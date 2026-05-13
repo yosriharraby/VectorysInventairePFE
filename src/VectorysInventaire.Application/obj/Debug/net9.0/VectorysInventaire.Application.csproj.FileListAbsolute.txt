@@ -1,0 +1,15 @@
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\bin\Debug\net9.0\VectorysInventaire.Application.deps.json
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\bin\Debug\net9.0\VectorysInventaire.Application.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\bin\Debug\net9.0\VectorysInventaire.Application.pdb
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\bin\Debug\net9.0\VectorysInventaire.Domain.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\bin\Debug\net9.0\VectorysInventaire.Domain.pdb
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.csproj.AssemblyReference.cache
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.AssemblyInfoInputs.cache
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.AssemblyInfo.cs
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.csproj.CoreCompileInputs.cache
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\Vectorys.2E79C865.Up2Date
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\refint\VectorysInventaire.Application.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.pdb
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\ref\VectorysInventaire.Application.dll

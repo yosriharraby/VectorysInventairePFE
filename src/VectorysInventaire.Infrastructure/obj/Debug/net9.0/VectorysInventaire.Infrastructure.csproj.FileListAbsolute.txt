@@ -1,0 +1,17 @@
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\bin\Debug\net9.0\VectorysInventaire.Infrastructure.deps.json
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\bin\Debug\net9.0\VectorysInventaire.Infrastructure.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\bin\Debug\net9.0\VectorysInventaire.Infrastructure.pdb
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\bin\Debug\net9.0\VectorysInventaire.Application.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\bin\Debug\net9.0\VectorysInventaire.Domain.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\bin\Debug\net9.0\VectorysInventaire.Application.pdb
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\bin\Debug\net9.0\VectorysInventaire.Domain.pdb
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.AssemblyInfo.cs
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\Vectorys.9ED6C697.Up2Date
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\refint\VectorysInventaire.Infrastructure.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.pdb
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\ref\VectorysInventaire.Infrastructure.dll
