@@ -1,0 +1,264 @@
+.login-shell {
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: #111827;
+  font-family: Inter, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  position: relative;
+}
+
+.login-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(17, 24, 39, 0.08) 1px, transparent 1px);
+  background-size: 18px 18px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.topbar {
+  position: relative;
+  z-index: 1;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.secure-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  background: rgba(99, 102, 241, 0.08);
+  color: #4f46e5;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.secure-badge mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+}
+
+.topbar__right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(17, 24, 39, 0.7);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.topbar__right mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 1024px;
+  margin: 0 auto;
+  min-height: calc(100vh - 56px);
+  padding: 28px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero {
+  text-align: center;
+  margin: 10px 0 18px;
+}
+
+.logo {
+  width: min(280px, 72vw);
+  height: auto;
+  display: inline-block;
+  margin-bottom: 12px;
+  object-fit: contain;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: rgba(17, 24, 39, 0.65);
+}
+
+.auth-card {
+  width: min(480px, 100%);
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 16px 40px rgba(17, 24, 39, 0.12);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.card-header {
+  margin-bottom: 12px;
+}
+
+.card-title {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.card-desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: rgba(17, 24, 39, 0.62);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: rgba(239, 68, 68, 0.07);
+  color: #b91c1c;
+  font-size: 12px;
+}
+
+.error mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  margin-top: 1px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(17, 24, 39, 0.75);
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 2px;
+}
+
+.forgot-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4f46e5;
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.field {
+  margin-top: -6px;
+}
+
+.field-error {
+  margin-top: -6px;
+  font-size: 12px;
+  color: #b91c1c;
+}
+
+.remember {
+  margin: 4px 0 4px;
+  font-size: 13px;
+}
+
+.submit {
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.legal-note {
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: rgba(17, 24, 39, 0.55);
+  text-align: center;
+}
+
+.footer {
+  width: 100%;
+  max-width: 680px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(17, 24, 39, 0.08);
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: rgba(17, 24, 39, 0.55);
+}
+
+.footer-links a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-tagline {
+  margin-top: 10px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(17, 24, 39, 0.42);
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding-top: 22px;
+  }
+
+  .topbar {
+    padding: 0 12px;
+  }
+
+  .auth-card {
+    width: min(420px, 100%);
+  }
+}

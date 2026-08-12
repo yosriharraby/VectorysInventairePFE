@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>PFE Vectorys — Lot 3 — Chapitre 4 Réalisation</title>
+  <style>
+    @page { size: A4; margin: 2.2cm 2cm; }
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt; line-height: 1.5; color: #111;
+      max-width: 17cm; margin: 0 auto; padding: 0.8cm;
+    }
+    h1 { font-size: 18pt; text-align: center; margin-top: 1.5cm; page-break-before: always; }
+    h1.no-break { page-break-before: avoid; margin-top: 0.4cm; }
+    h2 { font-size: 15pt; margin-top: 1.1em; border-bottom: 1px solid #ccc; padding-bottom: 0.15em; page-break-after: avoid; }
+    h3 { font-size: 13pt; margin-top: 0.9em; page-break-after: avoid; }
+    h4 { font-size: 12pt; margin-top: 0.7em; font-style: italic; page-break-after: avoid; }
+    p { text-align: justify; margin: 0.5em 0; }
+    ul, ol { margin: 0.35em 0 0.6em 1.2em; }
+    li { margin-bottom: 0.22em; text-align: justify; }
+    .cover { text-align: center; page-break-after: always; padding-top: 0.5cm; }
+    .cover-logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2cm; padding: 0 0.5cm; }
+    .cover-logos img { max-height: 65px; max-width: 160px; }
+    .cover .title { font-size: 15pt; font-weight: bold; margin: 1.2cm 0; line-height: 1.4; }
+    .cover .meta { font-size: 11pt; line-height: 1.9; }
+    .toc { page-break-after: always; }
+    .toc p { margin: 0.3em 0; font-size: 11.5pt; }
+    .chapter-intro { font-style: italic; margin-bottom: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 0.7em 0; font-size: 10.5pt; }
+    th, td { border: 1px solid #333; padding: 5px 7px; text-align: left; vertical-align: top; }
+    th { background: #f0f0f0; }
+    figure { margin: 0.9em 0; text-align: center; page-break-inside: avoid; }
+    figcaption { font-size: 10pt; font-style: italic; margin-top: 0.35em; color: #333; }
+    .figure-box svg { max-width: 100%; height: auto; border: 1px solid #ddd; }
+    .placeholder {
+      border: 2px dashed #888; background: #f9f9f9; padding: 1cm 0.7cm;
+      margin: 0.7em 0; text-align: center; color: #555; font-size: 10.5pt;
+      page-break-inside: avoid;
+    }
+    .note-box {
+      border: 1px solid #999; background: #fafafa; padding: 0.55em 0.75em;
+      margin: 0.7em 0; font-size: 11pt; page-break-inside: avoid;
+    }
+    .section-break { page-break-before: always; }
+    figure img.screenshot { max-width: 100%; height: auto; border: 1px solid #ccc; }
+    figure img.screenshot-mobile { max-width: 48%; display: block; margin: 0.4em auto; border: 1px solid #ccc; }
+    .figure-multi img { margin-bottom: 0.5em; display: block; }
+    code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 10pt; }
+  </style>
+</head>
+<body>
+
+<!-- PAGE DE GARDE LOT 3 -->
+<div class="cover">
+  <div class="cover-logos">
+    <img src="assets/tek-up-logo.svg" alt="Logo TEK-UP" />
+    <img src="assets/vectorys-logo.png" alt="Logo VECTORYS" />
+  </div>
+  <p><strong>République Tunisienne</strong><br />
+  Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br />
+  École Supérieure Privée d'Ingénierie et de Technologie — TEK-UP</p>
+  <p class="title">Conception et développement d'une plateforme<br />d'inventaire logistique multi-canal</p>
+  <p class="meta">
+    Rapport de Projet de Fin d'Études — Lot 3<br />
+    Chapitre 4 — Réalisation technique<br /><br />
+    Réalisé par : <strong>Harrabi Yosri</strong><br />
+    Spécialité : Génie Logiciel et Systèmes d'Information<br />
+    Encadrant professionnel : M. Ferchichi Marwen — VECTORYS Tunisie<br />
+    Encadrante académique : Mme Zrelli Siwar — TEK-UP<br />
+    Année universitaire 2025 — 2026
+  </p>
+</div>
+
+<div class="toc">
+  <h2 style="border:none;">Table des matières — Lot 3</h2>
+  <p>Chapitre 4 — Réalisation technique</p>
+  <p>&nbsp;&nbsp;4.1 Environnement de développement et outillage</p>
+  <p>&nbsp;&nbsp;4.2 Réalisation de l'API ASP.NET Core</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;4.2.1 Organisation Clean Architecture et CQRS</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;4.2.2 Sécurité JWT et politiques d'autorisation</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;4.2.3 Persistance SQL Server et migrations</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;4.2.4 Endpoints métier et hub SignalR</p>
+  <p>&nbsp;&nbsp;4.3 Réalisation de l'application web de supervision</p>
+  <p>&nbsp;&nbsp;4.4 Réalisation de l'application mobile agent</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;4.4.1 Authentification et navigation</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;4.4.2 Boucle de scan et quotas</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;4.4.3 Mode hors ligne et synchronisation</p>
+  <p>&nbsp;&nbsp;4.5 Déroulement des sprints et livrables</p>
+  <p>&nbsp;&nbsp;4.6 Déploiement sur serveur local</p>
+  <p>&nbsp;&nbsp;4.7 Difficultés rencontrées et solutions retenues</p>
+  <p>&nbsp;&nbsp;Conclusion du chapitre</p>
+</div>
+
+<h1 class="no-break">Chapitre 4 — Réalisation technique</h1>
+
+<p class="chapter-intro">
+Ce chapitre décrit la mise en œuvre concrète de la conception présentée au chapitre 3. Il détaille
+l'environnement de travail, l'implémentation de l'API centrale, des clients web et mobile, le
+déroulement des sprints Scrum, puis les choix de déploiement sur un serveur local adapté au
+contexte d'exploitation VECTORYS. Les illustrations reprennent les captures déjà intégrées aux
+chapitres précédents et réservent des emplacements pour les vues de déploiement.
+</p>
+
+<h2>Introduction</h2>
+<p>
+La réalisation a suivi une logique de <em>tranches verticales</em> : chaque sprint livre un bout de
+fonctionnalité traversant l'API, la base de données et au moins un canal client (web ou mobile).
+Cette approche réduit le risque d'un backend « orphelin » ou d'interfaces déconnectées du métier.
+Le fil conducteur demeure le cycle inventaire C1 → comptage → écarts → pilotage KPI.
+</p>
+<p>
+Les sections suivantes s'organisent d'abord par couche technique (outillage, API, web, mobile),
+puis par chronologie des sprints, afin de relier les décisions de conception aux artefacts livrés
+dans le dépôt et aux interfaces réellement utilisées en démonstration.
+</p>
+
+<!-- ========== 4.1 ========== -->
+<h2>4.1 Environnement de développement et outillage</h2>
+<p>
+Le poste de développement et le serveur de démonstration s'appuient sur un stack Microsoft/Flutter
+homogène avec les choix du chapitre 1.
+</p>
+
+<table>
+  <tr><th>Composant</th><th>Technologie / version</th><th>Rôle dans la réalisation</th></tr>
+  <tr><td>IDE / outils</td><td>Visual Studio / VS Code, Flutter SDK, SSMS</td><td>Édition, debug, inspection SQL</td></tr>
+  <tr><td>Backend</td><td>ASP.NET Core 9, C#, MediatR, FluentValidation</td><td>API REST + hub SignalR</td></tr>
+  <tr><td>ORM</td><td>Entity Framework Core + migrations</td><td>Schéma VectorysDB, seed utilisateurs</td></tr>
+  <tr><td>SGBD</td><td>Microsoft SQL Server Express (<span class="mono">YOSRI\SQLEXPRESS</span>)</td><td>Persistance centrale</td></tr>
+  <tr><td>Web supervision</td><td>Angular 19, TypeScript, Chart.js</td><td>Portail superviseur / KPI</td></tr>
+  <tr><td>Mobile agent</td><td>Flutter (Dart), Dio, SQLite</td><td>Scan terrain et sync offline</td></tr>
+  <tr><td>Excel</td><td>ClosedXML</td><td>Import du stock théorique</td></tr>
+  <tr><td>Docs API</td><td>Swagger / OpenAPI (profil Development)</td><td>Exploration et tests manuels</td></tr>
+  <tr><td>Qualité / logs</td><td>Serilog, middleware d'exceptions</td><td>Diagnostic runtime</td></tr>
+  <tr><td>Versionnement</td><td>Git</td><td>Historique des sprints et branches</td></tr>
+</table>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" width="500" font-family="Times New Roman">
+  <rect x="10" y="40" width="110" height="55" fill="#fff" stroke="#000"/>
+  <text x="65" y="62" text-anchor="middle" font-size="10" font-weight="bold">Dev</text>
+  <text x="65" y="78" text-anchor="middle" font-size="9">dotnet / flutter</text>
+  <line x1="120" y1="67" x2="155" y2="67" stroke="#000"/>
+  <rect x="155" y="25" width="120" height="85" fill="#fff" stroke="#000"/>
+  <text x="215" y="48" text-anchor="middle" font-size="10" font-weight="bold">API :5000</text>
+  <text x="215" y="66" text-anchor="middle" font-size="9">JWT · MediatR</text>
+  <text x="215" y="84" text-anchor="middle" font-size="9">SignalR hub</text>
+  <line x1="275" y1="67" x2="310" y2="67" stroke="#000"/>
+  <rect x="310" y="40" width="100" height="55" fill="#fff" stroke="#000"/>
+  <text x="360" y="62" text-anchor="middle" font-size="10" font-weight="bold">SQL</text>
+  <text x="360" y="78" text-anchor="middle" font-size="9">VectorysDB</text>
+  <rect x="430" y="15" width="80" height="40" fill="#fff" stroke="#000"/>
+  <text x="470" y="40" text-anchor="middle" font-size="9">Angular</text>
+  <rect x="430" y="70" width="80" height="40" fill="#fff" stroke="#000"/>
+  <text x="470" y="95" text-anchor="middle" font-size="9">Flutter</text>
+  <line x1="430" y1="35" x2="275" y2="50" stroke="#666" stroke-dasharray="3,2"/>
+  <line x1="430" y1="90" x2="275" y2="85" stroke="#666" stroke-dasharray="3,2"/>
+  <text x="260" y="140" text-anchor="middle" font-size="9">Figure conceptuelle — environnement de réalisation locale</text>
+</svg>
+<figcaption>Figure 4.1 — Chaîne de développement locale (clients → API → SQL Server)</figcaption>
+</figure>
+
+<p>
+Un script PowerShell (<span class="mono">scripts/setup-database.ps1</span>) applique les migrations EF Core
+et prépare le seed des comptes de démonstration. Un fichier Excel de test
+(<span class="mono">scripts/test-import-stock.xlsx</span>) et un générateur dédié facilitent la
+reproductibilité des scénarios d'import et de scan.
+</p>
+
+<!-- ========== 4.2 ========== -->
+<h2 class="section-break">4.2 Réalisation de l'API ASP.NET Core</h2>
+<p>
+L'API constitue le point unique de vérité métier. Tous les canaux consomment les mêmes commandes
+et requêtes ; aucune règle de quotas, d'écarts ou d'assignation n'est dupliquée côté client.
+</p>
+
+<h3>4.2.1 Organisation Clean Architecture et CQRS</h3>
+<p>
+La solution Visual Studio est découpée en quatre projets :
+</p>
+<ul>
+  <li><strong>VectorysInventaire.Domain</strong> — entités (<em>Inventaire</em>, <em>Passage</em>,
+    <em>Emplacement</em>, <em>StockTheorique</em>, <em>Scan</em>, <em>Ecart</em>, <em>Utilisateur</em>)
+    et enumérations de statut ;</li>
+  <li><strong>VectorysInventaire.Application</strong> — Features organisées en Commands/Queries
+    (MediatR), DTOs, validateurs FluentValidation et contrats d'interfaces ;</li>
+  <li><strong>VectorysInventaire.Infrastructure</strong> — EF Core, repositories, JWT, ClosedXML,
+    hash BCrypt, seeders ;</li>
+  <li><strong>VectorysInventaire.API</strong> — contrôleurs HTTP, hub SignalR, middleware,
+    composition DI (<span class="mono">Program.cs</span>).</li>
+</ul>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 130" width="460" font-family="Times New Roman">
+  <rect x="20" y="20" width="100" height="90" fill="#fff" stroke="#000"/>
+  <text x="70" y="55" text-anchor="middle" font-size="11" font-weight="bold">API</text>
+  <text x="70" y="72" text-anchor="middle" font-size="9">Controllers</text>
+  <text x="70" y="88" text-anchor="middle" font-size="9">Hubs</text>
+  <line x1="120" y1="65" x2="150" y2="65" stroke="#000"/>
+  <rect x="150" y="20" width="110" height="90" fill="#fff" stroke="#000"/>
+  <text x="205" y="50" text-anchor="middle" font-size="11" font-weight="bold">Application</text>
+  <text x="205" y="68" text-anchor="middle" font-size="9">MediatR</text>
+  <text x="205" y="84" text-anchor="middle" font-size="9">Validators</text>
+  <line x1="260" y1="50" x2="290" y2="40" stroke="#000"/>
+  <line x1="260" y1="80" x2="290" y2="90" stroke="#000"/>
+  <rect x="290" y="10" width="80" height="50" fill="#fff" stroke="#000"/>
+  <text x="330" y="40" text-anchor="middle" font-size="10">Domain</text>
+  <rect x="290" y="70" width="160" height="50" fill="#fff" stroke="#000"/>
+  <text x="370" y="100" text-anchor="middle" font-size="10">Infrastructure (EF, JWT…)</text>
+</svg>
+<figcaption>Figure 4.2 — Couches de la solution .NET réalisées</figcaption>
+</figure>
+
+<p>
+Exemple de flux typique : le contrôleur reçoit un DTO, dispatche une commande MediatR, le handler
+orchestre les repositories, puis un service de notification publie éventuellement un événement
+SignalR. Cette discipline évite le « fat controller » et facilite l'ajout de validations sans
+modifier le protocole HTTP.
+</p>
+
+<h3>4.2.2 Sécurité JWT et politiques d'autorisation</h3>
+<p>
+L'authentification est centralisée dans <span class="mono">POST /api/auth/login</span> :
+</p>
+<ul>
+  <li>superviseur / administrateur : email + mot de passe ;</li>
+  <li>agent : code personnel (identifiant terrain), avec vérification BCrypt du hash stocké.</li>
+</ul>
+<p>
+Le service JWT émet un jeton de 8 heures pour les agents et de 24 heures pour les superviseurs.
+Les politiques <span class="mono">SuperviseurOnly</span> et <span class="mono">AgentOnly</span>
+protègent les contrôleurs. Le hub SignalR lit le jeton via le query string
+<span class="mono">access_token</span> afin d'autoriser les connexions WebSocket depuis Angular.
+</p>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-4-login-angular.png" alt="Login Angular" />
+  <figcaption>Figure 4.3 — Portail web : authentification superviseur (réalisation Angular)</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-5-login-flutter.png" alt="Login Flutter" />
+  <figcaption>Figure 4.4 — Application mobile : authentification agent (réalisation Flutter)</figcaption>
+</figure>
+
+<h3>4.2.3 Persistance SQL Server et migrations</h3>
+<p>
+Les migrations EF Core matérialisent l'évolution du schéma au fil des sprints :
+</p>
+<table>
+  <tr><th>Migration</th><th>Contenu principal</th></tr>
+  <tr><td>InitialCreate</td><td>Utilisateurs, fondations sécurité</td></tr>
+  <tr><td>Sprint2_InventaireSchema</td><td>Inventaires, passages, emplacements, stock théorique</td></tr>
+  <tr><td>Sprint3_ScansSchema</td><td>Scans, clés et relations comptage</td></tr>
+  <tr><td>Sprint5_EcartsSchema</td><td>Écarts MANQUANT / SURPLUS et statuts de traitement</td></tr>
+  <tr><td>Sprint7_KpiIndexes</td><td>Index en soutien aux agrégats KPI</td></tr>
+</table>
+<p>
+Au démarrage, <span class="mono">Program.cs</span> applique automatiquement
+<span class="mono">MigrateAsync</span> puis exécute le seeder (comptes
+<span class="mono">superviseur@vectorys.local</span>, agents <span class="mono">AG001</span> /
+<span class="mono">AG002</span>, etc.). Cette stratégie simplifie la mise en route d'un environnement
+local neuf.
+</p>
+
+<h3>4.2.4 Endpoints métier et hub SignalR</h3>
+<p>
+Le tableau suivant synthétise les endpoints effectivement exposés par l'API réalisée.
+</p>
+<table>
+  <tr><th>Contrôleur</th><th>Méthodes clés</th><th>Rôle métier</th></tr>
+  <tr><td>Auth</td><td>POST login</td><td>Émission JWT multi-rôle</td></tr>
+  <tr><td>Inventaires</td><td>GET, POST, suivi-temps-reel</td><td>Création, liste, monitoring</td></tr>
+  <tr><td>Passages</td><td>POST, import-stock</td><td>C2 manuel ; import Excel ClosedXML</td></tr>
+  <tr><td>Emplacements</td><td>GET, mes-emplacements</td><td>Supervision / tâches agent</td></tr>
+  <tr><td>Scans</td><td>POST, batch, fin-comptage</td><td>Comptage online et sync offline</td></tr>
+  <tr><td>Ecarts</td><td>detecter, branche-a, GET</td><td>Détection et recomptage ciblé</td></tr>
+  <tr><td>Kpi</td><td>dashboard, precision, performance, qualite, clients, wms</td><td>Pilotage analytique</td></tr>
+  <tr><td>Agents</td><td>GET</td><td>Liste agents actifs pour assignation</td></tr>
+  <tr><td>Hub</td><td>/hubs/inventaire</td><td>Groupes par inventaire, push temps réel</td></tr>
+</table>
+
+<div class="note-box">
+  <strong>Règle métier structurante (scan).</strong> Lors de
+  <span class="mono">EnregistrerScan</span>, l'emplacement passe de <em>EN_ATTENTE</em> à
+  <em>EN_COURS</em>, puis à <em>TERMINE</em> dès que l'ensemble des codes US a atteint la quantité
+  théorique. La clôture manuelle terrain est volontairement désactivée côté mobile afin d'éviter
+  les fins de comptage prématurées.
+</div>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-7-create-inventaire.png" alt="Création inventaire" />
+  <figcaption>Figure 4.5 — Création d'inventaire et préparation de l'import (interface réalisée)</figcaption>
+</figure>
+
+<!-- ========== 4.3 ========== -->
+<h2 class="section-break">4.3 Réalisation de l'application web de supervision</h2>
+<p>
+Le portail Angular 19 s'adresse au superviseur (et à l'administrateur). Il consomme l'API via des
+services HTTP, stocke le JWT, protège les routes par garde d'authentification et affiche le
+suivi temps réel en s'abonnant au hub SignalR après sélection d'un inventaire.
+</p>
+<p>
+Les modules fonctionnels réalisés côté supervision sont :
+</p>
+<ul>
+  <li><strong>Authentification</strong> — formulaire email / mot de passe, intercepteur Bearer,
+    redirection vers le tableau de bord ;</li>
+  <li><strong>Inventaires</strong> — création (intitulé, zone, dates), liste paginée, statut
+    EN_PREPARATION puis EN_COURS après import ;</li>
+  <li><strong>Import Excel</strong> — téléversement multipart vers
+    <span class="mono">POST /api/passages/{id}/import-stock</span>, affichage du rapport
+    (emplacements créés, assignations par CodeAgent) ;</li>
+  <li><strong>Monitoring</strong> — avancement des agents et des emplacements, notifications de
+    nouveaux scans ;</li>
+  <li><strong>Écarts</strong> — détection C1, consultation MANQUANT / SURPLUS, déclenchement de
+    la branche A (recomptage ciblé C2) ;</li>
+  <li><strong>KPI</strong> — dashboard agrégé (précision, performance, qualité, clients, WMS)
+    avec filtres et graphiques Chart.js.</li>
+</ul>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-17-monitoring.png" alt="Monitoring" />
+  <figcaption>Figure 4.6 — Suivi d'avancement temps réel (canal web)</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-15-ecarts.png" alt="Écarts" />
+  <figcaption>Figure 4.7 — Gestion des écarts et stratégie de recomptage (branche A)</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-18-kpi.png" alt="KPI" />
+  <figcaption>Figure 4.8 — Tableau de bord KPI réalisé</figcaption>
+</figure>
+
+<p>
+Le paramétrage CORS de l'API autorise notamment
+<span class="mono">http://localhost:4200</span> en développement. Sur le serveur local de
+démonstration, cette origine est remplacée par l'URL réelle du portail (adresse IP ou nom d'hôte
+du serveur), afin que les appels XHR et SignalR restent conformes à la politique du navigateur.
+</p>
+
+<!-- ========== 4.4 ========== -->
+<h2 class="section-break">4.4 Réalisation de l'application mobile agent</h2>
+<p>
+L'application Flutter est structurée par fonctionnalités (<span class="mono">features/auth</span>,
+<span class="mono">scan</span>, <span class="mono">offline_sync</span>, <span class="mono">agent</span>)
+avec une couche réseau Dio, un stockage local SQLite et une configuration d'URL API adaptable
+(<span class="mono">API_BASE_URL</span> via <span class="mono">--dart-define</span>).
+</p>
+
+<h3>4.4.1 Authentification et navigation</h3>
+<p>
+L'agent s'authentifie par code personnel. Après succès, un shell de navigation donne accès au
+tableau de bord, à la liste des emplacements assignés, à la synchronisation et aux réglages.
+Seuls les emplacements de l'agent connecté, rattachés à un inventaire <em>EN_COURS</em>, sont
+exposés par <span class="mono">GET /api/emplacements/mes-emplacements</span>.
+</p>
+
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-12-emplacements.png" alt="Emplacements" />
+  <figcaption>Figure 4.9 — Liste des emplacements assignés (mobile)</figcaption>
+</figure>
+
+<h3>4.4.2 Boucle de scan et quotas</h3>
+<p>
+La page de boucle de scan orchestre :
+</p>
+<ol>
+  <li>la lecture du code-barres (caméra / scanner) ;</li>
+  <li>l'envoi de <span class="mono">POST /api/scans</span> (ou file locale si hors ligne) ;</li>
+  <li>l'affichage de la progression par code US (quantité scannée / quantité théorique) ;</li>
+  <li>le passage automatique de l'emplacement à <em>TERMINE</em> lorsque le quota global est
+    atteint ;</li>
+  <li>le refus des scans supplémentaires (« quota atteint »).</li>
+</ol>
+
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-13-scan-loop.png" alt="Scan loop" />
+  <figcaption>Figure 4.10 — Boucle de scan et progression par unité de stock</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig2-2b-scan-debut.png" alt="Début scan" />
+  <figcaption>Figure 4.11 — Démarrage du comptage sur un emplacement</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig2-2c-scan-progression.png" alt="Progression scan" />
+  <figcaption>Figure 4.12 — Progression du scan pendant le passage C1</figcaption>
+</figure>
+
+<h3>4.4.3 Mode hors ligne et synchronisation</h3>
+<p>
+Lorsque la connectivité chute, les repositories « offline-aware » enregistrent les scans (et, le
+cas échéant, les fins de comptage) dans SQLite avec un identifiant local. Un service
+<span class="mono">OfflineSyncService</span> observe le retour réseau, pousse un
+<span class="mono">POST /api/scans/batch</span>, gère les doublons et met à jour une bannière /
+page de synchronisation destinée à l'agent.
+</p>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 120" width="480" font-family="Times New Roman">
+  <rect x="15" y="35" width="100" height="50" fill="#fff" stroke="#000"/>
+  <text x="65" y="65" text-anchor="middle" font-size="10">Scan offline</text>
+  <line x1="115" y1="60" x2="150" y2="60" stroke="#000"/>
+  <rect x="150" y="35" width="100" height="50" fill="#fff" stroke="#000"/>
+  <text x="200" y="65" text-anchor="middle" font-size="10">SQLite file</text>
+  <line x1="250" y1="60" x2="285" y2="60" stroke="#000"/>
+  <rect x="285" y="35" width="110" height="50" fill="#fff" stroke="#000"/>
+  <text x="340" y="58" text-anchor="middle" font-size="10">POST /scans/batch</text>
+  <text x="340" y="72" text-anchor="middle" font-size="9">(retour réseau)</text>
+  <line x1="395" y1="60" x2="430" y2="60" stroke="#000"/>
+  <rect x="430" y="35" width="55" height="50" fill="#fff" stroke="#000"/>
+  <text x="457" y="65" text-anchor="middle" font-size="10">API</text>
+</svg>
+<figcaption>Figure 4.13 — Chaîne de synchronisation offline réalisée sur Flutter</figcaption>
+</figure>
+
+<!-- ========== 4.5 ========== -->
+<h2 class="section-break">4.5 Déroulement des sprints et livrables</h2>
+<p>
+Le tableau ci-dessous relie chaque sprint aux artefacts techniques principaux. Il complète la
+frise du chapitre 1 en précisant <em>ce qui a été réalisé</em> dans le code et les interfaces.
+</p>
+
+<table>
+  <tr><th>Sprint</th><th>Objectif</th><th>Livrables techniques</th></tr>
+  <tr>
+    <td>0</td>
+    <td>Fondations</td>
+    <td>Solution .NET Clean Architecture, projet Flutter, dépôt Git, SQL Server, script de setup DB</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Authentification</td>
+    <td>Login JWT multi-rôle, policies, login Angular, login Flutter, seed utilisateurs</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Inventaire &amp; import</td>
+    <td>CreateInventaire + C1 auto, ImportStock ClosedXML, assignation CodeAgent, UI création / import</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Scan &amp; temps réel</td>
+    <td>EnregistrerScan, quotas, auto-TERMINE, InventaireHub, suivi-temps-reel, UI monitoring</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Offline</td>
+    <td>SQLite, OfflineSyncService, POST /scans/batch, bannière et page de sync</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Écarts (branche A)</td>
+    <td>DetecterEcarts, AppliquerBrancheA (C2 ciblé), UI liste d'écarts</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Clôture &amp; consolidation</td>
+    <td>Workflows de recomptage / finalisation inventaire, export résultats, extensions branche B selon besoin terrain</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>KPI</td>
+    <td>KpiController + repository agrégé, index SQL, dashboard Chart.js, filtres</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Tests &amp; doc</td>
+    <td>Swagger annoté Bearer, scénarios manuels Postman / guide d'import, consolidation des jeux de test</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Mise en service locale</td>
+    <td>Publication API + portail sur serveur local, APK paramétré vers l'IP serveur, validation E2E</td>
+  </tr>
+</table>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 70" width="500" font-family="Arial">
+  <circle cx="26" cy="28" r="12" fill="#4caf50"/><text x="26" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">0</text>
+  <circle cx="74" cy="28" r="12" fill="#4caf50"/><text x="74" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">1</text>
+  <circle cx="122" cy="28" r="12" fill="#4caf50"/><text x="122" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">2</text>
+  <circle cx="170" cy="28" r="12" fill="#4caf50"/><text x="170" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">3</text>
+  <circle cx="218" cy="28" r="12" fill="#4caf50"/><text x="218" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">4</text>
+  <circle cx="266" cy="28" r="12" fill="#4caf50"/><text x="266" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">5</text>
+  <circle cx="314" cy="28" r="12" fill="#4caf50"/><text x="314" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">6</text>
+  <circle cx="362" cy="28" r="12" fill="#4caf50"/><text x="362" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">7</text>
+  <circle cx="410" cy="28" r="12" fill="#4caf50"/><text x="410" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">8</text>
+  <circle cx="458" cy="28" r="12" fill="#1565c0"/><text x="458" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">9</text>
+  <line x1="38" y1="28" x2="62" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="86" y1="28" x2="110" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="134" y1="28" x2="158" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="182" y1="28" x2="206" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="230" y1="28" x2="254" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="278" y1="28" x2="302" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="326" y1="28" x2="350" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="374" y1="28" x2="398" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="422" y1="28" x2="446" y2="28" stroke="#1565c0" stroke-width="2"/>
+  <text x="240" y="58" text-anchor="middle" font-size="9">S0–S8 : réalisation fonctionnelle — S9 : mise en service serveur local</text>
+</svg>
+<figcaption>Figure 4.14 — Enchaînement des sprints de réalisation</figcaption>
+</figure>
+
+<!-- ========== 4.6 ========== -->
+<h2 class="section-break">4.6 Déploiement sur serveur local</h2>
+<p>
+Conformément au contexte entreprise, la mise en service retenue pour la démonstration et
+l'exploitation interne n'est pas un hébergement cloud public, mais un <strong>déploiement sur
+serveur local</strong> (machine Windows du réseau VECTORYS). Ce choix limite les contraintes de
+sécurité externe, rapproche l'API de SQL Server Express et autorise les terminaux mobiles à
+joindre l'API via l'adresse IP privée du serveur.
+</p>
+
+<h3>4.6.1 Architecture cible de déploiement</h3>
+<table>
+  <tr><th>Composant</th><th>Déploiement local prévu</th></tr>
+  <tr><td>SQL Server</td><td>Instance locale ou machine serveur (<span class="mono">VectorysDB</span>), Trusted Connection ou compte SQL dédié</td></tr>
+  <tr><td>API ASP.NET Core</td><td><span class="mono">dotnet publish</span> puis exécution Kestrel (service Windows) ou site IIS local</td></tr>
+  <tr><td>Portail Angular</td><td><span class="mono">ng build</span> ; fichiers statiques servis (IIS / reverse proxy) vers le réseau LAN</td></tr>
+  <tr><td>Application mobile</td><td>APK généré avec <span class="mono">--dart-define=API_BASE_URL=http://&lt;IP-serveur&gt;:&lt;port&gt;/api</span></td></tr>
+  <tr><td>CORS / SignalR</td><td>Origins = URL du portail ; ouverture du port API sur le pare-feu Windows</td></tr>
+</table>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" width="500" font-family="Times New Roman">
+  <rect x="10" y="50" width="120" height="60" fill="#fff" stroke="#000"/>
+  <text x="70" y="75" text-anchor="middle" font-size="10" font-weight="bold">Serveur local</text>
+  <text x="70" y="93" text-anchor="middle" font-size="9">API + SQL + Web</text>
+  <rect x="200" y="20" width="110" height="45" fill="#fff" stroke="#000"/>
+  <text x="255" y="47" text-anchor="middle" font-size="10">PC superviseur</text>
+  <rect x="200" y="95" width="110" height="45" fill="#fff" stroke="#000"/>
+  <text x="255" y="122" text-anchor="middle" font-size="10">PDA / Android</text>
+  <line x1="130" y1="70" x2="200" y2="42" stroke="#000"/>
+  <line x1="130" y1="90" x2="200" y2="117" stroke="#000"/>
+  <rect x="380" y="55" width="120" height="50" fill="#fff" stroke="#000"/>
+  <text x="440" y="85" text-anchor="middle" font-size="10">Réseau LAN</text>
+  <text x="260" y="155" text-anchor="middle" font-size="9">Clients du même réseau → IP du serveur (pas localhost mobile)</text>
+</svg>
+<figcaption>Figure 4.15 — Topologie de déploiement sur serveur local</figcaption>
+</figure>
+
+<figure class="figure-multi">
+  <img class="screenshot" src="assets/fig4-16a-swagger-api.png" alt="Swagger API — partie 1" />
+  <img class="screenshot" src="assets/fig4-16b-swagger-api.png" alt="Swagger API — partie 2" />
+  <figcaption>Figure 4.16 — API publiée sur le serveur local (documentation Swagger)</figcaption>
+</figure>
+<div class="placeholder">
+  <strong>[Insérer ici une capture : portail Angular accessible via l'IP / nom du serveur]</strong><br />
+  Figure 4.17 — Portail superviseur déployé en local
+</div>
+<div class="placeholder">
+  <strong>[Insérer ici une capture : APK / réglages pointant vers l'URL API du serveur]</strong><br />
+  Figure 4.18 — Application mobile configurée pour le serveur local
+</div>
+
+<h3>4.6.2 Points de configuration critiques</h3>
+<ol>
+  <li><strong>Chaîne de connexion</strong> — pointer vers l'instance SQL du serveur dans
+    <span class="mono">appsettings.Production.json</span> (ou variables d'environnement) ;</li>
+  <li><strong>Secrets JWT</strong> — remplacer la clé de développement par un secret fort hors dépôt ;</li>
+  <li><strong>URL Flutter</strong> — ne plus utiliser <span class="mono">10.0.2.2</span>
+    (émulateur) ni <span class="mono">localhost</span> depuis un téléphone physique ;</li>
+  <li><strong>HTTPS</strong> — optionnel en LAN contrôlé ; recommandé si exposition plus large ;</li>
+  <li><strong>Pare-feu</strong> — autoriser le port de l'API (ex. 5000) et du site web.</li>
+</ol>
+
+<!-- ========== 4.7 ========== -->
+<h2 class="section-break">4.7 Difficultés rencontrées et solutions retenues</h2>
+<table>
+  <tr><th>Difficulté</th><th>Impact</th><th>Solution retenue</th></tr>
+  <tr>
+    <td>Zones entrepôt sans couverture Wi‑Fi stable</td>
+    <td>Perte de scans, reprise manuelle coûteuse</td>
+    <td>File SQLite + sync batch avec dédoublonnage côté API</td>
+  </tr>
+  <tr>
+    <td>Risque de clôture anticipée d'emplacement</td>
+    <td>Sous-comptage, écarts artificiels</td>
+    <td>Terminaison automatique pilotée par QteTheorique ; fin manuelle désactivée</td>
+  </tr>
+  <tr>
+    <td>Assignation ambiguë des emplacements</td>
+    <td>Agents travaillant hors périmètre</td>
+    <td>Colonne CodeAgent obligatoire à l'import ; filtrage strict mes-emplacements</td>
+  </tr>
+  <tr>
+    <td>Besoin de supervision instantanée</td>
+    <td>Retards de pilotage si simple polling</td>
+    <td>Hub SignalR par groupe inventaire + endpoint de suivi</td>
+  </tr>
+  <tr>
+    <td>URL API différente selon émulateur / device / serveur</td>
+    <td>Échecs de connexion silencieusement confus</td>
+    <td>Résolution conditionnelle + surcharge <span class="mono">API_BASE_URL</span></td>
+  </tr>
+  <tr>
+    <td>Fichiers Excel hétérogènes issus de l'ERP</td>
+    <td>Imports partiels ou rejetés</td>
+    <td>Schéma de colonnes figé, validation ligne à ligne, rapport d'import explicite</td>
+  </tr>
+</table>
+
+<p>
+Ces arbitrages confirment la priorité donnée à la <em>robustesse terrain</em> plutôt qu'à la
+richesse purement esthétique des interfaces. Ils seront réévalués lors des retours d'utilisation
+après déploiement local.
+</p>
+
+<h2>Conclusion</h2>
+<p>
+Le chapitre 4 a présenté la réalisation technique de Vectorys Inventaire : outillage, API Clean
+Architecture (CQRS, JWT, EF Core, SignalR, ClosedXML), portail Angular de supervision, application
+Flutter agent (scan, quotas, offline), enchaînement des sprints et stratégie de mise en service
+sur serveur local. Les figures illustrent les principaux écrans livrés ; les emplacements 4.16 à
+4.18 permettront d'intégrer les captures de déploiement. Le chapitre 5 abordera les tests, la
+validation fonctionnelle et les perspectives d'évolution de la plateforme.
+</p>
+
+</body>
+</html>

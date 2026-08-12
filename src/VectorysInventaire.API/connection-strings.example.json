@@ -1,0 +1,9 @@
+{
+  "_comment": "SSMS : YOSRI\\SQLEXPRESS — meme serveur que appsettings.",
+  "_ssms_server": "YOSRI\\SQLEXPRESS",
+  "_ssms_database": "VectorysDB",
+  "_setup_script": "powershell -File scripts/setup-database.ps1",
+  "examples": {
+    "sqlexpress": "Server=YOSRI\\SQLEXPRESS;Database=VectorysDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True;"
+  }
+}

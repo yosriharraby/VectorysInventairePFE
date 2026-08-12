@@ -1,0 +1,193 @@
+@use '../dashboard/dashboard.component.scss';
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.chart-wrap {
+  position: relative;
+  height: 240px;
+}
+
+.chart-wrap--sm {
+  height: 120px;
+}
+
+.gauge {
+  text-align: center;
+}
+
+.gauge-val {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #111827;
+  margin-top: -8px;
+}
+
+.charts-row--gauges {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.client-table {
+  width: 100%;
+  margin-top: 12px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.state.warn {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  color: #92400e;
+}
+
+.state.info {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 12px;
+  margin-bottom: 16px;
+  color: #1e40af;
+}
+
+.family {
+  margin-bottom: 28px;
+}
+
+.family h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.card .label {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(17, 24, 39, 0.6);
+  margin-bottom: 6px;
+}
+
+.card .value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.chart-box {
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.chart-box.wide {
+  margin-top: 12px;
+}
+
+.chart-box h3 {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+}
+
+.chart-box canvas {
+  max-height: none;
+}
+
+.hint {
+  color: rgba(17, 24, 39, 0.65);
+  font-size: 0.85rem;
+  margin: 0 0 12px;
+}
+
+.feasibility {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.feasibility-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.feasibility-card {
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.feasibility-card.full { background: rgba(34, 197, 94, 0.08); }
+.feasibility-card.partial { background: rgba(245, 158, 11, 0.1); }
+.feasibility-card.blocked { background: rgba(239, 68, 68, 0.08); }
+
+.feasibility-card__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.formula, .missing, .scale {
+  margin: 4px 0;
+  font-size: 0.82rem;
+}
+
+.state {
+  padding: 24px;
+  text-align: center;
+  color: rgba(17, 24, 39, 0.7);
+}
+
+.state.error {
+  color: #b91c1c;
+}

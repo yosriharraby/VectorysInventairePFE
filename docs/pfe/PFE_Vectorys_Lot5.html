@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>PFE Vectorys — Lot 5 — Pages finales</title>
+  <style>
+    @page { size: A4; margin: 2.2cm 2cm; }
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt; line-height: 1.5; color: #111;
+      max-width: 17cm; margin: 0 auto; padding: 0.8cm;
+    }
+    h1 { font-size: 18pt; text-align: center; margin-top: 1.5cm; page-break-before: always; }
+    h1.no-break { page-break-before: avoid; margin-top: 0.4cm; }
+    h2 { font-size: 15pt; margin-top: 1.1em; border-bottom: 1px solid #ccc; padding-bottom: 0.15em; page-break-after: avoid; }
+    h3 { font-size: 13pt; margin-top: 0.9em; page-break-after: avoid; }
+    p { text-align: justify; margin: 0.5em 0; }
+    ul, ol { margin: 0.35em 0 0.6em 1.2em; }
+    li { margin-bottom: 0.22em; text-align: justify; }
+    .cover { text-align: center; page-break-after: always; padding-top: 0.5cm; }
+    .cover-logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2cm; padding: 0 0.5cm; }
+    .cover-logos img { max-height: 65px; max-width: 160px; }
+    .cover .title { font-size: 15pt; font-weight: bold; margin: 1.2cm 0; line-height: 1.4; }
+    .cover .meta { font-size: 11pt; line-height: 1.9; }
+    .toc { page-break-after: always; }
+    .toc p { margin: 0.28em 0; font-size: 11pt; }
+    .list-fig p, .list-tab p, .abbr p { margin: 0.22em 0; font-size: 10.5pt; text-align: left; }
+    .list-fig, .list-tab, .abbr { page-break-after: always; }
+    table { border-collapse: collapse; width: 100%; margin: 0.7em 0; font-size: 10.5pt; }
+    th, td { border: 1px solid #333; padding: 5px 7px; text-align: left; vertical-align: top; }
+    th { background: #f0f0f0; }
+    .biblio p { margin: 0.45em 0; padding-left: 1.5em; text-indent: -1.5em; font-size: 11pt; }
+    .section-break { page-break-before: always; }
+    .keywords { margin-top: 0.8em; }
+  </style>
+</head>
+<body>
+
+<!-- PAGE DE GARDE -->
+<div class="cover">
+  <div class="cover-logos">
+    <img src="assets/tek-up-logo.svg" alt="Logo TEK-UP" />
+    <img src="assets/vectorys-logo.png" alt="Logo VECTORYS" />
+  </div>
+  <p><strong>République Tunisienne</strong><br />
+  Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br />
+  École Supérieure Privée d'Ingénierie et de Technologie — TEK-UP</p>
+  <p class="title">Conception et développement d'une plateforme<br />d'inventaire logistique multi-canal</p>
+  <p class="meta">
+    Rapport de Projet de Fin d'Études — Lot 5<br />
+    Pages finales (listes, résumé, conclusion, bibliographie)<br /><br />
+    Réalisé par : <strong>Harrabi Yosri</strong><br />
+    Spécialité : Génie Logiciel et Systèmes d'Information<br />
+    Encadrant professionnel : M. Ferchichi Marwen — VECTORYS Tunisie<br />
+    Encadrante académique : Mme Zrelli Siwar — TEK-UP<br />
+    Année universitaire 2025 — 2026
+  </p>
+</div>
+
+<div class="toc">
+  <h2 style="border:none;">Table des matières — Lot 5</h2>
+  <p>Liste des abréviations</p>
+  <p>Liste des figures</p>
+  <p>Liste des tableaux</p>
+  <p>Résumé (FR) / Abstract (EN) — version consolidée</p>
+  <p>Conclusion générale</p>
+  <p>Perspectives</p>
+  <p>Bibliographie</p>
+</div>
+
+<!-- ========== ABRÉVIATIONS ========== -->
+<div class="abbr">
+  <h1 class="no-break" style="font-size:16pt;text-align:left;border:none;margin-top:0;">Liste des abréviations</h1>
+  <table>
+    <tr><th width="22%">Sigle</th><th>Signification</th></tr>
+    <tr><td>API</td><td>Application Programming Interface</td></tr>
+    <tr><td>C1 / C2</td><td>Premier / second passage de comptage d'inventaire</td></tr>
+    <tr><td>CORS</td><td>Cross-Origin Resource Sharing</td></tr>
+    <tr><td>CQRS</td><td>Command Query Responsibility Segregation</td></tr>
+    <tr><td>DTO</td><td>Data Transfer Object</td></tr>
+    <tr><td>E2E</td><td>End-to-End (bout en bout)</td></tr>
+    <tr><td>EF Core</td><td>Entity Framework Core</td></tr>
+    <tr><td>ERP</td><td>Enterprise Resource Planning</td></tr>
+    <tr><td>HTTP / HTTPS</td><td>Hypertext Transfer Protocol (Secure)</td></tr>
+    <tr><td>IIS</td><td>Internet Information Services</td></tr>
+    <tr><td>JWT</td><td>JSON Web Token</td></tr>
+    <tr><td>KPI</td><td>Key Performance Indicator (indicateur de performance)</td></tr>
+    <tr><td>LAN</td><td>Local Area Network</td></tr>
+    <tr><td>ORM</td><td>Object-Relational Mapping</td></tr>
+    <tr><td>PDA</td><td>Personal Digital Assistant (terminal mobile)</td></tr>
+    <tr><td>PFE</td><td>Projet de Fin d'Études</td></tr>
+    <tr><td>REST</td><td>Representational State Transfer</td></tr>
+    <tr><td>RF / RNF</td><td>Exigence Fonctionnelle / Non Fonctionnelle</td></tr>
+    <tr><td>SGBD</td><td>Système de Gestion de Base de Données</td></tr>
+    <tr><td>SQL</td><td>Structured Query Language</td></tr>
+    <tr><td>SSMS</td><td>SQL Server Management Studio</td></tr>
+    <tr><td>TTL</td><td>Time To Live (durée de validité du jeton)</td></tr>
+    <tr><td>UC</td><td>Use Case (cas d'utilisation)</td></tr>
+    <tr><td>UML</td><td>Unified Modeling Language</td></tr>
+    <tr><td>US</td><td>Unité de Stock (code scanné)</td></tr>
+    <tr><td>WMS</td><td>Warehouse Management System</td></tr>
+  </table>
+</div>
+
+<!-- ========== LISTE DES FIGURES ========== -->
+<div class="list-fig">
+  <h1 class="no-break" style="font-size:16pt;text-align:left;border:none;margin-top:0;">Liste des figures</h1>
+
+  <h3>Chapitre 1</h3>
+  <p>Figure 1.1 — Architecture three-tier de la plateforme Vectorys Inventaire</p>
+  <p>Figure 1.2 — Flux métier principal du cycle d'inventaire Vectorys</p>
+  <p>Figure 1.3 — Cadre Scrum et répartition des rôles dans le projet</p>
+  <p>Figure 1.4 — Frise chronologique des sprints 0 à 9 (version finale)</p>
+
+  <h3>Chapitre 2</h3>
+  <p>Figure 2.1 — Écran de création d'inventaire et import du stock théorique</p>
+  <p>Figure 2.2 — Interface agent : zones, scan en boucle et progression US</p>
+  <p>Figure 2.3 — Dashboard KPI (précision, performance, qualité, clients, WMS)</p>
+  <p>Figure 2.4 — Diagramme de cas d'utilisation détaillé</p>
+
+  <h3>Chapitre 3</h3>
+  <p>Figure 3.1 — Architecture logique three-tier</p>
+  <p>Figure 3.2 — Diagramme de classes global (vue métier)</p>
+  <p>Figure 3.3 — Diagramme de séquence : authentification</p>
+  <p>Figure 3.4 — Interface d'authentification Angular</p>
+  <p>Figure 3.5 — Interface d'authentification Flutter</p>
+  <p>Figure 3.6 — Diagramme de séquence : création d'inventaire et génération C1</p>
+  <p>Figure 3.7 — Formulaire de création / configuration d'inventaire</p>
+  <p>Figure 3.8 — Vue conceptuelle de l'import Excel vers le modèle de données</p>
+  <p>Figure 3.9 — Import du stock théorique et validation CodeAgent</p>
+  <p>Figure 3.10 — Diagramme de séquence : scan, quota et notification</p>
+  <p>Figure 3.11 — Classes concernées par le comptage terrain</p>
+  <p>Figure 3.12 — Emplacements assignés (mobile)</p>
+  <p>Figure 3.13 — Scan en boucle et progression par unité de stock</p>
+  <p>Figure 3.14 — Diagramme de séquence : détection et Branche A</p>
+  <p>Figure 3.15 — Liste des écarts et choix de stratégie</p>
+  <p>Figure 3.16 — Diagramme de séquence : consultation KPI</p>
+  <p>Figure 3.17 — Suivi d'avancement en temps réel</p>
+  <p>Figure 3.18 — Tableau de bord KPI</p>
+
+  <h3>Chapitre 4</h3>
+  <p>Figure 4.1 — Chaîne de développement locale (clients → API → SQL Server)</p>
+  <p>Figure 4.2 — Couches de la solution .NET réalisées</p>
+  <p>Figure 4.3 — Portail web : authentification superviseur</p>
+  <p>Figure 4.4 — Application mobile : authentification agent</p>
+  <p>Figure 4.5 — Création d'inventaire et préparation de l'import</p>
+  <p>Figure 4.6 — Suivi d'avancement temps réel (canal web)</p>
+  <p>Figure 4.7 — Gestion des écarts (branche A)</p>
+  <p>Figure 4.8 — Tableau de bord KPI réalisé</p>
+  <p>Figure 4.9 — Liste des emplacements assignés (mobile)</p>
+  <p>Figure 4.10 — Boucle de scan et progression par US</p>
+  <p>Figure 4.11 — Démarrage du comptage sur un emplacement</p>
+  <p>Figure 4.12 — Progression du scan pendant le passage C1</p>
+  <p>Figure 4.13 — Chaîne de synchronisation offline (Flutter)</p>
+  <p>Figure 4.14 — Enchaînement des sprints de réalisation</p>
+  <p>Figure 4.15 — Topologie de déploiement sur serveur local</p>
+  <p>Figure 4.16 — API publiée sur le serveur local (Swagger)</p>
+  <p>Figure 4.17 — Portail superviseur déployé en local <em>(à compléter)</em></p>
+  <p>Figure 4.18 — Application mobile configurée pour le serveur local <em>(à compléter)</em></p>
+
+  <h3>Chapitre 5</h3>
+  <p>Figure 5.1 — Niveaux de test privilégiés</p>
+  <p>Figure 5.2 — Point d'entrée des tests API : Swagger</p>
+  <p>Figure 5.3 — Jeu de données Excel / rapport d'assignation <em>(à compléter)</em></p>
+  <p>Figure 5.4 — Test d'intégration API (Postman) <em>(à compléter)</em></p>
+  <p>Figure 5.5 — Étape superviseur : création avant import de test</p>
+  <p>Figure 5.6 — Étape agent : liste filtrée des emplacements</p>
+  <p>Figure 5.7 — Étape agent : progression du scan et quotas</p>
+  <p>Figure 5.8 — Vérification BDD après scénario E2E <em>(à compléter)</em></p>
+  <p>Figure 5.9 — Chaîne vérifiée lors des tests offline</p>
+  <p>Figure 5.10 — Contrôle superviseur : suivi d'avancement</p>
+  <p>Figure 5.11 — Contrôle superviseur : écarts détectés</p>
+  <p>Figure 5.12 — Contrôle superviseur : indicateurs KPI</p>
+  <p>Figure 5.13 — Séance de validation / démonstration <em>(optionnel)</em></p>
+</div>
+
+<!-- ========== LISTE DES TABLEAUX ========== -->
+<div class="list-tab">
+  <h1 class="no-break" style="font-size:16pt;text-align:left;border:none;margin-top:0;">Liste des tableaux</h1>
+
+  <h3>Chapitre 1</h3>
+  <p>Tableau 1.1 — Stack technologique de la solution</p>
+  <p>Tableau 1.2 — Découpage des sprints 0 à 9</p>
+
+  <h3>Chapitre 2</h3>
+  <p>Tableau 2.1 — Acteurs du système</p>
+  <p>Tableau 2.2 — Exigences d'authentification (RF-01 à RF-04)</p>
+  <p>Tableau 2.3 — Exigences inventaires et passages</p>
+  <p>Tableau 2.4 — Exigences d'import et d'assignation</p>
+  <p>Tableau 2.5 — Exigences de comptage terrain</p>
+  <p>Tableau 2.6 — Exigences de gestion des écarts</p>
+  <p>Tableau 2.7 — Exigences KPI et temps réel</p>
+  <p>Tableau 2.8 — Exigences non fonctionnelles (RNF)</p>
+  <p>Tableau 2.9 — Catalogue des cas d'utilisation</p>
+  <p>Tableau 2.10 — Backlog produit (user stories par sprint)</p>
+  <p>Tableau 2.11 — Matrice de traçabilité exigences / composants</p>
+
+  <h3>Chapitre 3</h3>
+  <p>Tableau 3.1 — Énumérations du domaine métier</p>
+  <p>Tableau 3.2 — Cas d'utilisation détaillés (authentification … pilotage)</p>
+  <p>Tableau 3.3 — Vue synthétique des endpoints API</p>
+
+  <h3>Chapitre 4</h3>
+  <p>Tableau 4.1 — Environnement de développement et outillage</p>
+  <p>Tableau 4.2 — Migrations EF Core</p>
+  <p>Tableau 4.3 — Endpoints métier et hub SignalR</p>
+  <p>Tableau 4.4 — Livrables techniques par sprint</p>
+  <p>Tableau 4.5 — Architecture de déploiement sur serveur local</p>
+  <p>Tableau 4.6 — Difficultés rencontrées et solutions</p>
+
+  <h3>Chapitre 5</h3>
+  <p>Tableau 5.1 — Niveaux de test et outils</p>
+  <p>Tableau 5.2 — Configuration de l'environnement de test</p>
+  <p>Tableau 5.3 — Jeu de données Excel de référence</p>
+  <p>Tableau 5.4 — Cas de test API (T-API-01 à T-API-13)</p>
+  <p>Tableau 5.5 — Critères d'acceptation du scénario E2E</p>
+  <p>Tableau 5.6 — Cas de test offline</p>
+  <p>Tableau 5.7 — Matrice de couverture des exigences</p>
+  <p>Tableau 5.8 — Vérifications non fonctionnelles</p>
+</div>
+
+<!-- ========== RÉSUMÉ / ABSTRACT CONSOLIDÉS ========== -->
+<h1 class="no-break">Résumé</h1>
+<p>
+Ce projet de fin d'études, réalisé au sein de <strong>VECTORYS Tunisie</strong>, porte sur la conception
+et le développement de <strong>Vectorys Inventaire</strong>, une plateforme d'inventaire logistique
+multi-canal. L'objectif est de digitaliser le cycle complet de l'inventaire physique en entrepôt :
+préparation (création de mission, import du stock théorique depuis Excel, assignation stricte des
+agents), exécution terrain (scan des unités de stock, quotas, clôture automatique des emplacements,
+mode hors ligne), traitement des écarts (détection MANQUANT/SURPLUS, recomptage ciblé) et pilotage
+(suivi temps réel SignalR, tableaux de bord KPI).
+</p>
+<p>
+Sur le plan technique, la solution repose sur une architecture three-tier : une API REST
+<strong>ASP.NET Core 9</strong> (Clean Architecture, CQRS/MediatR, FluentValidation, JWT, Entity Framework
+Core, ClosedXML), une application web <strong>Angular 19</strong> destinée au superviseur, et une
+application mobile <strong>Flutter</strong> pour les agents, adossées à <strong>Microsoft SQL Server</strong>
+et à une base SQLite locale pour la résilience hors connexion. Le projet a été mené selon la
+méthode agile Scrum (sprints 0 à 9). La validation a combiné tests d'intégration API (Swagger,
+Postman), scénarios bout-en-bout import/comptage et contrôles en base de données. Le déploiement
+retenu pour l'exploitation interne est un <strong>serveur local</strong> sur le réseau d'entreprise.
+</p>
+<p class="keywords"><strong>Mots-clés :</strong> inventaire logistique, multi-canal, ASP.NET Core, Angular,
+Flutter, SQL Server, SignalR, Scrum, KPI, entrepôt, hors ligne.</p>
+
+<h2 style="border:none;text-align:center;margin-top:1.8cm;">Abstract</h2>
+<p>
+This graduation project, carried out at <strong>VECTORYS Tunisia</strong>, focuses on the design and
+development of <strong>Vectorys Inventaire</strong>, a multi-channel logistics inventory platform. The
+goal is to digitize the full physical warehouse inventory cycle: preparation (mission creation,
+Excel import of theoretical stock, strict agent assignment), field execution (unit scanning,
+quotas, automatic location closure, offline mode), discrepancy handling (shortage/surplus detection,
+targeted recount), and supervision (real-time SignalR monitoring, KPI dashboards).
+</p>
+<p>
+Technically, the solution follows a three-tier architecture: an <strong>ASP.NET Core 9</strong> REST API
+(Clean Architecture, CQRS/MediatR, FluentValidation, JWT, Entity Framework Core, ClosedXML), an
+<strong>Angular 19</strong> web portal for supervisors, and a <strong>Flutter</strong> mobile application for
+agents, backed by <strong>Microsoft SQL Server</strong> and a local SQLite store for offline resilience.
+The work was organized with Scrum (sprints 0–9). Validation combined API integration tests
+(Swagger, Postman), end-to-end import/counting scenarios, and database checks. The deployment
+model chosen for internal use is a <strong>local on-premises server</strong> on the corporate LAN.
+</p>
+<p class="keywords"><strong>Keywords:</strong> logistics inventory, multi-channel, ASP.NET Core, Angular,
+Flutter, SQL Server, SignalR, Scrum, KPI, warehouse, offline.</p>
+
+<p style="font-size:10.5pt;font-style:italic;margin-top:1.2cm;">
+<em>Note :</em> une version courte du résumé/abstract figure déjà dans le Lot 1 (pages liminaires).
+Le texte ci-dessus constitue la version consolidée, enrichie après la rédaction des chapitres 3 à 5
+(conception, réalisation, tests et déploiement local).
+</p>
+
+<!-- ========== CONCLUSION ========== -->
+<h1>Conclusion générale</h1>
+<p>
+Au terme de ce projet de fin d'études, la problématique posée au chapitre 1 —
+concevoir une plateforme d'inventaire multi-canal fiable, capable de synchroniser le comptage
+terrain et le pilotage superviseur, y compris hors connexion — a trouvé une réponse concrète à
+travers <strong>Vectorys Inventaire</strong>.
+</p>
+<p>
+Le cheminement du rapport a permis de passer d'une analyse métier (acteurs, RF/RNF, cas
+d'utilisation, backlog Scrum) à une conception technique structurée (architecture three-tier,
+modèle de classes, séquences par fonctionnalité), puis à une réalisation multi-canal (API Clean
+Architecture, portail Angular, application Flutter offline) et enfin à une validation par
+scénarios reproductibles. La plateforme couvre désormais le cœur du cycle inventaire VECTORYS :
+import Excel, assignation CodeAgent, scan à quotas, auto-terminaison, sync batch, détection
+d'écarts avec branche A, suivi temps réel et indicateurs KPI.
+</p>
+<p>
+Sur le plan méthodologique, Scrum a favorisé des livraisons incrémentales et une priorisation
+guidée par la valeur terrain. Sur le plan organisationnel, le binôme encadrant professionnel /
+encadrante académique a ancré les choix techniques dans les contraintes réelles de l'entrepôt
+(zones couvertes partiellement, fichiers ERP hétérogènes, besoin de supervision immédiate).
+</p>
+<p>
+Les limites identifiées — couverture encore partielle des tests unitaires automatisés, finalisation
+de certains workflows de clôture/export, captures de déploiement LAN encore à compléter —
+n'effacent pas le résultat principal : une plateforme opérationnelle, documentée et prête à être
+mise en service sur un <strong>serveur local</strong> du réseau VECTORYS.
+</p>
+<p>
+Ce travail a également constitué une expérience professionnelle complète : compréhension d'un
+métier logistique 3PL, conception logicielle en Clean Architecture, développement multi-technologie
+et conduite de tests d'acceptation. Il ouvre naturellement sur les perspectives exposées ci-après.
+</p>
+
+<!-- ========== PERSPECTIVES ========== -->
+<h2 class="section-break">Perspectives</h2>
+<p>
+Plusieurs axes d'évolution se dégagent à l'issue du stage :
+</p>
+<ol>
+  <li><strong>Mise en service sur serveur local.</strong> Publier l'API et le portail sur la machine
+    d'entreprise, configurer CORS/SignalR et générer l'APK avec
+    <span style="font-family:Consolas,monospace;font-size:10pt;">API_BASE_URL</span> pointant vers
+    l'IP du serveur ; compléter alors les figures 4.17 et 4.18.</li>
+  <li><strong>Consolidation des workflows de fin d'inventaire.</strong> Formaliser la clôture
+    inventaire (statut <em>CLOTURE</em>), l'export Excel des résultats et, selon besoin terrain,
+    le recomptage global (branche B).</li>
+  <li><strong>Automatisation des tests.</strong> Enrichir la suite xUnit / Flutter Test autour des
+    handlers critiques (quotas, écarts, import) pour sécuriser les régressions.</li>
+  <li><strong>Enrichissement analytique.</strong> Affiner les KPI WMS/clients (référentiel client,
+    valeur monétaire des écarts, occupation maximale) à partir de données ERP complémentarisées.</li>
+  <li><strong>Expérience terrain.</strong> Intégrer retours opérateurs (ergonomie scan, alertes,
+    impressions de rapports) et éventuellement le mode tablette pour les chefs d'équipe.</li>
+  <li><strong>Industrialisation.</strong> Scripts de publication, secrets hors dépôt, journaling
+    opérationnel et procédure de reprise après incident.</li>
+</ol>
+<p>
+Ces perspectives marquent la transition entre un livrable académique réussi et un produit
+d'exploitation durable au sein de VECTORYS Tunisie.
+</p>
+
+<!-- ========== BIBLIOGRAPHIE ========== -->
+<h1>Bibliographie</h1>
+<div class="biblio">
+
+<p>
+[1] Microsoft, <em>ASP.NET Core documentation</em>, available at:
+https://learn.microsoft.com/aspnet/core/ (consulted 2026).
+</p>
+<p>
+[2] Microsoft, <em>Entity Framework Core documentation</em>, available at:
+https://learn.microsoft.com/ef/core/ (consulted 2026).
+</p>
+<p>
+[3] Microsoft, <em>ASP.NET Core SignalR</em>, available at:
+https://learn.microsoft.com/aspnet/core/signalr/ (consulted 2026).
+</p>
+<p>
+[4] Angular Team, <em>Angular Developers Documentation</em>, available at:
+https://angular.dev/ (consulted 2026).
+</p>
+<p>
+[5] Flutter Team / Google, <em>Flutter documentation</em>, available at:
+https://docs.flutter.dev/ (consulted 2026).
+</p>
+<p>
+[6] OASIS / OpenAPI Initiative, <em>OpenAPI Specification</em>, available at:
+https://swagger.io/specification/ (consulted 2026).
+</p>
+<p>
+[7] Schwaber, K. &amp; Sutherland, J., <em>The Scrum Guide</em>, Scrum.org, latest official
+edition, available at: https://scrumguides.org/ (consulted 2026).
+</p>
+<p>
+[8] Martin, R. C., <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>,
+Prentice Hall, 2017.
+</p>
+<p>
+[9] Fowler, M., <em>Patterns of Enterprise Application Architecture</em>, Addison-Wesley, 2002
+(CQRS / layered design — foundation concepts).
+</p>
+<p>
+[10] Object Management Group, <em>Unified Modeling Language (UML) specification</em>, available at:
+https://www.omg.org/spec/UML/ (consulted 2026).
+</p>
+<p>
+[11] ClosedXML contributors, <em>ClosedXML documentation</em> (Excel for .NET), available at:
+https://closedxml.readthedocs.io/ (consulted 2026).
+</p>
+<p>
+[12] IETF, <em>JSON Web Token (JWT) — RFC 7519</em>, available at:
+https://datatracker.ietf.org/doc/html/rfc7519 (consulted 2026).
+</p>
+<p>
+[13] VECTORYS Tunisie, documentation interne et besoins métier inventaire (notes de stage,
+entretiens encadrant, 2025–2026).
+</p>
+<p>
+[14] TEK-UP, <em>Template et consignes de rédaction du rapport de Projet de Fin d'Études</em>,
+École Supérieure Privée d'Ingénierie et de Technologie, année universitaire 2025–2026.
+</p>
+
+</div>
+
+<p style="margin-top:1.5cm;font-style:italic;text-align:center;">
+— Fin du Lot 5 / pages finales du rapport —
+</p>
+
+</body>
+</html>

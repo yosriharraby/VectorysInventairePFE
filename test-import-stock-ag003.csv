@@ -1,0 +1,7 @@
+CodeEmplacement,DesignationEmplacement,CodeUS,DesignationUS,QteTheorique,CodeAgent
+TEST-A01,Zone test A - Rack 01,US-T001,Carton test 12L,2,AG001
+TEST-A01,Zone test A - Rack 01,US-T002,Bouteille test 1L,1,AG001
+TEST-A02,Zone test A - Rack 02,US-T003,Palette test mixte,2,AG001
+TEST-C01,Zone test C - Rack 01,US-T301,Carton agent 3,2,AG003
+TEST-B01,Zone test B - Rack 01,US-T102,Produit test B,2,AG002
+TEST-C02,Zone test C - Rack 02,US-T303,Produit agent 3,2,AG003

@@ -1,0 +1,242 @@
+﻿<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <img class="brand-logo" src="/brand/vectorys-tunisie-logo.png" alt="Vectorys Tunisie" />
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" routerLink="/dashboard">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item active" routerLink="/inventaires/create">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Inventories</span>
+      </a>
+      <a class="nav-item" routerLink="/monitoring">
+        <mat-icon>groups</mat-icon>
+        <span>Monitoring</span>
+      </a>
+      <a class="nav-item" routerLink="/ecarts">
+        <mat-icon>difference</mat-icon>
+        <span>Écarts</span>
+      </a>
+      <a class="nav-item" routerLink="/kpi">
+        <mat-icon>query_stats</mat-icon>
+        <span>KPI</span>
+      </a>
+      <a class="nav-item" routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <button class="logout" type="button" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span class="crumb">Vectorys Logistics</span>
+        <span class="sep">/</span>
+        <span class="crumb strong">Créer un Inventaire</span>
+      </div>
+
+      <div class="topbar__right">
+        <span class="live">
+          <span class="dot" aria-hidden="true"></span>
+          Live Connected
+        </span>
+        <div class="user">
+          <span class="user__name">{{ user?.nom ?? 'Superviseur' }}</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-title">
+        <h1>Nouvelle Mission d'Audit</h1>
+        <p>Configurez les paramètres de votre prochain inventaire tournant ou annuel pour le dépôt de Tunis.</p>
+      </div>
+
+      <mat-card class="card" appearance="outlined">
+        <div class="card-head">
+          <div class="card-head__icon">
+            <mat-icon>tune</mat-icon>
+          </div>
+          <div>
+            <div class="card-head__title">Configuration de l'Inventaire</div>
+            <div class="card-head__sub">Tous les champs marqués d'un * sont obligatoires</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section__title">
+            <span class="bar"></span>
+            Informations Générales
+          </div>
+          <div class="section__desc">Définissez le contexte et le lieu de l'inventaire.</div>
+
+          <form class="grid" [formGroup]="infoForm">
+            <div class="field">
+              <label>Nom de l'Inventaire <span class="req">*</span></label>
+              <mat-form-field appearance="outline">
+                <mat-icon matPrefix>assignment</mat-icon>
+                <input matInput placeholder="Ex: Audit Mensuel - Zone A" formControlName="intitule" />
+              </mat-form-field>
+            </div>
+
+            <div class="field">
+              <label>Date Prévue <span class="req">*</span></label>
+              <mat-form-field appearance="outline">
+                <mat-icon matPrefix>event</mat-icon>
+                <input matInput type="date" formControlName="dateDebut" aria-label="Date prévue" />
+              </mat-form-field>
+            </div>
+
+            <div class="field">
+              <label>Entrepôt / Site <span class="req">*</span></label>
+              <mat-form-field appearance="outline">
+                <mat-icon matPrefix>warehouse</mat-icon>
+                <input matInput value="Vectorys Tunis - Radès" disabled aria-label="Entrepôt / Site" />
+              </mat-form-field>
+            </div>
+
+            <div class="field">
+              <label>Type de Passage</label>
+              <div class="radio-row">
+                <mat-radio-group formControlName="typePassage" class="radios">
+                  <mat-radio-button value="C1">C1 (Premier passage)</mat-radio-button>
+                  <mat-radio-button value="C2">C2 (Second passage)</mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="section">
+          <div class="section__title">
+            <span class="bar"></span>
+            Équipe et Ressources
+          </div>
+          <div class="section__desc">Attribuez cette mission aux agents qualifiés.</div>
+
+          <div class="field">
+            <label>Sélectionner les Agents affectés <span class="req">*</span></label>
+            <div class="chips">
+              @for (agent of selectedAgents; track agent.id) {
+                <span class="chip">
+                  <span class="dot-user" aria-hidden="true"></span>
+                  {{ agentDisplayName(agent) }}
+                  <button
+                    type="button"
+                    class="x"
+                    [attr.aria-label]="'Retirer ' + agentDisplayName(agent)"
+                    (click)="removeAgent(agent)">
+                    ×
+                  </button>
+                </span>
+              }
+              <button
+                type="button"
+                class="chip add"
+                [matMenuTriggerFor]="agentMenu"
+                [disabled]="unselectedAgents.length === 0">
+                Ajouter un agent…
+              </button>
+              <mat-menu #agentMenu="matMenu">
+                @for (agent of unselectedAgents; track agent.id) {
+                  <button mat-menu-item type="button" (click)="addAgent(agent)">
+                    <span>{{ agentDisplayName(agent) }}</span>
+                    <span class="menu-code">{{ agent.codePersonnel }}</span>
+                  </button>
+                }
+              </mat-menu>
+            </div>
+            @if (agentsSelectionError) {
+              <div class="error inline">{{ agentsSelectionError }}</div>
+            }
+            @if (agentsError) {
+              <div class="error inline">{{ agentsError }}</div>
+            }
+            <div class="note">
+              <mat-icon>info</mat-icon>
+              <span>Note : Les agents recevront une notification sur leur application mobile dès la validation de cet inventaire.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section__title">
+            <span class="bar"></span>
+            Importation de Données
+          </div>
+          <div class="section__desc">Chargez la liste des unités logistiques à vérifier.</div>
+
+          <div class="field">
+            <label>Liste de Stock Théorique (Excel)</label>
+
+            <div
+              class="dropzone"
+              (dragover)="$event.preventDefault()"
+              (drop)="$event.preventDefault(); onFileDropped(($event.dataTransfer?.files?.item(0)) ?? null)">
+              <div class="drop-icon">
+                <mat-icon>upload_file</mat-icon>
+              </div>
+              <div class="drop-text">
+                <div class="drop-title">Cliquer pour télécharger ou glisser-déposer</div>
+                <div class="drop-sub">Formats acceptés : .XLSX, .CSV (Max. 10MB)</div>
+                @if (fileName) {
+                  <div class="drop-file">{{ fileName }}</div>
+                }
+              </div>
+
+              <input
+                #fileInput
+                type="file"
+                accept=".xlsx,.xls,.csv"
+                class="file-input"
+                aria-label="Fichier Excel"
+                (change)="onFileSelected($event)" />
+              <button type="button" class="drop-click" title="Sélectionner un fichier" aria-label="Sélectionner un fichier" (click)="fileInput.click()"></button>
+            </div>
+
+            <div class="mini-hint">
+              Colonnes attendues : CodeEmplacement, DesignationEmplacement, CodeUS, DesignationUS, QteTheorique, <strong>CodeAgent</strong> (obligatoire — l'assignation agent → emplacement provient du fichier Excel).
+            </div>
+            <div class="note">
+              <mat-icon>info</mat-icon>
+              <span>Chaque emplacement doit avoir un CodeAgent valide dans le fichier. Les agents sélectionnés ci-dessus servent uniquement de référence pour la mission.</span>
+            </div>
+
+            @if (fileError) {
+              <div class="error">{{ fileError }}</div>
+            }
+          </div>
+        </div>
+
+        @if (error) {
+          <div class="error global">{{ error }}</div>
+        }
+
+        <div class="actions">
+          <button mat-button type="button" (click)="cancel()" [disabled]="submitting">Annuler</button>
+          <button mat-flat-button color="primary" type="button" (click)="submitWizard()" [disabled]="submitting">
+            <mat-icon>play_arrow</mat-icon>
+            {{ submitting ? 'Traitement…' : "Initialiser l'Inventaire" }}
+          </button>
+        </div>
+      </mat-card>
+
+      <div class="help">
+        Besoin d'aide ? Consultez le guide d'utilisation ou contactez le support Vectorys.
+      </div>
+    </main>
+  </div>
+</div>
+

@@ -1,0 +1,105 @@
+<div class="login-shell">
+  <header class="topbar">
+    <div class="topbar__left">
+      <span class="secure-badge">
+        <mat-icon aria-hidden="true">shield</mat-icon>
+        ACCÈS SÉCURISÉ
+      </span>
+    </div>
+    <a class="topbar__right" href="#" (click)="$event.preventDefault()">
+      <mat-icon aria-hidden="true">support_agent</mat-icon>
+      Support Technique
+    </a>
+  </header>
+
+  <main class="content">
+    <section class="hero">
+      <img class="logo" src="/brand/vectorys-tunisie-logo.png" alt="Vectorys Tunisie" />
+      <h1 class="title">Portail Superviseur</h1>
+      <p class="subtitle">Accédez à votre tableau de bord de gestion logistique</p>
+    </section>
+
+    <mat-card class="auth-card" appearance="outlined">
+      <mat-card-content>
+        <div class="card-header">
+          <h2 class="card-title">Authentification</h2>
+          <p class="card-desc">
+            Veuillez saisir vos identifiants pour accéder aux outils de supervision.
+          </p>
+        </div>
+
+        @if (errorMessage) {
+          <div class="error" role="alert">
+            <mat-icon aria-hidden="true">error</mat-icon>
+            {{ errorMessage }}
+          </div>
+        }
+
+        <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+          <label class="field-label" for="email">Adresse E-mail Professionnelle</label>
+          <mat-form-field class="field" appearance="outline">
+            <mat-icon matPrefix aria-hidden="true">mail</mat-icon>
+            <input
+              matInput
+              id="email"
+              type="email"
+              formControlName="email"
+              autocomplete="username"
+              placeholder="superviseur@vectorys.com" />
+          </mat-form-field>
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <div class="field-error">Email invalide</div>
+          }
+
+          <div class="row-between">
+            <label class="field-label" for="password">Mot de Passe</label>
+            <a class="forgot-link" href="#" (click)="$event.preventDefault()">Mot de passe oublié ?</a>
+          </div>
+          <mat-form-field class="field" appearance="outline">
+            <mat-icon matPrefix aria-hidden="true">lock</mat-icon>
+            <input
+              matInput
+              id="password"
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              autocomplete="current-password" />
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              [attr.aria-label]="hidePassword ? 'Afficher le mot de passe' : 'Masquer le mot de passe'"
+              title="Afficher ou masquer le mot de passe"
+              (click)="hidePassword = !hidePassword">
+              <mat-icon aria-hidden="true">{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <div class="field-error">Mot de passe requis</div>
+          }
+
+          <mat-checkbox class="remember" formControlName="rememberMe">
+            Rester connecté sur cet appareil
+          </mat-checkbox>
+
+          <button class="submit" mat-raised-button color="primary" type="submit" [disabled]="loading">
+            {{ loading ? 'Connexion…' : 'Se connecter en tant que Superviseur' }}
+          </button>
+
+          <div class="legal-note">
+            L'utilisation de ce système est réservée au personnel autorisé.<br />
+            Toutes les connexions sont enregistrées et surveillées pour des raisons de sécurité.
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="#" (click)="$event.preventDefault()">Politique de Confidentialité</a>
+        <a href="#" (click)="$event.preventDefault()">Conditions d'Utilisation</a>
+        <span>© 2026 Vectorys Logistics</span>
+      </div>
+      <div class="footer-tagline">• EXCELLENCE EN LOGISTIQUE GLOBALE •</div>
+    </footer>
+  </main>
+</div>

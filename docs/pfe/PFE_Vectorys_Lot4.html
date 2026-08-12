@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>PFE Vectorys — Lot 4 — Chapitre 5 Tests et validation</title>
+  <style>
+    @page { size: A4; margin: 2.2cm 2cm; }
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt; line-height: 1.5; color: #111;
+      max-width: 17cm; margin: 0 auto; padding: 0.8cm;
+    }
+    h1 { font-size: 18pt; text-align: center; margin-top: 1.5cm; page-break-before: always; }
+    h1.no-break { page-break-before: avoid; margin-top: 0.4cm; }
+    h2 { font-size: 15pt; margin-top: 1.1em; border-bottom: 1px solid #ccc; padding-bottom: 0.15em; page-break-after: avoid; }
+    h3 { font-size: 13pt; margin-top: 0.9em; page-break-after: avoid; }
+    h4 { font-size: 12pt; margin-top: 0.7em; font-style: italic; page-break-after: avoid; }
+    p { text-align: justify; margin: 0.5em 0; }
+    ul, ol { margin: 0.35em 0 0.6em 1.2em; }
+    li { margin-bottom: 0.22em; text-align: justify; }
+    .cover { text-align: center; page-break-after: always; padding-top: 0.5cm; }
+    .cover-logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2cm; padding: 0 0.5cm; }
+    .cover-logos img { max-height: 65px; max-width: 160px; }
+    .cover .title { font-size: 15pt; font-weight: bold; margin: 1.2cm 0; line-height: 1.4; }
+    .cover .meta { font-size: 11pt; line-height: 1.9; }
+    .toc { page-break-after: always; }
+    .toc p { margin: 0.3em 0; font-size: 11.5pt; }
+    .chapter-intro { font-style: italic; margin-bottom: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 0.7em 0; font-size: 10.5pt; }
+    th, td { border: 1px solid #333; padding: 5px 7px; text-align: left; vertical-align: top; }
+    th { background: #f0f0f0; }
+    figure { margin: 0.9em 0; text-align: center; page-break-inside: avoid; }
+    figcaption { font-size: 10pt; font-style: italic; margin-top: 0.35em; color: #333; }
+    .figure-box svg { max-width: 100%; height: auto; border: 1px solid #ddd; }
+    .placeholder {
+      border: 2px dashed #888; background: #f9f9f9; padding: 1cm 0.7cm;
+      margin: 0.7em 0; text-align: center; color: #555; font-size: 10.5pt;
+      page-break-inside: avoid;
+    }
+    .note-box {
+      border: 1px solid #999; background: #fafafa; padding: 0.55em 0.75em;
+      margin: 0.7em 0; font-size: 11pt; page-break-inside: avoid;
+    }
+    .ok { color: #1b5e20; font-weight: bold; }
+    .section-break { page-break-before: always; }
+    figure img.screenshot { max-width: 100%; height: auto; border: 1px solid #ccc; }
+    figure img.screenshot-mobile { max-width: 48%; display: block; margin: 0.4em auto; border: 1px solid #ccc; }
+    .figure-multi img { margin-bottom: 0.5em; display: block; }
+    code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 10pt; }
+  </style>
+</head>
+<body>
+
+<!-- PAGE DE GARDE LOT 4 -->
+<div class="cover">
+  <div class="cover-logos">
+    <img src="assets/tek-up-logo.svg" alt="Logo TEK-UP" />
+    <img src="assets/vectorys-logo.png" alt="Logo VECTORYS" />
+  </div>
+  <p><strong>République Tunisienne</strong><br />
+  Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br />
+  École Supérieure Privée d'Ingénierie et de Technologie — TEK-UP</p>
+  <p class="title">Conception et développement d'une plateforme<br />d'inventaire logistique multi-canal</p>
+  <p class="meta">
+    Rapport de Projet de Fin d'Études — Lot 4<br />
+    Chapitre 5 — Tests et validation<br /><br />
+    Réalisé par : <strong>Harrabi Yosri</strong><br />
+    Spécialité : Génie Logiciel et Systèmes d'Information<br />
+    Encadrant professionnel : M. Ferchichi Marwen — VECTORYS Tunisie<br />
+    Encadrante académique : Mme Zrelli Siwar — TEK-UP<br />
+    Année universitaire 2025 — 2026
+  </p>
+</div>
+
+<div class="toc">
+  <h2 style="border:none;">Table des matières — Lot 4</h2>
+  <p>Chapitre 5 — Tests et validation</p>
+  <p>&nbsp;&nbsp;5.1 Stratégie et niveaux de test</p>
+  <p>&nbsp;&nbsp;5.2 Environnement et jeux de données</p>
+  <p>&nbsp;&nbsp;5.3 Tests d'API (Swagger et Postman)</p>
+  <p>&nbsp;&nbsp;5.4 Scénario bout-en-bout : import et comptage</p>
+  <p>&nbsp;&nbsp;5.5 Tests mobile, offline et supervision</p>
+  <p>&nbsp;&nbsp;5.6 Matrice de couverture des exigences</p>
+  <p>&nbsp;&nbsp;5.7 Tests non fonctionnels</p>
+  <p>&nbsp;&nbsp;5.8 Synthèse des résultats et limites</p>
+  <p>&nbsp;&nbsp;Conclusion du chapitre</p>
+</div>
+
+<h1 class="no-break">Chapitre 5 — Tests et validation</h1>
+
+<p class="chapter-intro">
+Ce chapitre présente la démarche de vérification de Vectorys Inventaire. Après la réalisation
+technique (chapitre 4), il s'agit de démontrer que les fonctionnalités critiques — authentification,
+import Excel, comptage avec quotas, synchronisation hors ligne, détection d'écarts et consultation
+KPI — se comportent conformément aux exigences du chapitre 2. La stratégie privilégie des scénarios
+reproductibles, des jeux de données contrôlés et une validation multi-canal (API, web, mobile).
+</p>
+
+<h2>Introduction</h2>
+<p>
+Dans un contexte logistique, une erreur de comptage ou d'assignation a un coût métier immédiat.
+Les tests ne se limitent donc pas à « l'API répond 200 » : ils vérifient les transitions de statut
+(<em>EN_ATTENTE</em> → <em>EN_COURS</em> → <em>TERMINE</em>), le respect des quotas US, l'isolation
+des emplacements par agent et la cohérence des données en base SQL Server.
+</p>
+<p>
+La campagne de validation s'appuie principalement sur des tests d'intégration et bout-en-bout
+manuels, assistés par Swagger, Postman, SSMS et un guide opérationnel
+(<span class="mono">scripts/GUIDE-TEST-IMPORT.txt</span>). Ces approches sont complétées par la
+documentation OpenAPI et, côté Flutter, une base de tests unitaires destinée à être enrichie.
+</p>
+
+<!-- ========== 5.1 ========== -->
+<h2>5.1 Stratégie et niveaux de test</h2>
+<p>
+La pyramide de tests adoptée pour le projet est volontairement pragmatique : fort accent sur les
+scénarios métier traversant plusieurs couches, faute d'une suite unitaire exhaustive à ce stade
+du stage.
+</p>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 150" width="400" font-family="Times New Roman">
+  <polygon points="210,15 320,55 100,55" fill="#e8f5e9" stroke="#2e7d32"/>
+  <text x="210" y="42" text-anchor="middle" font-size="10">E2E métier (web + mobile + BDD)</text>
+  <polygon points="120,60 300,60 345,100 75,100" fill="#fff3e0" stroke="#ef6c00"/>
+  <text x="210" y="85" text-anchor="middle" font-size="10">Intégration API (Postman / Swagger)</text>
+  <polygon points="80,105 340,105 380,140 40,140" fill="#e3f2fd" stroke="#1565c0"/>
+  <text x="210" y="128" text-anchor="middle" font-size="10">Unitaire (handlers, widgets) — consolidation</text>
+</svg>
+<figcaption>Figure 5.1 — Niveaux de test privilégiés sur Vectorys Inventaire</figcaption>
+</figure>
+
+<table>
+  <tr><th>Niveau</th><th>Objectif</th><th>Outils / méthodes</th></tr>
+  <tr>
+    <td>Unitaire</td>
+    <td>Isoler une règle (validation, calcul de quota)</td>
+    <td>xUnit / Flutter test (enrichissement progressif)</td>
+  </tr>
+  <tr>
+    <td>Intégration API</td>
+    <td>Vérifier endpoints, JWT, codes HTTP, payloads</td>
+    <td>Swagger, Postman, Serilog</td>
+  </tr>
+  <tr>
+    <td>Bout-en-bout (E2E)</td>
+    <td>Parcourir le cycle inventaire réel</td>
+    <td>Angular + Flutter + SQL Server + guide import</td>
+  </tr>
+  <tr>
+    <td>Non fonctionnel</td>
+    <td>Sécurité des rôles, volume d'import, offline</td>
+    <td>Tests manuels ciblés, observations terrain</td>
+  </tr>
+  <tr>
+    <td>Recette</td>
+    <td>Valider avec l'encadrant professionnel</td>
+    <td>Démonstration scénario C1 / écarts / KPI</td>
+  </tr>
+</table>
+
+<p>
+Chaque scénario formalise : préconditions, étapes, résultat attendu et critère de succès. Les
+anomalies détectées sont corrigées avant de basculer vers le sprint suivant (définition de « Done »
+Scrum).
+</p>
+
+<!-- ========== 5.2 ========== -->
+<h2 class="section-break">5.2 Environnement et jeux de données</h2>
+
+<h3>5.2.1 Environnement de test</h3>
+<table>
+  <tr><th>Élément</th><th>Configuration</th></tr>
+  <tr><td>API</td><td><span class="mono">http://localhost:5000</span> (profil Development, Swagger actif)</td></tr>
+  <tr><td>Base de données</td><td>SQL Server Express <span class="mono">YOSRI\SQLEXPRESS</span>, base <span class="mono">VectorysDB</span></td></tr>
+  <tr><td>Portail web</td><td><span class="mono">http://localhost:4200</span></td></tr>
+  <tr><td>Mobile</td><td>Émulateur Android et/ou appareil physique (URL API adaptée)</td></tr>
+  <tr><td>Comptes seed</td><td>superviseur@vectorys.local / agents AG001, AG002…</td></tr>
+</table>
+
+<figure class="figure-multi">
+  <img class="screenshot" src="assets/fig4-16a-swagger-api.png" alt="Swagger" />
+  <figcaption>Figure 5.2 — Point d'entrée des tests API : interface Swagger</figcaption>
+</figure>
+
+<h3>5.2.2 Jeu de données Excel de référence</h3>
+<p>
+Un fichier reproductible (<span class="mono">scripts/test-import-stock.xlsx</span>), généré par un
+petit outil .NET, structure un inventaire de démonstration :
+</p>
+<table>
+  <tr><th>Emplacement</th><th>Agent</th><th>Contenu US (quantités)</th><th>Scans pour TERMINE</th></tr>
+  <tr><td>TEST-A01</td><td>AG001</td><td>US-T001 ×2 ; US-T002 ×1</td><td>3</td></tr>
+  <tr><td>TEST-A02</td><td>AG001</td><td>US-T003 ×2</td><td>2</td></tr>
+  <tr><td>TEST-B01</td><td>AG002</td><td>US-T101 ×1 ; US-T102 ×2</td><td>3</td></tr>
+  <tr><td>TEST-B02</td><td>AG002</td><td>US-T201 ×1</td><td>1</td></tr>
+</table>
+<p>
+Résultat d'import attendu : 4 emplacements, 6 lignes de stock théorique, répartition
+<span class="mono">{"AG001": 2, "AG002": 2}</span>. Ce jeu permet de tester à la fois l'assignation
+stricte et l'auto-terminaison.
+</p>
+
+<div class="placeholder">
+  <strong>[Insérer ici une capture du fichier Excel de test ou du rapport d'import]</strong><br />
+  Figure 5.3 — Jeu de données Excel et/ou rapport d'assignation
+</div>
+
+<!-- ========== 5.3 ========== -->
+<h2 class="section-break">5.3 Tests d'API (Swagger et Postman)</h2>
+<p>
+Les tests d'intégration API valident le contrat HTTP indépendamment de l'interface graphique.
+La procédure type est la suivante.
+</p>
+
+<ol>
+  <li>Obtenir un JWT superviseur via <span class="mono">POST /api/auth/login</span>
+    (email + mot de passe).</li>
+  <li>Créer un inventaire (<span class="mono">POST /api/inventaires</span>) et noter
+    <span class="mono">inventaireId</span> / <span class="mono">passageC1Id</span>.</li>
+  <li>Importer le stock
+    (<span class="mono">POST /api/passages/{id}/import-stock</span>, multipart).</li>
+  <li>Vérifier <span class="mono">GET /api/emplacements?passageId=…</span>.</li>
+  <li>Obtenir un JWT agent (code personnel) et appeler
+    <span class="mono">GET /api/emplacements/mes-emplacements</span>.</li>
+  <li>Enregistrer des scans (<span class="mono">POST /api/scans</span>) jusqu'à
+    <em>TERMINE</em>.</li>
+  <li>Déclencher <span class="mono">POST /api/ecarts/detecter/{inventaireId}</span> puis consulter
+    la liste.</li>
+  <li>Interroger <span class="mono">GET /api/kpi/dashboard</span> avec filtre inventaire.</li>
+</ol>
+
+<table>
+  <tr><th>ID</th><th>Cas de test API</th><th>Attendu</th><th>Résultat</th></tr>
+  <tr><td>T-API-01</td><td>Login superviseur valide</td><td>200 + token JWT</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-02</td><td>Login agent code invalide</td><td>401</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-03</td><td>GET inventaires sans token</td><td>401</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-04</td><td>Agent appelle endpoint superviseur</td><td>403</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-05</td><td>Création inventaire + C1 auto</td><td>201 + passage C1</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-06</td><td>Import Excel conforme</td><td>emplacements + stocks créés</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-07</td><td>Import CodeAgent manquant / inconnu</td><td>rejet / message explicite</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-08</td><td>Scan jusqu'au quota</td><td>statut TERMINE</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-09</td><td>Scan au-delà du quota</td><td>erreur métier</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-10</td><td>Batch offline (doublons)</td><td>idempotence / compteurs sync</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-11</td><td>Détection écarts après C1</td><td>MANQUANT / SURPLUS selon cas</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-12</td><td>Branche A</td><td>passage C2 ciblé + écarts traités</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-13</td><td>KPI dashboard</td><td>DTO agrégé cohérent</td><td class="ok">OK</td></tr>
+</table>
+
+<div class="placeholder">
+  <strong>[Insérer ici une capture Postman : login + réponse JWT, ou collection]</strong><br />
+  Figure 5.4 — Exemple de test d'intégration API (Postman)
+</div>
+
+<!-- ========== 5.4 ========== -->
+<h2 class="section-break">5.4 Scénario bout-en-bout : import et comptage</h2>
+<p>
+Le scénario nominal de recette reprend le guide d'import/scan. Il constitue le test E2E principal
+du projet.
+</p>
+
+<div class="note-box">
+  <strong>Objectif.</strong> Vérifier qu'un inventaire créé côté superviseur peut être compté
+  correctement par deux agents distincts, avec auto-terminaison et isolation des tâches.
+</div>
+
+<h3>5.4.1 Procédure</h3>
+<ol>
+  <li><strong>Démarrer l'API</strong> et contrôler Swagger
+    (<span class="mono">http://localhost:5000/swagger</span>).</li>
+  <li><strong>Superviseur</strong> : se connecter, créer un inventaire, importer
+    <span class="mono">test-import-stock.xlsx</span>.</li>
+  <li><strong>Contrôle SQL</strong> : les emplacements TEST-* sont associés aux bons
+    <span class="mono">CodePersonnel</span>.</li>
+  <li><strong>Agent AG001</strong> : ne voit que TEST-A01 et TEST-A02 ; scanne TEST-A01 jusqu'à
+    TERMINE (US-T001×2 puis US-T002×1) ; un scan supplémentaire est refusé.</li>
+  <li><strong>Agent AG002</strong> : ne voit que TEST-B* ; termine TEST-B01 et TEST-B02 selon quotas.</li>
+  <li><strong>Contrôle SQL final</strong> : statut TERMINE et nombre de scans cohérents avec les
+    quantités théoriques.</li>
+</ol>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-7-create-inventaire.png" alt="Création inventaire test" />
+  <figcaption>Figure 5.5 — Étape superviseur : création / configuration avant import de test</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-12-emplacements.png" alt="Emplacements agent" />
+  <figcaption>Figure 5.6 — Étape agent : liste filtrée des emplacements assignés</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-13-scan-loop.png" alt="Scan loop test" />
+  <figcaption>Figure 5.7 — Étape agent : progression du scan et quotas</figcaption>
+</figure>
+
+<h3>5.4.2 Résultats attendus (critères d'acceptation)</h3>
+<table>
+  <tr><th>Critère</th><th>Mesure</th><th>Statut</th></tr>
+  <tr><td>Import complet</td><td>4 emplacements / 6 stocks / 2+2 assignations</td><td class="ok">Validé</td></tr>
+  <tr><td>Isolation AG001 / AG002</td><td>Aucun emplacement croisé visible</td><td class="ok">Validé</td></tr>
+  <tr><td>Auto-terminaison</td><td>TERMINE sans bouton « fin manuelle »</td><td class="ok">Validé</td></tr>
+  <tr><td>Quota strict</td><td>Message d'erreur sur sur-scan</td><td class="ok">Validé</td></tr>
+  <tr><td>Persistance</td><td>Cohérence SSMS (scans vs QteTheorique)</td><td class="ok">Validé</td></tr>
+</table>
+
+<div class="placeholder">
+  <strong>[Insérer ici une capture SSMS du SELECT de vérification post-scan]</strong><br />
+  Figure 5.8 — Vérification base de données après scénario E2E
+</div>
+
+<!-- ========== 5.5 ========== -->
+<h2 class="section-break">5.5 Tests mobile, offline et supervision</h2>
+
+<h3>5.5.1 Mode hors ligne</h3>
+<p>
+Le test offline simule une coupure réseau pendant la boucle de scan :
+</p>
+<ol>
+  <li>Activer le mode avion (ou couper le Wi‑Fi) après ouverture d'un emplacement.</li>
+  <li>Scanner plusieurs US : les enregistrements doivent rester en file SQLite locale.</li>
+  <li>Rétablir le réseau : synchronisation automatique ou manuelle via
+    <span class="mono">POST /api/scans/batch</span>.</li>
+  <li>Vérifier l'absence de doublons côté serveur et la mise à jour des statuts d'emplacement.</li>
+</ol>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 100" width="460" font-family="Times New Roman">
+  <rect x="10" y="25" width="90" height="50" fill="#fff" stroke="#000"/><text x="55" y="55" text-anchor="middle" font-size="10">Scan offline</text>
+  <line x1="100" y1="50" x2="130" y2="50" stroke="#000"/>
+  <rect x="130" y="25" width="90" height="50" fill="#fff" stroke="#000"/><text x="175" y="55" text-anchor="middle" font-size="10">SQLite</text>
+  <line x1="220" y1="50" x2="250" y2="50" stroke="#000"/>
+  <rect x="250" y="25" width="100" height="50" fill="#fff" stroke="#000"/><text x="300" y="55" text-anchor="middle" font-size="10">sync batch</text>
+  <line x1="350" y1="50" x2="380" y2="50" stroke="#000"/>
+  <rect x="380" y="25" width="90" height="50" fill="#fff" stroke="#000"/><text x="425" y="55" text-anchor="middle" font-size="10">API/SQL</text>
+</svg>
+<figcaption>Figure 5.9 — Chaîne vérifiée lors des tests offline</figcaption>
+</figure>
+
+<table>
+  <tr><th>ID</th><th>Cas offline</th><th>Attendu</th><th>Résultat</th></tr>
+  <tr><td>T-OFF-01</td><td>Scan sans réseau</td><td>Pas d'erreur bloquante ; file locale</td><td class="ok">OK</td></tr>
+  <tr><td>T-OFF-02</td><td>Retour réseau</td><td>Sync réussie ; bannière à jour</td><td class="ok">OK</td></tr>
+  <tr><td>T-OFF-03</td><td>Re-sync accidentelle</td><td>Pas de double comptage serveur</td><td class="ok">OK</td></tr>
+</table>
+
+<h3>5.5.2 Supervision et KPI</h3>
+<p>
+Côté web, la validation porte sur :
+</p>
+<ul>
+  <li>le suivi temps réel (SignalR / endpoint de suivi) pendant les scans agents ;</li>
+  <li>la détection d'écarts après terminaison C1 et le déclenchement de la branche A ;</li>
+  <li>l'affichage du dashboard KPI (précision, performance, qualité, WMS) pour l'inventaire de test.</li>
+</ul>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-17-monitoring.png" alt="Monitoring test" />
+  <figcaption>Figure 5.10 — Contrôle superviseur : suivi d'avancement</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-15-ecarts.png" alt="Écarts test" />
+  <figcaption>Figure 5.11 — Contrôle superviseur : écarts détectés</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-18-kpi.png" alt="KPI test" />
+  <figcaption>Figure 5.12 — Contrôle superviseur : indicateurs KPI</figcaption>
+</figure>
+
+<!-- ========== 5.6 ========== -->
+<h2 class="section-break">5.6 Matrice de couverture des exigences</h2>
+<p>
+Le tableau suivant relie les familles d'exigences fonctionnelles (chapitre 2) aux scénarios de
+test exécutés.
+</p>
+
+<table>
+  <tr><th>Exigences (famille)</th><th>Scénarios / tests</th><th>Couverture</th></tr>
+  <tr><td>RF-01 … RF-04 Authentification</td><td>T-API-01 à T-API-04 ; login web/mobile</td><td class="ok">Couvert</td></tr>
+  <tr><td>RF-05 … RF-09 Inventaires / passages</td><td>T-API-05 ; Fig. 5.5</td><td class="ok">Couvert</td></tr>
+  <tr><td>RF-10 … RF-14 Import / assignation</td><td>T-API-06/07 ; guide Excel ; E2E §5.4</td><td class="ok">Couvert</td></tr>
+  <tr><td>RF-15 … RF-20 Comptage terrain</td><td>T-API-08/09 ; Fig. 5.6–5.7 ; E2E</td><td class="ok">Couvert</td></tr>
+  <tr><td>Offline / sync</td><td>T-OFF-01 à T-OFF-03 ; T-API-10</td><td class="ok">Couvert</td></tr>
+  <tr><td>RF-21 … RF-24 Écarts</td><td>T-API-11/12 ; Fig. 5.11</td><td class="ok">Couvert (Branche A)</td></tr>
+  <tr><td>RF-25 … RF-27 KPI / temps réel</td><td>T-API-13 ; Fig. 5.10 / 5.12</td><td class="ok">Couvert</td></tr>
+</table>
+
+<p>
+Cette matrice confirme que le périmètre prioritaire du backlog a fait l'objet d'une validation
+explicite. Les extensions (clôture inventaire formalisée, export Excel final, branche B globale)
+continuent d'être éprouvées lors des itérations de consolidation et du déploiement local.
+</p>
+
+<!-- ========== 5.7 ========== -->
+<h2>5.7 Tests non fonctionnels</h2>
+<table>
+  <tr><th>Critère (RNF)</th><th>Vérification réalisée</th><th>Observation</th></tr>
+  <tr>
+    <td>Sécurité / rôles</td>
+    <td>Accès refusés sans JWT ou hors policy</td>
+    <td>Policies SuperviseurOnly / AgentOnly effectives</td>
+  </tr>
+  <tr>
+    <td>Confidentialité tokens</td>
+    <td>TTL 8 h agent / 24 h superviseur</td>
+    <td>Conforme conception</td>
+  </tr>
+  <tr>
+    <td>Robustesse import</td>
+    <td>Fichier volumineux limité (50 Mo), validation colonnes</td>
+    <td>Rejets explicites</td>
+  </tr>
+  <tr>
+    <td>Disponibilité offline</td>
+    <td>Scans en file locale puis sync</td>
+    <td>Fonctionnel sur parcours testé</td>
+  </tr>
+  <tr>
+    <td>Temps réel</td>
+    <td>Notifications hub pendant scan</td>
+    <td>Suivi utilisable en démo</td>
+  </tr>
+  <tr>
+    <td>Maintenabilité API</td>
+    <td>Swagger + messages d'erreur middleware</td>
+    <td>Facilite le diagnostic</td>
+  </tr>
+</table>
+
+<p>
+Des tests de charge massifs (milliers d'emplacements simultanés) n'entrent pas dans le périmètre
+du stage ; en revanche, les index KPI (sprint 7) et le batch de sync préparatoire ont été
+conçus pour limiter les risques de saturation lors d'un inventaire réel.
+</p>
+
+<!-- ========== 5.8 ========== -->
+<h2 class="section-break">5.8 Synthèse des résultats et limites</h2>
+
+<h3>5.8.1 Bilan</h3>
+<ul>
+  <li>Le <strong>chemin critique C1</strong> (création → import → scan → TERMINE → contrôle BDD)
+    est validé de bout en bout.</li>
+  <li>La <strong>séparation des rôles</strong> et l'<strong>assignation par CodeAgent</strong>
+    sont stables.</li>
+  <li>Le <strong>mode offline</strong> et les <strong>KPI de base</strong> répondent aux besoins
+    de démonstration et de pilotage.</li>
+  <li>La <strong>branche A</strong> (recomptage ciblé) a été vérifiée via API et interface écarts.</li>
+</ul>
+
+<h3>5.8.2 Limites assumées</h3>
+<ul>
+  <li>La couverture de tests <em>automatisés</em> unitaires reste partielle : la valeur immédiate
+    a été placée sur les scénarios d'intégration et E2E, plus représentatifs du métier terrain.</li>
+  <li>Les figures de déploiement LAN (portail et APK pointant vers l'IP serveur) seront
+    consolidées lors de la mise en service locale (cf. placeholders 4.17 et 4.18).</li>
+  <li>Certains indicateurs KPI restent partiels faute de données métier riches (valeur monétaire,
+    occupation WMS maximale, etc.).</li>
+</ul>
+
+<div class="note-box">
+  Ces limites n'invalident pas la recette du cœur fonctionnel : elles orientent plutôt les
+  travaux post-rapport (automatisation, durcissement S6/S8, déploiement serveur local S9).
+</div>
+
+<div class="placeholder">
+  <strong>[Insérer ici une capture de démonstration / recette avec l'encadrant (optionnel)]</strong><br />
+  Figure 5.13 — Séance de validation / démonstration
+</div>
+
+<h2>Conclusion</h2>
+<p>
+Ce chapitre a formalisé la stratégie de test de Vectorys Inventaire : environnement contrôlé,
+jeux de données Excel reproductibles, batterie de cas API, scénario E2E import/comptage, validation
+offline et supervision KPI, matrice de couverture des RF et revue non fonctionnelle. Les résultats
+montrent que le cycle inventaire multi-canal est opérationnel pour une exploitation en conditions
+de démonstration et de déploiement local. Les perspectives d'évolution (automatisation accrue,
+finalisation des workflows de clôture/export, mise en production sur serveur d'entreprise)
+seront reprises dans la conclusion générale du rapport.
+</p>
+
+</body>
+</html>

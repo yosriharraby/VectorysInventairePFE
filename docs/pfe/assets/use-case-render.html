@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"/><style>body{margin:0;background:#fff;}</style></head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 720" width="980" height="720" font-family="Arial,sans-serif">
+  <defs>
+    <marker id="uca" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#333"/></marker>
+    <marker id="uco" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6" fill="none" stroke="#333"/></marker>
+  </defs>
+  <rect width="980" height="720" fill="#fff"/>
+  <text x="490" y="22" text-anchor="middle" font-size="14" font-weight="bold">Diagramme de cas utilisation - Vectorys Inventaire</text>
+  <rect x="155" y="45" width="720" height="655" rx="4" fill="#fafafa" stroke="#222" stroke-width="2"/>
+  <text x="515" y="65" text-anchor="middle" font-size="11" font-weight="bold">Systeme : Plateforme Vectorys Inventaire</text>
+  <rect x="170" y="78" width="210" height="95" fill="#fff" stroke="#1565c0" stroke-dasharray="6,3"/>
+  <text x="275" y="93" text-anchor="middle" font-size="9" font-weight="bold" fill="#1565c0">Authentification (RF-01 a RF-04)</text>
+  <ellipse cx="220" cy="125" rx="62" ry="16" fill="#e3f2fd" stroke="#1565c0"/><text x="220" y="129" text-anchor="middle" font-size="7.5">UC-01 Connexion agent</text>
+  <ellipse cx="330" cy="125" rx="62" ry="16" fill="#e3f2fd" stroke="#1565c0"/><text x="330" y="129" text-anchor="middle" font-size="7.5">UC-02 Connexion superviseur</text>
+  <ellipse cx="275" cy="158" rx="72" ry="14" fill="#e8eaf6" stroke="#5c6bc0"/><text x="275" y="162" text-anchor="middle" font-size="7">UC-03 Controle acces role</text>
+  <rect x="170" y="185" width="230" height="130" fill="#fff" stroke="#2e7d32" stroke-dasharray="6,3"/>
+  <text x="285" y="200" text-anchor="middle" font-size="9" font-weight="bold" fill="#2e7d32">Inventaires (RF-05 a RF-09)</text>
+  <ellipse cx="230" cy="222" rx="58" ry="14" fill="#e8f5e9" stroke="#2e7d32"/><text x="230" y="226" text-anchor="middle" font-size="7">UC-04 Creer inventaire</text>
+  <ellipse cx="340" cy="222" rx="58" ry="14" fill="#e8f5e9" stroke="#2e7d32"/><text x="340" y="226" text-anchor="middle" font-size="7">UC-05 Lister inventaires</text>
+  <ellipse cx="230" cy="252" rx="58" ry="14" fill="#e8f5e9" stroke="#2e7d32"/><text x="230" y="256" text-anchor="middle" font-size="7">UC-06 Suivi temps reel</text>
+  <ellipse cx="340" cy="252" rx="58" ry="14" fill="#e8f5e9" stroke="#2e7d32"/><text x="340" y="256" text-anchor="middle" font-size="7">UC-07 Creer passage C2</text>
+  <ellipse cx="285" cy="295" rx="78" ry="14" fill="#f1f8e9" stroke="#689f38"/><text x="285" y="299" text-anchor="middle" font-size="7">&lt;&lt;include&gt;&gt; UC-08 Generer C1</text>
+  <rect x="420" y="78" width="250" height="145" fill="#fff" stroke="#e65100" stroke-dasharray="6,3"/>
+  <text x="545" y="93" text-anchor="middle" font-size="9" font-weight="bold" fill="#e65100">Import Excel (RF-10 a RF-14)</text>
+  <ellipse cx="480" cy="115" rx="68" ry="14" fill="#fff3e0" stroke="#e65100"/><text x="480" y="119" text-anchor="middle" font-size="7">UC-09 Importer stock Excel</text>
+  <ellipse cx="610" cy="115" rx="68" ry="14" fill="#fff3e0" stroke="#e65100"/><text x="610" y="119" text-anchor="middle" font-size="7">UC-10 Valider CodeAgent</text>
+  <ellipse cx="480" cy="145" rx="68" ry="14" fill="#fff3e0" stroke="#e65100"/><text x="480" y="149" text-anchor="middle" font-size="7">UC-11 Creer emplacements</text>
+  <ellipse cx="610" cy="145" rx="68" ry="14" fill="#fff3e0" stroke="#e65100"/><text x="610" y="149" text-anchor="middle" font-size="7">UC-12 Rapport par agent</text>
+  <ellipse cx="545" cy="175" rx="78" ry="14" fill="#fff8e1" stroke="#f9a825"/><text x="545" y="179" text-anchor="middle" font-size="7">&lt;&lt;include&gt;&gt; UC-13 EN_COURS</text>
+  <ellipse cx="545" cy="205" rx="72" ry="14" fill="#fff3e0" stroke="#e65100"/><text x="545" y="209" text-anchor="middle" font-size="7">UC-14 Lister agents</text>
+  <rect x="170" y="330" width="280" height="175" fill="#fff" stroke="#6a1b9a" stroke-dasharray="6,3"/>
+  <text x="310" y="345" text-anchor="middle" font-size="9" font-weight="bold" fill="#6a1b9a">Comptage terrain (RF-15 a RF-20)</text>
+  <ellipse cx="230" cy="368" rx="68" ry="14" fill="#f3e5f5" stroke="#6a1b9a"/><text x="230" y="372" text-anchor="middle" font-size="7">UC-15 Mes emplacements</text>
+  <ellipse cx="370" cy="368" rx="68" ry="14" fill="#f3e5f5" stroke="#6a1b9a"/><text x="370" y="372" text-anchor="middle" font-size="7">UC-16 Enregistrer scan US</text>
+  <ellipse cx="230" cy="398" rx="68" ry="14" fill="#f3e5f5" stroke="#6a1b9a"/><text x="230" y="402" text-anchor="middle" font-size="7">UC-17 Progression US</text>
+  <ellipse cx="370" cy="398" rx="68" ry="14" fill="#ede7f6" stroke="#7b1fa2"/><text x="370" y="402" text-anchor="middle" font-size="7">&lt;&lt;include&gt;&gt; UC-18 Quota</text>
+  <ellipse cx="300" cy="428" rx="78" ry="14" fill="#ede7f6" stroke="#7b1fa2"/><text x="300" y="432" text-anchor="middle" font-size="7">&lt;&lt;extend&gt;&gt; UC-19 Cloture auto</text>
+  <ellipse cx="300" cy="465" rx="78" ry="14" fill="#f3e5f5" stroke="#6a1b9a"/><text x="300" y="469" text-anchor="middle" font-size="7">UC-20 Sync offline</text>
+  <ellipse cx="300" cy="492" rx="72" ry="12" fill="#fce4ec" stroke="#c2185b"/><text x="300" y="496" text-anchor="middle" font-size="6.5">UC-21 Fin comptage</text>
+  <rect x="470" y="240" width="230" height="130" fill="#fff" stroke="#c62828" stroke-dasharray="6,3"/>
+  <text x="585" y="255" text-anchor="middle" font-size="9" font-weight="bold" fill="#c62828">Ecarts (RF-21 a RF-24)</text>
+  <ellipse cx="520" cy="278" rx="62" ry="14" fill="#ffebee" stroke="#c62828"/><text x="520" y="282" text-anchor="middle" font-size="7">UC-22 Detecter ecarts</text>
+  <ellipse cx="650" cy="278" rx="62" ry="14" fill="#ffebee" stroke="#c62828"/><text x="650" y="282" text-anchor="middle" font-size="7">UC-23 Consulter ecarts</text>
+  <ellipse cx="520" cy="310" rx="62" ry="14" fill="#ffebee" stroke="#c62828"/><text x="520" y="314" text-anchor="middle" font-size="7">UC-24 Branche A</text>
+  <ellipse cx="650" cy="310" rx="62" ry="14" fill="#ffebee" stroke="#c62828"/><text x="650" y="314" text-anchor="middle" font-size="7">UC-25 Branche B</text>
+  <ellipse cx="585" cy="348" rx="72" ry="14" fill="#ffcdd2" stroke="#b71c1c"/><text x="585" y="352" text-anchor="middle" font-size="7">&lt;&lt;include&gt;&gt; Cloner vers C2</text>
+  <rect x="470" y="385" width="250" height="145" fill="#fff" stroke="#00695c" stroke-dasharray="6,3"/>
+  <text x="595" y="400" text-anchor="middle" font-size="9" font-weight="bold" fill="#00695c">KPI (RF-25 a RF-27)</text>
+  <ellipse cx="530" cy="425" rx="68" ry="14" fill="#e0f2f1" stroke="#00695c"/><text x="530" y="429" text-anchor="middle" font-size="7">UC-26 Notif SignalR</text>
+  <ellipse cx="660" cy="425" rx="68" ry="14" fill="#e0f2f1" stroke="#00695c"/><text x="660" y="429" text-anchor="middle" font-size="7">UC-27 Dashboard KPI</text>
+  <ellipse cx="530" cy="458" rx="68" ry="14" fill="#e0f2f1" stroke="#00695c"/><text x="530" y="462" text-anchor="middle" font-size="7">UC-28 KPI Precision</text>
+  <ellipse cx="660" cy="458" rx="68" ry="14" fill="#e0f2f1" stroke="#00695c"/><text x="660" y="462" text-anchor="middle" font-size="7">UC-29 KPI Performance</text>
+  <ellipse cx="530" cy="491" rx="68" ry="14" fill="#e0f2f1" stroke="#00695c"/><text x="530" y="495" text-anchor="middle" font-size="7">UC-30 KPI Qualite WMS</text>
+  <ellipse cx="660" cy="491" rx="68" ry="14" fill="#b2dfdb" stroke="#004d40"/><text x="660" y="495" text-anchor="middle" font-size="7">&lt;&lt;extend&gt;&gt; UC-31 Filtrer</text>
+  <rect x="720" y="545" width="140" height="55" fill="#fff" stroke="#455a64" stroke-dasharray="4,2"/>
+  <text x="790" y="560" text-anchor="middle" font-size="8" font-weight="bold" fill="#455a64">Emplacements</text>
+  <ellipse cx="790" cy="582" rx="58" ry="13" fill="#eceff1" stroke="#455a64"/><text x="790" y="586" text-anchor="middle" font-size="6.5">UC-32 Par passage</text>
+  <g transform="translate(25,220)"><circle cx="20" cy="12" r="10" fill="none" stroke="#333" stroke-width="1.5"/><line x1="20" y1="22" x2="20" y2="48" stroke="#333" stroke-width="1.5"/><line x1="5" y1="32" x2="35" y2="32" stroke="#333" stroke-width="1.5"/><line x1="20" y1="48" x2="8" y2="68" stroke="#333" stroke-width="1.5"/><line x1="20" y1="48" x2="32" y2="68" stroke="#333" stroke-width="1.5"/><text x="20" y="82" text-anchor="middle" font-size="9" font-weight="bold">Superviseur</text></g>
+  <g transform="translate(25,310)"><circle cx="20" cy="12" r="10" fill="none" stroke="#333" stroke-width="1.5"/><line x1="20" y1="22" x2="20" y2="48" stroke="#333" stroke-width="1.5"/><line x1="5" y1="32" x2="35" y2="32" stroke="#333" stroke-width="1.5"/><line x1="20" y1="48" x2="8" y2="68" stroke="#333" stroke-width="1.5"/><line x1="20" y1="48" x2="32" y2="68" stroke="#333" stroke-width="1.5"/><text x="20" y="82" text-anchor="middle" font-size="9" font-weight="bold">Administrateur</text></g>
+  <line x1="45" y1="310" x2="45" y2="290" stroke="#333" stroke-width="1.5"/><polygon points="45,290 40,300 50,300" fill="white" stroke="#333" stroke-width="1.5"/>
+  <g transform="translate(25,430)"><circle cx="20" cy="12" r="10" fill="none" stroke="#333" stroke-width="1.5"/><line x1="20" y1="22" x2="20" y2="48" stroke="#333" stroke-width="1.5"/><line x1="5" y1="32" x2="35" y2="32" stroke="#333" stroke-width="1.5"/><line x1="20" y1="48" x2="8" y2="68" stroke="#333" stroke-width="1.5"/><line x1="20" y1="48" x2="32" y2="68" stroke="#333" stroke-width="1.5"/><text x="20" y="82" text-anchor="middle" font-size="9" font-weight="bold">Agent</text></g>
+  <g transform="translate(900,120)"><rect x="-30" y="0" width="60" height="35" rx="3" fill="#fff8e1" stroke="#f57f17"/><text x="0" y="14" text-anchor="middle" font-size="7" font-weight="bold">Excel</text><text x="0" y="26" text-anchor="middle" font-size="7">ERP</text></g>
+  <g transform="translate(900,420)"><rect x="-30" y="0" width="60" height="35" rx="3" fill="#e3f2fd" stroke="#1565c0"/><text x="0" y="14" text-anchor="middle" font-size="7" font-weight="bold">Hub</text><text x="0" y="26" text-anchor="middle" font-size="7">SignalR</text></g>
+  <g transform="translate(900,520)"><rect x="-30" y="0" width="60" height="35" rx="3" fill="#fce4ec" stroke="#c2185b"/><text x="0" y="14" text-anchor="middle" font-size="7" font-weight="bold">SQLite</text><text x="0" y="26" text-anchor="middle" font-size="7">mobile</text></g>
+  <line x1="65" y1="250" x2="170" y2="125" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="255" x2="170" y2="222" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="260" x2="170" y2="252" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="265" x2="350" y2="115" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="270" x2="520" y2="278" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="275" x2="660" y2="425" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="280" x2="790" y2="582" stroke="#333" marker-end="url(#uca)"/>
+  <line x1="65" y1="460" x2="170" y2="125" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="465" x2="170" y2="368" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="470" x2="370" y2="368" stroke="#333" marker-end="url(#uca)"/><line x1="65" y1="475" x2="300" y2="465" stroke="#333" marker-end="url(#uca)"/>
+  <line x1="870" y1="138" x2="670" y2="115" stroke="#333" stroke-dasharray="4,2" marker-end="url(#uca)"/><line x1="870" y1="438" x2="670" y2="425" stroke="#333" stroke-dasharray="4,2" marker-end="url(#uca)"/><line x1="870" y1="538" x2="378" y2="465" stroke="#333" stroke-dasharray="4,2" marker-end="url(#uca)"/>
+  <line x1="285" y1="222" x2="285" y2="295" stroke="#666" stroke-dasharray="3,2" marker-end="url(#uco)"/><line x1="545" y1="115" x2="545" y2="175" stroke="#666" stroke-dasharray="3,2" marker-end="url(#uco)"/><line x1="370" y1="368" x2="370" y2="398" stroke="#666" stroke-dasharray="3,2" marker-end="url(#uco)"/>
+  <rect x="170" y="620" width="720" height="70" fill="white" stroke="#999" rx="3"/>
+  <text x="185" y="638" font-size="8" font-weight="bold">Legende</text>
+  <line x1="185" y1="652" x2="215" y2="652" stroke="#333"/><text x="220" y="656" font-size="7.5">Association acteur / cas utilisation</text>
+  <line x1="185" y1="667" x2="215" y2="667" stroke="#666" stroke-dasharray="3,2"/><text x="220" y="671" font-size="7.5">include / extend</text>
+  <line x1="420" y1="652" x2="450" y2="652" stroke="#333" stroke-dasharray="4,2"/><text x="455" y="656" font-size="7.5">Acteur externe</text>
+  <polygon points="420,666 415,676 425,676" fill="white" stroke="#333"/><text x="430" y="672" font-size="7.5">Admin herite Superviseur</text>
+</svg>
+</body></html>

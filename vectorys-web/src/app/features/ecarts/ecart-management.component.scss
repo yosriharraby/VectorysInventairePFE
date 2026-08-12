@@ -1,0 +1,272 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  background: #f6f7fb;
+  color: #111827;
+  font-family: Inter, Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.sidebar {
+  width: 248px;
+  background: #ffffff;
+  border-right: 1px solid rgba(17, 24, 39, 0.08);
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 14px;
+  background: #f6f7fb;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.brand-logo {
+  height: 32px;
+  width: auto;
+}
+
+.nav {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #475569;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.nav-item.active {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.nav-item.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.sidebar__footer {
+  margin-top: auto;
+}
+
+.logout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #64748b;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: #fff;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.breadcrumb {
+  display: flex;
+  gap: 8px;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.breadcrumb .strong {
+  color: #111827;
+  font-weight: 800;
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.sub {
+  margin: 6px 0 0;
+  color: #64748b;
+}
+
+.content-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.inventaire-select {
+  min-width: 280px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.summary-card {
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.summary-card__label {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summary-card__value {
+  margin-top: 8px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.summary-card__value.warn {
+  color: #dc2626;
+}
+
+.summary-card__value.ok {
+  color: #16a34a;
+}
+
+.table-card {
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.ecart-table {
+  width: 100%;
+}
+
+.cell-title {
+  font-weight: 700;
+  color: #111827;
+}
+
+.cell-sub {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.delta {
+  font-weight: 800;
+}
+
+.delta.neg {
+  color: #dc2626;
+}
+
+.delta.pos {
+  color: #d97706;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.badge[data-type='MANQUANT'] {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge[data-type='SURPLUS'] {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.badge[data-statut='DETECTE'] {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.badge[data-statut='TRAITE_BRANCHE_A'] {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.success {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #ecfdf5;
+  color: #047857;
+  font-weight: 700;
+}
+
+.error,
+.loading,
+.empty {
+  padding: 18px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.error {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+@media (max-width: 1100px) {
+  .summary-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

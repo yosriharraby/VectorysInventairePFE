@@ -1,0 +1,262 @@
+﻿<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <img class="brand-logo" src="/brand/vectorys-tunisie-logo.png" alt="Vectorys Tunisie" />
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" routerLink="/dashboard">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/inventaires/create">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Inventories</span>
+      </a>
+      <a class="nav-item" routerLink="/monitoring">
+        <mat-icon>groups</mat-icon>
+        <span>Monitoring</span>
+      </a>
+      <a class="nav-item" routerLink="/ecarts">
+        <mat-icon>difference</mat-icon>
+        <span>Écarts</span>
+      </a>
+      <a class="nav-item" routerLink="/kpi">
+        <mat-icon>query_stats</mat-icon>
+        <span>KPI</span>
+      </a>
+      <a class="nav-item active" routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <button class="logout" type="button" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span class="crumb">Vectorys Logistics</span>
+        <span class="sep">/</span>
+        <span class="crumb strong">Paramètres</span>
+      </div>
+
+      <div class="topbar__right">
+        <span class="live">
+          <span class="dot" aria-hidden="true"></span>
+          Live Connected
+        </span>
+        <div class="user">
+          <span class="user__name">{{ user?.nom ?? 'Superviseur' }}</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="content-header">
+        <div>
+          <h1 class="h1">Paramètres</h1>
+          <p class="sub">Compte, préférences d’affichage et informations système.</p>
+        </div>
+      </div>
+
+      <div class="settings-layout">
+        <div class="tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            class="tab"
+            [class.active]="activeTab === 'compte'"
+            (click)="setTab('compte')"
+          >
+            <mat-icon>person</mat-icon>
+            Mon compte
+          </button>
+          <button
+            type="button"
+            role="tab"
+            class="tab"
+            [class.active]="activeTab === 'preferences'"
+            (click)="setTab('preferences')"
+          >
+            <mat-icon>tune</mat-icon>
+            Préférences
+          </button>
+          <button
+            type="button"
+            role="tab"
+            class="tab"
+            [class.active]="activeTab === 'apropos'"
+            (click)="setTab('apropos')"
+          >
+            <mat-icon>info</mat-icon>
+            À propos
+          </button>
+        </div>
+
+        @if (activeTab === 'compte') {
+          <section class="panel" aria-label="Mon compte">
+            <div class="profile">
+              <div class="avatar" aria-hidden="true">{{ initials }}</div>
+              <div class="profile__meta">
+                <div class="profile__name">{{ user?.nom ?? '—' }}</div>
+                <div class="profile__role">{{ roleLabel }}</div>
+              </div>
+            </div>
+
+            <div class="fields">
+              <div class="field">
+                <label>Nom complet</label>
+                <div class="field__value">{{ user?.nom ?? '—' }}</div>
+              </div>
+              <div class="field">
+                <label>Identifiant utilisateur</label>
+                <div class="field__value mono">#{{ user?.userId ?? '—' }}</div>
+              </div>
+              <div class="field">
+                <label>Rôle</label>
+                <div class="field__value">
+                  <span class="badge">{{ roleLabel }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="notice">
+              <mat-icon>lock</mat-icon>
+              <div>
+                <strong>Mot de passe</strong>
+                <p>
+                  La modification du mot de passe n’est pas exposée via l’API pour des raisons de
+                  sécurité. Contactez l’administrateur système pour une réinitialisation.
+                </p>
+              </div>
+            </div>
+          </section>
+        }
+
+        @if (activeTab === 'preferences') {
+          <section class="panel" aria-label="Préférences">
+            <h2 class="panel__title">Notifications &amp; session</h2>
+            <p class="panel__hint">
+              Ces choix sont stockés localement dans le navigateur (cet appareil uniquement).
+            </p>
+
+            <div class="toggles">
+              <label class="toggle">
+                <input type="checkbox" [(ngModel)]="prefs.notificationsEcarts" />
+                <span class="toggle__ui" aria-hidden="true"></span>
+                <span class="toggle__text">
+                  <strong>Alertes écarts</strong>
+                  <small>Mettre en avant les nouveaux écarts détectés.</small>
+                </span>
+              </label>
+
+              <label class="toggle">
+                <input type="checkbox" [(ngModel)]="prefs.notificationsFinEmplacement" />
+                <span class="toggle__ui" aria-hidden="true"></span>
+                <span class="toggle__text">
+                  <strong>Fin d’emplacement</strong>
+                  <small>Signaler la clôture d’un emplacement scanné.</small>
+                </span>
+              </label>
+
+              <label class="toggle">
+                <input type="checkbox" [(ngModel)]="prefs.notificationsSon" />
+                <span class="toggle__ui" aria-hidden="true"></span>
+                <span class="toggle__text">
+                  <strong>Sons de notification</strong>
+                  <small>Activer un retour sonore (si pris en charge).</small>
+                </span>
+              </label>
+            </div>
+
+            <div class="field mt">
+              <label for="inv-defaut">Inventaire par défaut</label>
+              <select id="inv-defaut" [(ngModel)]="prefs.inventaireDefautId">
+                <option [ngValue]="null">Aucun (choix manuel)</option>
+                @for (inv of inventaires; track inv.id) {
+                  <option [ngValue]="inv.id">
+                    {{ inv.reference }} — {{ inv.intitule || inv.zone }}
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="langue">Langue de l’interface</label>
+              <select id="langue" [(ngModel)]="prefs.langue" disabled>
+                <option value="fr">Français</option>
+              </select>
+              <span class="field__hint">Seule la langue française est disponible pour cette version.</span>
+            </div>
+
+            @if (saveMessage) {
+              <div class="feedback ok">{{ saveMessage }}</div>
+            }
+            @if (saveError) {
+              <div class="feedback err">{{ saveError }}</div>
+            }
+
+            <div class="actions">
+              <button mat-stroked-button type="button" (click)="resetPreferences()">
+                Réinitialiser
+              </button>
+              <button mat-flat-button color="primary" type="button" class="save-btn" (click)="savePreferences()">
+                <mat-icon>save</mat-icon>
+                Enregistrer
+              </button>
+            </div>
+          </section>
+        }
+
+        @if (activeTab === 'apropos') {
+          <section class="panel" aria-label="À propos">
+            <div class="about-hero">
+              <img class="about-logo" src="/brand/vectorys-tunisie-logo.png" alt="Vectorys Tunisie" />
+              <div>
+                <h2 class="panel__title">Vectorys Inventaire</h2>
+                <p class="panel__hint">Portail superviseur — inventaire multi-canal, monitoring live et KPI.</p>
+              </div>
+            </div>
+
+            <div class="meta-grid">
+              <div class="meta">
+                <span class="meta__label">Version</span>
+                <span class="meta__value mono">{{ appVersion }}</span>
+              </div>
+              <div class="meta">
+                <span class="meta__label">Environnement</span>
+                <span class="meta__value">{{ environmentLabel }}</span>
+              </div>
+              <div class="meta">
+                <span class="meta__label">API</span>
+                <span class="meta__value mono">{{ apiUrl }}</span>
+              </div>
+              <div class="meta">
+                <span class="meta__label">SignalR</span>
+                <span class="meta__value mono">{{ signalRUrl }}</span>
+              </div>
+            </div>
+
+            <div class="notice soft">
+              <mat-icon>school</mat-icon>
+              <div>
+                <strong>Projet PFE — TEK-UP</strong>
+                <p>
+                  Application développée pour Vectorys Tunisie : cadrage, conception et réalisation
+                  d’une solution d’inventaire terrain / supervision.
+                </p>
+              </div>
+            </div>
+          </section>
+        }
+      </div>
+    </main>
+  </div>
+</div>

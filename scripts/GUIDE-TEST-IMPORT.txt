@@ -1,0 +1,80 @@
+================================================================================
+ GUIDE DE TEST — Import Excel + Scan auto-terminaison (VectorysInventaire)
+================================================================================
+
+FICHIER EXCEL
+  scripts/test-import-stock.xlsx
+
+  Agents utilisés (présents dans VectorysDB sur YOSRI\SQLEXPRESS) :
+    - AG001 → emplacements TEST-A01, TEST-A02
+    - AG002 → emplacements TEST-B01, TEST-B02
+
+  Contenu :
+    TEST-A01 : US-T001 (x2) + US-T002 (x1)  → 3 scans pour terminer
+    TEST-A02 : US-T003 (x2)                 → 2 scans pour terminer
+    TEST-B01 : US-T101 (x1) + US-T102 (x2)  → 3 scans
+    TEST-B02 : US-T201 (x1)                 → 1 scan
+
+  Regénérer le fichier :
+    cd scripts\GenerateTestStockExcel
+    dotnet run -- ..\
+
+--------------------------------------------------------------------------------
+ÉTAPE 1 — Démarrer l'API
+--------------------------------------------------------------------------------
+  cd src\VectorysInventaire.API
+  dotnet run
+
+  Vérifier : http://localhost:5000/swagger
+
+--------------------------------------------------------------------------------
+ÉTAPE 2 — Créer un inventaire (Web superviseur)
+--------------------------------------------------------------------------------
+  1. Ouvrir http://localhost:4200 (npm start dans vectorys-web si besoin)
+  2. Se connecter : superviseur@vectorys.local / Super123!
+  3. Créer un inventaire (nom + date)
+  4. Importer scripts/test-import-stock.xlsx
+
+  Réponse attendue :
+    emplacementsCrees : 4
+    lignesStockImportees : 6
+    assignationsParAgent : { "AG001": 2, "AG002": 2 }
+
+  Vérification SSMS :
+    SELECT e.Code, e.Statut, u.CodePersonnel
+    FROM Emplacements e
+    JOIN Utilisateurs u ON u.Id = e.AgentAssigneId
+    WHERE e.Code LIKE 'TEST-%';
+
+--------------------------------------------------------------------------------
+ÉTAPE 3 — Test mobile agent AG001
+--------------------------------------------------------------------------------
+  1. Lancer l'app Flutter (vectorys_mobile)
+  2. Connexion : code personnel AG001 / mot de passe AG001
+  3. Onglet Emplacements → voir TEST-A01 et TEST-A02 uniquement (pas TEST-B*)
+
+  Test TEST-A01 (auto-terminaison) :
+    - Scanner US-T001 → 1/2 pour ce code
+    - Scanner US-T001 → 2/2 ✓
+    - Scanner US-T002 → 1/1 ✓ → emplacement TERMINE automatiquement
+    - Rescanner US-T001 → erreur "Quota atteint"
+
+  Pas de bouton "Terminer l'emplacement" — la clôture est automatique.
+
+--------------------------------------------------------------------------------
+ÉTAPE 4 — Test mobile agent AG002
+--------------------------------------------------------------------------------
+  Connexion AG002 / AG002
+  Voir TEST-B01 et TEST-B02 seulement
+  Scanner les codes US-T101, US-T102, US-T201 selon les quotas affichés.
+
+--------------------------------------------------------------------------------
+ÉTAPE 5 — Vérification BDD après scans
+--------------------------------------------------------------------------------
+  SELECT e.Code, e.Statut, COUNT(s.Id) AS NbScans
+  FROM Emplacements e
+  LEFT JOIN Scans s ON s.EmplacementId = e.Id
+  WHERE e.Code LIKE 'TEST-%'
+  GROUP BY e.Code, e.Statut;
+
+================================================================================

@@ -1,0 +1,208 @@
+﻿<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <img class="brand-logo" src="/brand/vectorys-tunisie-logo.png" alt="Vectorys Tunisie" />
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item" routerLink="/dashboard">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/inventaires/create">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Inventories</span>
+      </a>
+      <a class="nav-item" routerLink="/monitoring">
+        <mat-icon>groups</mat-icon>
+        <span>Monitoring</span>
+      </a>
+      <a class="nav-item active" routerLink="/ecarts">
+        <mat-icon>difference</mat-icon>
+        <span>Écarts</span>
+      </a>
+      <a class="nav-item" routerLink="/kpi">
+        <mat-icon>query_stats</mat-icon>
+        <span>KPI</span>
+      </a>
+      <a class="nav-item" routerLink="/settings">
+        <mat-icon>settings</mat-icon>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <button class="logout" type="button" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span class="crumb">Vectorys Logistics</span>
+        <span class="sep">/</span>
+        <span class="crumb strong">Gestion des Écarts</span>
+      </div>
+
+      <div class="topbar__right">
+        <div class="user">
+          <span class="user__name">{{ user?.nom ?? 'Superviseur' }}</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="content-header">
+        <div>
+          <h1 class="h1">Ecart Management</h1>
+          <p class="sub">Analysez les écarts C1 et lancez la Branche A (passage C2 ciblé).</p>
+        </div>
+
+        <div class="header-actions">
+          <mat-form-field appearance="outline" class="inventaire-select">
+            <mat-label>Inventaire</mat-label>
+            <mat-select
+              [value]="selectedInventaireId"
+              (selectionChange)="selectInventaire($event.value)"
+              aria-label="Sélection inventaire"
+            >
+              @for (inv of inventaires; track inv.id) {
+                <mat-option [value]="inv.id">{{ inv.reference }} — {{ inv.intitule }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-stroked-button type="button" (click)="detecter()" [disabled]="detecting || !selectedInventaireId">
+            <mat-icon>search</mat-icon>
+            {{ detecting ? 'Détection...' : 'Détecter écarts' }}
+          </button>
+
+          <button mat-flat-button color="primary" type="button" (click)="appliquerBrancheA()" [disabled]="applying || pendingEcarts.length === 0">
+            <mat-icon>redo</mat-icon>
+            {{ applying ? 'Traitement...' : 'Branche A' }}
+          </button>
+
+          <button mat-stroked-button color="warn" type="button" (click)="appliquerBrancheB()" [disabled]="applyingB || !selectedInventaireId">
+            <mat-icon>sync</mat-icon>
+            {{ applyingB ? 'Traitement...' : 'Branche B' }}
+          </button>
+        </div>
+      </div>
+
+      @if (ecarts) {
+        <section class="summary-cards">
+          <div class="summary-card">
+            <div class="summary-card__label">Écarts détectés</div>
+            <div class="summary-card__value warn">{{ ecarts.totalDetectes }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Traités (A/B)</div>
+            <div class="summary-card__value ok">{{ ecarts.totalTraites }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Manquants</div>
+            <div class="summary-card__value">{{ ecarts.totalManquants }}</div>
+          </div>
+          <div class="summary-card">
+            <div class="summary-card__label">Surplus</div>
+            <div class="summary-card__value">{{ ecarts.totalSurplus }}</div>
+          </div>
+        </section>
+      }
+
+      @if (success) {
+        <div class="success">{{ success }}</div>
+      }
+      @if (error) {
+        <div class="error">{{ error }}</div>
+      } @else if (loading) {
+        <div class="loading">Chargement des écarts...</div>
+      } @else if (!ecarts || ecarts.items.length === 0) {
+        <div class="empty">
+          Aucun écart enregistré. Terminez les comptages C1 puis cliquez sur « Détecter écarts ».
+        </div>
+      } @else {
+        <section class="table-card">
+          <table mat-table [dataSource]="ecarts.items" class="ecart-table">
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                  [checked]="allPendingSelected"
+                  [indeterminate]="selectedIds.size > 0 && !allPendingSelected"
+                  (change)="toggleAll($event.checked)"
+                  aria-label="Sélectionner tous les écarts en attente"
+                />
+              </th>
+              <td mat-cell *matCellDef="let row">
+                @if (canSelect(row)) {
+                  <mat-checkbox
+                    [checked]="isSelected(row.id)"
+                    (change)="toggleOne(row.id, $event.checked)"
+                    [attr.aria-label]="'Sélectionner écart ' + row.codeUS"
+                  />
+                }
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="emplacement">
+              <th mat-header-cell *matHeaderCellDef>Emplacement</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="cell-title">{{ row.codeEmplacement }}</div>
+                <div class="cell-sub">{{ row.designationEmplacement }}</div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="codeUS">
+              <th mat-header-cell *matHeaderCellDef>Code US</th>
+              <td mat-cell *matCellDef="let row">
+                <div class="cell-title">{{ row.codeUS }}</div>
+                <div class="cell-sub">{{ row.designationUS }}</div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="qteTheorique">
+              <th mat-header-cell *matHeaderCellDef>Qté théorique</th>
+              <td mat-cell *matCellDef="let row">{{ row.qteTheorique }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="qteScannee">
+              <th mat-header-cell *matHeaderCellDef>Qté scannée</th>
+              <td mat-cell *matCellDef="let row">{{ row.qteScannee }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="delta">
+              <th mat-header-cell *matHeaderCellDef>Delta</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="delta" [class.neg]="row.delta < 0" [class.pos]="row.delta > 0">
+                  {{ row.delta > 0 ? '+' : '' }}{{ row.delta }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>Type</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge" [attr.data-type]="row.type">{{ row.type }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="statut">
+              <th mat-header-cell *matHeaderCellDef>Statut</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="badge" [attr.data-statut]="row.statut">{{ statutLabel(row.statut) }}</span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </section>
+      }
+    </main>
+  </div>
+</div>
+
+

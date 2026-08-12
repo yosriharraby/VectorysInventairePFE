@@ -1,0 +1,2492 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8" />
+<title>PFE Vectorys Inventaire — Rapport complet</title>
+<style>
+    @page { size: A4; margin: 2.2cm 2cm; }
+    body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.5; color: #111; max-width: 17cm; margin: 0 auto; padding: 0.8cm; }
+    h1 { font-size: 18pt; text-align: center; margin-top: 1.5cm; page-break-before: always; }
+    h1.no-break { page-break-before: avoid; margin-top: 0.4cm; }
+    h2 { font-size: 15pt; margin-top: 1.1em; border-bottom: 1px solid #ccc; padding-bottom: 0.15em; page-break-after: avoid; }
+    h3 { font-size: 13pt; margin-top: 0.9em; page-break-after: avoid; }
+    h4 { font-size: 12pt; margin-top: 0.7em; font-style: italic; page-break-after: avoid; }
+    p { text-align: justify; margin: 0.5em 0; }
+    ul, ol { margin: 0.35em 0 0.6em 1.2em; }
+    li { margin-bottom: 0.22em; text-align: justify; }
+    .cover { text-align: center; page-break-after: always; padding-top: 0.5cm; }
+    .cover-logos { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2cm; padding: 0 0.5cm; }
+    .cover-logos img { max-height: 65px; max-width: 160px; }
+    .cover .title { font-size: 15pt; font-weight: bold; margin: 1.2cm 0; line-height: 1.4; }
+    .cover .meta { font-size: 11pt; line-height: 1.9; }
+    .prelim { page-break-after: always; }
+    .toc { page-break-after: always; }
+    .toc p { margin: 0.28em 0; font-size: 11pt; }
+    .chapter-intro { font-style: italic; margin-bottom: 1em; }
+    table { border-collapse: collapse; width: 100%; margin: 0.7em 0; font-size: 10.5pt; }
+    th, td { border: 1px solid #333; padding: 5px 7px; text-align: left; vertical-align: top; }
+    th { background: #f0f0f0; }
+    figure { margin: 0.9em 0; text-align: center; page-break-inside: avoid; }
+    figcaption { font-size: 10pt; font-style: italic; margin-top: 0.35em; color: #333; }
+    .figure-box svg { max-width: 100%; height: auto; border: 1px solid #ddd; }
+    .placeholder { border: 2px dashed #888; background: #f9f9f9; padding: 1cm 0.7cm; margin: 0.7em 0; text-align: center; color: #555; font-size: 10.5pt; page-break-inside: avoid; }
+    .note-box, .uc-box { border: 1px solid #999; background: #fafafa; padding: 0.55em 0.75em; margin: 0.7em 0; font-size: 11pt; page-break-inside: avoid; }
+    .uc-box h4 { margin-top: 0.2em; font-style: normal; }
+    .ok { color: #1b5e20; font-weight: bold; }
+    .section-break { page-break-before: always; }
+    .req-id { font-weight: bold; white-space: nowrap; }
+    figure img.screenshot { max-width: 100%; height: auto; border: 1px solid #ccc; }
+    figure img.use-case-diagram { width: 100%; max-width: 100%; border: 1px solid #ccc; }
+    figure img.screenshot-mobile { max-width: 48%; display: block; margin: 0.4em auto; border: 1px solid #ccc; }
+    .figure-multi img { margin-bottom: 0.5em; display: block; }
+    code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 10pt; }
+    .list-fig p, .list-tab p { margin: 0.22em 0; font-size: 10.5pt; text-align: left; }
+    .list-fig, .list-tab, .abbr { page-break-after: always; }
+    .biblio p { margin: 0.45em 0; padding-left: 1.5em; text-indent: -1.5em; font-size: 11pt; }
+    .keywords { margin-top: 0.8em; }
+    .page-note { color: #666; }
+</style></head><body>
+<div class="cover">
+  <div class="cover-logos">
+    <img src="assets/tek-up-logo.svg" alt="Logo TEK-UP" />
+    <img src="assets/vectorys-logo.png" alt="Logo VECTORYS" />
+  </div>
+  <p><strong>République Tunisienne</strong><br />
+  Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br />
+  École Supérieure Privée d'Ingénierie et de Technologie — TEK-UP</p>
+  <p class="title">Conception et développement d'une plateforme<br />d'inventaire logistique multi-canal</p>
+  <p class="meta">
+    Rapport de Projet de Fin d'Études<br /><br />
+    Réalisé par : <strong>Harrabi Yosri</strong><br />
+    Spécialité : Génie Logiciel et Systèmes d'Information<br />
+    Encadrant professionnel : M. Ferchichi Marwen — VECTORYS Tunisie<br />
+    Encadrante académique : Mme Zrelli Siwar — TEK-UP<br />
+    Année universitaire 2025 — 2026
+  </p>
+</div>
+<!-- DÉDICACE -->
+<div class="prelim">
+  <h2 style="border:none;text-align:center;">Dédicace</h2>
+  <p class="page-note" style="text-align:center;">[À compléter par l'étudiant]</p>
+  <p style="margin-top:2cm;font-style:italic;text-align:center;">
+    « À mes parents, pour leur soutien indéfectible tout au long de mon parcours académique. »
+  </p>
+</div>
+<!-- REMERCIEMENTS -->
+<div class="prelim">
+  <h2 style="border:none;text-align:center;">Remerciements</h2>
+  <p>
+    Je tiens à exprimer ma profonde gratitude à toutes les personnes qui ont contribué à la réalisation
+    de ce projet de fin d'études. Je remercie tout d'abord <strong>M. Ferchichi Marwen</strong>, mon encadrant
+    professionnel au sein de <strong>VECTORYS Tunisie</strong>, pour sa disponibilité, sa vision métier et ses
+    orientations précieuses tout au long du stage. Mes remerciements s'adressent également à
+    <strong>Mme Zrelli Siwar</strong>, mon encadrante académique à TEK-UP, pour le suivi rigoureux et les
+    recommandations méthodologiques. Enfin, je remercie l'équipe VECTORYS et l'ensemble du corps
+    enseignant de TEK-UP pour l'environnement de travail propice à l'apprentissage et à l'innovation.
+  </p>
+</div>
+<div class="prelim">
+<h1 class="no-break">Résumé</h1>
+<p>
+Ce projet de fin d'études, réalisé au sein de <strong>VECTORYS Tunisie</strong>, porte sur la conception
+et le développement de <strong>Vectorys Inventaire</strong>, une plateforme d'inventaire logistique
+multi-canal. L'objectif est de digitaliser le cycle complet de l'inventaire physique en entrepôt :
+préparation (création de mission, import du stock théorique depuis Excel, assignation stricte des
+agents), exécution terrain (scan des unités de stock, quotas, clôture automatique des emplacements,
+mode hors ligne), traitement des écarts (détection MANQUANT/SURPLUS, recomptage ciblé) et pilotage
+(suivi temps réel SignalR, tableaux de bord KPI).
+</p>
+<p>
+Sur le plan technique, la solution repose sur une architecture three-tier : une API REST
+<strong>ASP.NET Core 9</strong> (Clean Architecture, CQRS/MediatR, FluentValidation, JWT, Entity Framework
+Core, ClosedXML), une application web <strong>Angular 19</strong> destinée au superviseur, et une
+application mobile <strong>Flutter</strong> pour les agents, adossées à <strong>Microsoft SQL Server</strong>
+et à une base SQLite locale pour la résilience hors connexion. Le projet a été mené selon la
+méthode agile Scrum (sprints 0 à 9). La validation a combiné tests d'intégration API (Swagger,
+Postman), scénarios bout-en-bout import/comptage et contrôles en base de données. Le déploiement
+retenu pour l'exploitation interne est un <strong>serveur local</strong> sur le réseau d'entreprise.
+</p>
+<p class="keywords"><strong>Mots-clés :</strong> inventaire logistique, multi-canal, ASP.NET Core, Angular,
+Flutter, SQL Server, SignalR, Scrum, KPI, entrepôt, hors ligne.</p>
+
+<h2 style="border:none;text-align:center;margin-top:1.8cm;">Abstract</h2>
+<p>
+This graduation project, carried out at <strong>VECTORYS Tunisia</strong>, focuses on the design and
+development of <strong>Vectorys Inventaire</strong>, a multi-channel logistics inventory platform. The
+goal is to digitize the full physical warehouse inventory cycle: preparation (mission creation,
+Excel import of theoretical stock, strict agent assignment), field execution (unit scanning,
+quotas, automatic location closure, offline mode), discrepancy handling (shortage/surplus detection,
+targeted recount), and supervision (real-time SignalR monitoring, KPI dashboards).
+</p>
+<p>
+Technically, the solution follows a three-tier architecture: an <strong>ASP.NET Core 9</strong> REST API
+(Clean Architecture, CQRS/MediatR, FluentValidation, JWT, Entity Framework Core, ClosedXML), an
+<strong>Angular 19</strong> web portal for supervisors, and a <strong>Flutter</strong> mobile application for
+agents, backed by <strong>Microsoft SQL Server</strong> and a local SQLite store for offline resilience.
+The work was organized with Scrum (sprints 0–9). Validation combined API integration tests
+(Swagger, Postman), end-to-end import/counting scenarios, and database checks. The deployment
+model chosen for internal use is a <strong>local on-premises server</strong> on the corporate LAN.
+</p>
+<p class="keywords"><strong>Keywords:</strong> logistics inventory, multi-channel, ASP.NET Core, Angular,
+Flutter, SQL Server, SignalR, Scrum, KPI, warehouse, offline.</p>
+
+<!-- ========== CONCLUSION ========== -->
+
+</div>
+<div class="abbr">
+  <h1 class="no-break" style="font-size:16pt;text-align:left;border:none;margin-top:0;">Liste des abréviations</h1>
+  <table>
+    <tr><th width="22%">Sigle</th><th>Signification</th></tr>
+    <tr><td>API</td><td>Application Programming Interface</td></tr>
+    <tr><td>C1 / C2</td><td>Premier / second passage de comptage d'inventaire</td></tr>
+    <tr><td>CORS</td><td>Cross-Origin Resource Sharing</td></tr>
+    <tr><td>CQRS</td><td>Command Query Responsibility Segregation</td></tr>
+    <tr><td>DTO</td><td>Data Transfer Object</td></tr>
+    <tr><td>E2E</td><td>End-to-End (bout en bout)</td></tr>
+    <tr><td>EF Core</td><td>Entity Framework Core</td></tr>
+    <tr><td>ERP</td><td>Enterprise Resource Planning</td></tr>
+    <tr><td>HTTP / HTTPS</td><td>Hypertext Transfer Protocol (Secure)</td></tr>
+    <tr><td>IIS</td><td>Internet Information Services</td></tr>
+    <tr><td>JWT</td><td>JSON Web Token</td></tr>
+    <tr><td>KPI</td><td>Key Performance Indicator (indicateur de performance)</td></tr>
+    <tr><td>LAN</td><td>Local Area Network</td></tr>
+    <tr><td>ORM</td><td>Object-Relational Mapping</td></tr>
+    <tr><td>PDA</td><td>Personal Digital Assistant (terminal mobile)</td></tr>
+    <tr><td>PFE</td><td>Projet de Fin d'Études</td></tr>
+    <tr><td>REST</td><td>Representational State Transfer</td></tr>
+    <tr><td>RF / RNF</td><td>Exigence Fonctionnelle / Non Fonctionnelle</td></tr>
+    <tr><td>SGBD</td><td>Système de Gestion de Base de Données</td></tr>
+    <tr><td>SQL</td><td>Structured Query Language</td></tr>
+    <tr><td>SSMS</td><td>SQL Server Management Studio</td></tr>
+    <tr><td>TTL</td><td>Time To Live (durée de validité du jeton)</td></tr>
+    <tr><td>UC</td><td>Use Case (cas d'utilisation)</td></tr>
+    <tr><td>UML</td><td>Unified Modeling Language</td></tr>
+    <tr><td>US</td><td>Unité de Stock (code scanné)</td></tr>
+    <tr><td>WMS</td><td>Warehouse Management System</td></tr>
+  </table>
+</div>
+<div class="list-fig">
+  <h1 class="no-break" style="font-size:16pt;text-align:left;border:none;margin-top:0;">Liste des figures</h1>
+
+  <h3>Chapitre 1</h3>
+  <p>Figure 1.1 — Architecture three-tier de la plateforme Vectorys Inventaire</p>
+  <p>Figure 1.2 — Flux métier principal du cycle d'inventaire Vectorys</p>
+  <p>Figure 1.3 — Cadre Scrum et répartition des rôles dans le projet</p>
+  <p>Figure 1.4 — Frise chronologique des sprints 0 à 9 (version finale)</p>
+
+  <h3>Chapitre 2</h3>
+  <p>Figure 2.1 — Écran de création d'inventaire et import du stock théorique</p>
+  <p>Figure 2.2 — Interface agent : zones, scan en boucle et progression US</p>
+  <p>Figure 2.3 — Dashboard KPI (précision, performance, qualité, clients, WMS)</p>
+  <p>Figure 2.4 — Diagramme de cas d'utilisation détaillé</p>
+
+  <h3>Chapitre 3</h3>
+  <p>Figure 3.1 — Architecture logique three-tier</p>
+  <p>Figure 3.2 — Diagramme de classes global (vue métier)</p>
+  <p>Figure 3.3 — Diagramme de séquence : authentification</p>
+  <p>Figure 3.4 — Interface d'authentification Angular</p>
+  <p>Figure 3.5 — Interface d'authentification Flutter</p>
+  <p>Figure 3.6 — Diagramme de séquence : création d'inventaire et génération C1</p>
+  <p>Figure 3.7 — Formulaire de création / configuration d'inventaire</p>
+  <p>Figure 3.8 — Vue conceptuelle de l'import Excel vers le modèle de données</p>
+  <p>Figure 3.9 — Import du stock théorique et validation CodeAgent</p>
+  <p>Figure 3.10 — Diagramme de séquence : scan, quota et notification</p>
+  <p>Figure 3.11 — Classes concernées par le comptage terrain</p>
+  <p>Figure 3.12 — Emplacements assignés (mobile)</p>
+  <p>Figure 3.13 — Scan en boucle et progression par unité de stock</p>
+  <p>Figure 3.14 — Diagramme de séquence : détection et Branche A</p>
+  <p>Figure 3.15 — Liste des écarts et choix de stratégie</p>
+  <p>Figure 3.16 — Diagramme de séquence : consultation KPI</p>
+  <p>Figure 3.17 — Suivi d'avancement en temps réel</p>
+  <p>Figure 3.18 — Tableau de bord KPI</p>
+
+  <h3>Chapitre 4</h3>
+  <p>Figure 4.1 — Chaîne de développement locale (clients → API → SQL Server)</p>
+  <p>Figure 4.2 — Couches de la solution .NET réalisées</p>
+  <p>Figure 4.3 — Portail web : authentification superviseur</p>
+  <p>Figure 4.4 — Application mobile : authentification agent</p>
+  <p>Figure 4.5 — Création d'inventaire et préparation de l'import</p>
+  <p>Figure 4.6 — Suivi d'avancement temps réel (canal web)</p>
+  <p>Figure 4.7 — Gestion des écarts (branche A)</p>
+  <p>Figure 4.8 — Tableau de bord KPI réalisé</p>
+  <p>Figure 4.9 — Liste des emplacements assignés (mobile)</p>
+  <p>Figure 4.10 — Boucle de scan et progression par US</p>
+  <p>Figure 4.11 — Démarrage du comptage sur un emplacement</p>
+  <p>Figure 4.12 — Progression du scan pendant le passage C1</p>
+  <p>Figure 4.13 — Chaîne de synchronisation offline (Flutter)</p>
+  <p>Figure 4.14 — Enchaînement des sprints de réalisation</p>
+  <p>Figure 4.15 — Topologie de déploiement sur serveur local</p>
+  <p>Figure 4.16 — API publiée sur le serveur local (Swagger)</p>
+  <p>Figure 4.17 — Portail superviseur déployé en local <em>(à compléter)</em></p>
+  <p>Figure 4.18 — Application mobile configurée pour le serveur local <em>(à compléter)</em></p>
+
+  <h3>Chapitre 5</h3>
+  <p>Figure 5.1 — Niveaux de test privilégiés</p>
+  <p>Figure 5.2 — Point d'entrée des tests API : Swagger</p>
+  <p>Figure 5.3 — Jeu de données Excel / rapport d'assignation <em>(à compléter)</em></p>
+  <p>Figure 5.4 — Test d'intégration API (Postman) <em>(à compléter)</em></p>
+  <p>Figure 5.5 — Étape superviseur : création avant import de test</p>
+  <p>Figure 5.6 — Étape agent : liste filtrée des emplacements</p>
+  <p>Figure 5.7 — Étape agent : progression du scan et quotas</p>
+  <p>Figure 5.8 — Vérification BDD après scénario E2E <em>(à compléter)</em></p>
+  <p>Figure 5.9 — Chaîne vérifiée lors des tests offline</p>
+  <p>Figure 5.10 — Contrôle superviseur : suivi d'avancement</p>
+  <p>Figure 5.11 — Contrôle superviseur : écarts détectés</p>
+  <p>Figure 5.12 — Contrôle superviseur : indicateurs KPI</p>
+  <p>Figure 5.13 — Séance de validation / démonstration <em>(optionnel)</em></p>
+</div>
+<div class="list-tab">
+  <h1 class="no-break" style="font-size:16pt;text-align:left;border:none;margin-top:0;">Liste des tableaux</h1>
+
+  <h3>Chapitre 1</h3>
+  <p>Tableau 1.1 — Stack technologique de la solution</p>
+  <p>Tableau 1.2 — Découpage des sprints 0 à 9</p>
+
+  <h3>Chapitre 2</h3>
+  <p>Tableau 2.1 — Acteurs du système</p>
+  <p>Tableau 2.2 — Exigences d'authentification (RF-01 à RF-04)</p>
+  <p>Tableau 2.3 — Exigences inventaires et passages</p>
+  <p>Tableau 2.4 — Exigences d'import et d'assignation</p>
+  <p>Tableau 2.5 — Exigences de comptage terrain</p>
+  <p>Tableau 2.6 — Exigences de gestion des écarts</p>
+  <p>Tableau 2.7 — Exigences KPI et temps réel</p>
+  <p>Tableau 2.8 — Exigences non fonctionnelles (RNF)</p>
+  <p>Tableau 2.9 — Catalogue des cas d'utilisation</p>
+  <p>Tableau 2.10 — Backlog produit (user stories par sprint)</p>
+  <p>Tableau 2.11 — Matrice de traçabilité exigences / composants</p>
+
+  <h3>Chapitre 3</h3>
+  <p>Tableau 3.1 — Énumérations du domaine métier</p>
+  <p>Tableau 3.2 — Cas d'utilisation détaillés (authentification … pilotage)</p>
+  <p>Tableau 3.3 — Vue synthétique des endpoints API</p>
+
+  <h3>Chapitre 4</h3>
+  <p>Tableau 4.1 — Environnement de développement et outillage</p>
+  <p>Tableau 4.2 — Migrations EF Core</p>
+  <p>Tableau 4.3 — Endpoints métier et hub SignalR</p>
+  <p>Tableau 4.4 — Livrables techniques par sprint</p>
+  <p>Tableau 4.5 — Architecture de déploiement sur serveur local</p>
+  <p>Tableau 4.6 — Difficultés rencontrées et solutions</p>
+
+  <h3>Chapitre 5</h3>
+  <p>Tableau 5.1 — Niveaux de test et outils</p>
+  <p>Tableau 5.2 — Configuration de l'environnement de test</p>
+  <p>Tableau 5.3 — Jeu de données Excel de référence</p>
+  <p>Tableau 5.4 — Cas de test API (T-API-01 à T-API-13)</p>
+  <p>Tableau 5.5 — Critères d'acceptation du scénario E2E</p>
+  <p>Tableau 5.6 — Cas de test offline</p>
+  <p>Tableau 5.7 — Matrice de couverture des exigences</p>
+  <p>Tableau 5.8 — Vérifications non fonctionnelles</p>
+</div>
+<div class="toc">
+  <h2 style="border:none;">Table des matières</h2>
+  <p>Dédicace</p>
+  <p>Remerciements</p>
+  <p>Résumé</p>
+  <p>Abstract</p>
+  <p>Liste des abréviations</p>
+  <p>Liste des figures</p>
+  <p>Liste des tableaux</p>
+  <p><strong>Introduction générale</strong></p>
+  <p><strong>Chapitre 1 — Cadre du projet</strong></p>
+  <p>&nbsp;&nbsp;1.1 Cadre général du projet</p>
+  <p>&nbsp;&nbsp;1.2 Étude de l'existant</p>
+  <p>&nbsp;&nbsp;1.3 Problématique</p>
+  <p>&nbsp;&nbsp;1.4 Solution proposée</p>
+  <p>&nbsp;&nbsp;1.5 Méthodologie de gestion de projet</p>
+  <p>&nbsp;&nbsp;Conclusion du chapitre 1</p>
+  <p><strong>Chapitre 2 — Analyse et spécification des besoins</strong></p>
+  <p>&nbsp;&nbsp;2.1 Identification des acteurs</p>
+  <p>&nbsp;&nbsp;2.2 Analyse des besoins fonctionnels</p>
+  <p>&nbsp;&nbsp;2.3 Besoins non fonctionnels</p>
+  <p>&nbsp;&nbsp;2.4 Diagramme de cas d'utilisation</p>
+  <p>&nbsp;&nbsp;2.5 Scénario principal de comptage C1</p>
+  <p>&nbsp;&nbsp;2.6 Backlog produit et user stories</p>
+  <p>&nbsp;&nbsp;2.7 Matrice de traçabilité</p>
+  <p>&nbsp;&nbsp;Conclusion du chapitre 2</p>
+  <p><strong>Chapitre 3 — Conception de la solution</strong></p>
+  <p>&nbsp;&nbsp;3.1 Architecture globale de la solution</p>
+  <p>&nbsp;&nbsp;3.2 Modèle de données et diagramme de classes global</p>
+  <p>&nbsp;&nbsp;3.3 Conception par fonctionnalité</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;3.3.1 Authentification</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;3.3.2 Création et configuration d'inventaire</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;3.3.3 Import du stock théorique</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;3.3.4 Comptage terrain</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;3.3.5 Gestion des écarts</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;3.3.6 Pilotage et suivi</p>
+  <p>&nbsp;&nbsp;3.4 Vue synthétique de l'API</p>
+  <p>&nbsp;&nbsp;Conclusion du chapitre 3</p>
+  <p><strong>Chapitre 4 — Réalisation technique</strong></p>
+  <p>&nbsp;&nbsp;4.1 Environnement de développement et outillage</p>
+  <p>&nbsp;&nbsp;4.2 Réalisation de l'API ASP.NET Core</p>
+  <p>&nbsp;&nbsp;4.3 Réalisation de l'application web de supervision</p>
+  <p>&nbsp;&nbsp;4.4 Réalisation de l'application mobile agent</p>
+  <p>&nbsp;&nbsp;4.5 Déroulement des sprints et livrables</p>
+  <p>&nbsp;&nbsp;4.6 Déploiement sur serveur local</p>
+  <p>&nbsp;&nbsp;4.7 Difficultés rencontrées et solutions retenues</p>
+  <p>&nbsp;&nbsp;Conclusion du chapitre 4</p>
+  <p><strong>Chapitre 5 — Tests et validation</strong></p>
+  <p>&nbsp;&nbsp;5.1 Stratégie et niveaux de test</p>
+  <p>&nbsp;&nbsp;5.2 Environnement et jeux de données</p>
+  <p>&nbsp;&nbsp;5.3 Tests d'API (Swagger et Postman)</p>
+  <p>&nbsp;&nbsp;5.4 Scénario bout-en-bout : import et comptage</p>
+  <p>&nbsp;&nbsp;5.5 Tests mobile, offline et supervision</p>
+  <p>&nbsp;&nbsp;5.6 Matrice de couverture des exigences</p>
+  <p>&nbsp;&nbsp;5.7 Tests non fonctionnels</p>
+  <p>&nbsp;&nbsp;5.8 Synthèse des résultats et limites</p>
+  <p>&nbsp;&nbsp;Conclusion du chapitre 5</p>
+  <p><strong>Conclusion générale</strong></p>
+  <p><strong>Perspectives</strong></p>
+  <p><strong>Bibliographie</strong></p>
+</div>
+<h1 class="no-break">Introduction générale</h1>
+
+<p>
+La gestion des stocks constitue un enjeu stratégique pour les opérateurs logistiques. Une discordance
+entre le stock théorique enregistré dans les systèmes d'information et la réalité physique observée
+sur le terrain engendre des pertes financières, des ruptures de service et une dégradation de la
+relation client. L'inventaire physique demeure une pratique incontournable, malgré sa lourdeur
+organisationnelle.
+</p>
+<p>
+VECTORYS Tunisie fait face à cette réalité au quotidien. Les inventaires y étaient pilotés à l'aide
+d'outils hétérogènes (Excel, terminaux dédiés, ERP hérités) ne facilitant ni la coordination terrain,
+ni le traitement structuré des écarts. C'est dans ce cadre que s'inscrit le présent projet, intitulé
+« Conception et développement d'une plateforme d'inventaire logistique multi-canal ».
+</p>
+<p>
+La plateforme <strong>Vectorys Inventaire</strong> repose sur trois composants : une API REST ASP.NET Core 9
+(Clean Architecture, CQRS/MediatR), une application web Angular 19 de supervision et une application
+mobile Flutter pour le scan terrain. SQL Server centralise les données ; SignalR assure le temps réel ;
+SQLite local permet le mode hors ligne. Le projet a été mené selon Scrum en dix sprints, tous achevés.
+</p>
+<p>
+Ce rapport décrit progressivement le travail réalisé : le chapitre 1 présente le cadre du projet ;
+le chapitre 2 analyse les besoins ; le chapitre 3 détaille la conception ; le chapitre 4 expose la
+réalisation par sprint ; le chapitre 5 aborde les tests et la validation.
+</p>
+
+<h1>Chapitre 1 — Cadre du projet</h1>
+<p class="chapter-intro">
+Ce chapitre situe le projet dans son environnement organisationnel et métier, formule la problématique,
+décrit la solution retenue et expose la méthodologie Scrum adoptée.
+</p>
+
+<h2>1.1 Cadre général du projet</h2>
+<h3>1.1.1 Présentation de l'organisme d'accueil</h3>
+<p>
+VECTORYS Tunisie est une entreprise de logistique et supply chain implantée à Radès. Elle assure la
+gestion d'entrepôts, la préparation de commandes et le contrôle des flux pour ses clients. Les
+inventaires tournants ou annuels mobilisent superviseurs et agents terrain ; leur précision conditionne
+directement la fiabilité des opérations de picking et d'expédition.
+</p>
+<p>
+Le stage s'est déroulé sous l'encadrement de M. Ferchichi Marwen (VECTORYS) et de Mme Zrelli Siwar
+(TEK-UP), dans le cadre du diplôme d'ingénieur en Génie Logiciel et Systèmes d'Information.
+</p>
+
+<h3>1.1.2 Contexte et objectifs du projet</h3>
+<p>Les objectifs principaux du projet ont été les suivants :</p>
+<ol>
+  <li>Digitaliser la préparation d'inventaire (création mission, import Excel, passage C1, assignation agents).</li>
+  <li>Outiller le comptage terrain (scan en boucle, quotas US, clôture automatique des emplacements).</li>
+  <li>Assurer traçabilité et résilience (horodatage, mode hors ligne, synchronisation sans doublon).</li>
+  <li>Automatiser la détection des écarts et les workflows de correction (branches A et B).</li>
+  <li>Offrir un pilotage temps réel et des tableaux de bord KPI.</li>
+</ol>
+
+<h2>1.2 Étude de l'existant</h2>
+<h3>1.2.1 Pratiques internes</h3>
+<p>
+Avant le projet, le processus reposait sur l'extraction Excel depuis l'ERP Sage, la répartition manuelle
+des zones, une saisie partielle sur terminaux et une consolidation tardive. Les limites identifiées
+étaient : absence de source de vérité temps réel, risques de doublons, suivi d'avancement difficile,
+traitement des écarts non standardisé et KPI produits tardivement.
+</p>
+<h3>1.2.2 Solutions du marché</h3>
+<p>
+Les WMS généralistes et les applications de scan génériques ne couvrent pas la logique métier VECTORYS
+(passages C1/C2, assignation stricte CodeAgent, workflows d'écarts). Un espace fonctionnel dédié
+s'est imposé.
+</p>
+
+<h2>1.3 Problématique</h2>
+<p><em>
+Comment concevoir et développer une plateforme d'inventaire logistique multi-canal, fiable et évolutive,
+capable de synchroniser en temps réel le comptage terrain avec le pilotage superviseur, tout en
+garantissant la résilience hors connexion et le traitement structuré des écarts ?
+</em></p>
+
+<h2>1.4 Solution proposée</h2>
+<h3>1.4.1 Architecture générale</h3>
+<p>
+Le système suit une architecture three-tier : couche présentation (Angular + Flutter), couche métier
+(API ASP.NET Core, MediatR, FluentValidation, SignalR) et couche données (SQL Server, EF Core).
+La figure 1.1 illustre cette organisation.
+</p>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 280" width="500">
+  <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#333"/></marker></defs>
+  <rect x="30" y="20" width="200" height="55" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="130" y="42" text-anchor="middle" font-size="13" font-family="Arial" font-weight="bold">Angular 19</text>
+  <text x="130" y="58" text-anchor="middle" font-size="10" font-family="Arial">Interface superviseur</text>
+  <rect x="290" y="20" width="200" height="55" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="390" y="42" text-anchor="middle" font-size="13" font-family="Arial" font-weight="bold">Flutter</text>
+  <text x="390" y="58" text-anchor="middle" font-size="10" font-family="Arial">Application mobile terrain</text>
+  <line x1="130" y1="75" x2="130" y2="105" stroke="#333" marker-end="url(#arr)"/>
+  <line x1="390" y1="75" x2="390" y2="105" stroke="#333" marker-end="url(#arr)"/>
+  <line x1="130" y1="105" x2="390" y2="105" stroke="#333"/>
+  <line x1="260" y1="105" x2="260" y2="130" stroke="#333" marker-end="url(#arr)"/>
+  <rect x="110" y="130" width="300" height="65" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="2"/>
+  <text x="260" y="155" text-anchor="middle" font-size="13" font-family="Arial" font-weight="bold">ASP.NET Core 9 — API REST</text>
+  <text x="260" y="172" text-anchor="middle" font-size="10" font-family="Arial">MediatR · JWT · SignalR · FluentValidation</text>
+  <line x1="260" y1="195" x2="260" y2="220" stroke="#333" marker-end="url(#arr)"/>
+  <rect x="110" y="220" width="300" height="45" rx="6" fill="#fce4ec" stroke="#c2185b" stroke-width="2"/>
+  <text x="260" y="248" text-anchor="middle" font-size="13" font-family="Arial" font-weight="bold">Microsoft SQL Server</text>
+  <text x="400" y="175" font-size="9" font-family="Arial" fill="#2e7d32">SQLite (offline)</text>
+  <line x1="390" y1="75" x2="430" y2="175" stroke="#2e7d32" stroke-dasharray="4"/>
+</svg>
+<figcaption>Figure 1.1 — Architecture three-tier de la plateforme Vectorys Inventaire</figcaption>
+</figure>
+
+<h3>1.4.2 Flux métier principaux</h3>
+<p>Cinq flux structurants ont guidé la conception (figure 1.2) :</p>
+<ol>
+  <li>Préparation : import Excel → inventaire → C1 → assignation CodeAgent.</li>
+  <li>Comptage : scan emplacement → boucle US → quota → clôture automatique.</li>
+  <li>Détection d'écarts : comparaison théorique / réel.</li>
+  <li>Résolution : branche A (C2 ciblé) ou branche B (recomptage global).</li>
+  <li>Clôture : export Excel, KPI, analyse par zone client.</li>
+</ol>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 120" width="520">
+  <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1565c0"/></marker></defs>
+  <g font-family="Arial" font-size="9" text-anchor="middle">
+    <rect x="5" y="40" width="78" height="40" rx="4" fill="#e3f2fd" stroke="#1565c0"/><text x="44" y="58">Import</text><text x="44" y="70">Excel</text>
+    <rect x="95" y="40" width="78" height="40" rx="4" fill="#e3f2fd" stroke="#1565c0"/><text x="134" y="58">Création</text><text x="134" y="70">Inventaire</text>
+    <rect x="185" y="40" width="78" height="40" rx="4" fill="#e8f5e9" stroke="#2e7d32"/><text x="224" y="58">Scan</text><text x="224" y="70">terrain</text>
+    <rect x="275" y="40" width="78" height="40" rx="4" fill="#fff3e0" stroke="#e65100"/><text x="314" y="58">Détection</text><text x="314" y="70">écarts</text>
+    <rect x="365" y="40" width="78" height="40" rx="4" fill="#fce4ec" stroke="#c2185b"/><text x="404" y="58">Branche</text><text x="404" y="70">A / B</text>
+    <rect x="455" y="40" width="95" height="40" rx="4" fill="#f3e5f5" stroke="#7b1fa2"/><text x="502" y="58">Export &amp;</text><text x="502" y="70">KPI</text>
+  </g>
+  <line x1="83" y1="60" x2="95" y2="60" stroke="#1565c0" marker-end="url(#a2)"/>
+  <line x1="173" y1="60" x2="185" y2="60" stroke="#1565c0" marker-end="url(#a2)"/>
+  <line x1="263" y1="60" x2="275" y2="60" stroke="#1565c0" marker-end="url(#a2)"/>
+  <line x1="353" y1="60" x2="365" y2="60" stroke="#1565c0" marker-end="url(#a2)"/>
+  <line x1="443" y1="60" x2="455" y2="60" stroke="#1565c0" marker-end="url(#a2)"/>
+</svg>
+<figcaption>Figure 1.2 — Flux métier principal du cycle d'inventaire Vectorys</figcaption>
+</figure>
+
+<h3>1.4.3 Stack technologique</h3>
+<table>
+  <tr><th>Composant</th><th>Technologie</th><th>Rôle</th></tr>
+  <tr><td>Backend</td><td>ASP.NET Core 9, C#</td><td>API REST, SignalR, JWT</td></tr>
+  <tr><td>ORM</td><td>Entity Framework Core 9</td><td>SQL Server, migrations</td></tr>
+  <tr><td>Web</td><td>Angular 19, Chart.js</td><td>Supervision, KPI</td></tr>
+  <tr><td>Mobile</td><td>Flutter, SQLite</td><td>Scan, mode offline</td></tr>
+  <tr><td>Import/Export</td><td>ClosedXML</td><td>Fichiers Excel</td></tr>
+</table>
+
+<h2>1.5 Méthodologie de gestion de projet</h2>
+<h3>1.5.1 Choix de la méthode Scrum</h3>
+<p>
+Le projet a été mené selon Scrum, méthode agile adaptée aux projets logiciels évolutifs. Des sprints
+de une à deux semaines ont livré des incréments testables, de la fondation technique au déploiement.
+La figure 1.3 présente le cadre Scrum appliqué au projet.
+</p>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 320" width="480">
+  <rect x="170" y="10" width="160" height="45" rx="20" fill="#1a5490" stroke="#0d3a6e"/>
+  <text x="250" y="38" text-anchor="middle" fill="white" font-family="Arial" font-size="12" font-weight="bold">Product Owner</text>
+  <text x="250" y="70" text-anchor="middle" font-family="Arial" font-size="9">M. Ferchichi Marwen</text>
+  <line x1="250" y1="55" x2="250" y2="85" stroke="#333" stroke-width="2"/>
+  <rect x="100" y="85" width="300" height="50" rx="4" fill="#fff8e1" stroke="#f9a825" stroke-width="2"/>
+  <text x="250" y="108" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold">Product Backlog</text>
+  <text x="250" y="123" text-anchor="middle" font-family="Arial" font-size="9">User stories : auth, scan, écarts, KPI…</text>
+  <line x1="250" y1="135" x2="250" y2="155" stroke="#333" marker-end="url(#arr)"/>
+  <rect x="60" y="155" width="380" height="100" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+  <text x="250" y="178" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold">Sprint (1–2 semaines)</text>
+  <rect x="80" y="190" width="95" height="50" rx="4" fill="white" stroke="#2e7d32"/><text x="127" y="212" text-anchor="middle" font-size="9" font-family="Arial">Planning</text><text x="127" y="225" text-anchor="middle" font-size="8" font-family="Arial">Sprint</text>
+  <rect x="185" y="190" width="95" height="50" rx="4" fill="white" stroke="#2e7d32"/><text x="232" y="212" text-anchor="middle" font-size="9" font-family="Arial">Daily</text><text x="232" y="225" text-anchor="middle" font-size="8" font-family="Arial">Stand-up</text>
+  <rect x="290" y="190" width="95" height="50" rx="4" fill="white" stroke="#2e7d32"/><text x="337" y="212" text-anchor="middle" font-size="9" font-family="Arial">Revue</text><text x="337" y="225" text-anchor="middle" font-size="8" font-family="Arial">Sprint</text>
+  <rect x="395" y="190" width="35" height="50" rx="4" fill="white" stroke="#2e7d32"/><text x="412" y="218" text-anchor="middle" font-size="8" font-family="Arial">Rétro</text>
+  <text x="250" y="275" text-anchor="middle" font-family="Arial" font-size="10">Scrum Master / Développeur : Harrabi Yosri</text>
+  <text x="250" y="295" text-anchor="middle" font-family="Arial" font-size="10" fill="#2e7d32">Incrément livré → Produit Vectorys Inventaire</text>
+</svg>
+<figcaption>Figure 1.3 — Cadre Scrum et répartition des rôles dans le projet</figcaption>
+</figure>
+
+<h3>1.5.2 Rôles et cérémonies</h3>
+<ul>
+  <li><strong>Product Owner</strong> : priorisation du backlog, validation métier.</li>
+  <li><strong>Scrum Master / développeur</strong> : organisation des sprints, implémentation, documentation.</li>
+  <li><strong>Cérémonies</strong> : planification, daily stand-up, revue de sprint, rétrospective.</li>
+</ul>
+
+<h3>1.5.3 Découpage en sprints</h3>
+<p>
+Le tableau ci-dessous résume le découpage fonctionnel et les livrables réalisés. L'ensemble des dix
+sprints (0 à 9) a été mené à terme. La figure 1.4 en propose une vue chronologique.
+</p>
+
+<table>
+  <tr><th>Sprint</th><th>Objectif principal</th></tr>
+  <tr><td>0</td><td>Fondations : structure solution, base de données et dépôt Git</td></tr>
+  <tr><td>1</td><td>Authentification JWT pour les interfaces web et mobile</td></tr>
+  <tr><td>2</td><td>Création d'inventaire, import Excel et assignation des agents</td></tr>
+  <tr><td>3</td><td>Scan Flutter et SignalR temps réel</td></tr>
+  <tr><td>4</td><td>Mode hors ligne et synchronisation batch</td></tr>
+  <tr><td>5</td><td>Détection et gestion des écarts (branche A)</td></tr>
+  <tr><td>6</td><td>Branche B, clôture et export Excel final</td></tr>
+  <tr><td>7</td><td>Module KPI et analytics (Chart.js)</td></tr>
+  <tr><td>8</td><td>Tests automatisés et documentation Swagger</td></tr>
+  <tr><td>9</td><td>Déploiement IIS, APK terrain et validation end-to-end</td></tr>
+</table>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 100" width="520">
+  <g font-family="Arial" font-size="8">
+    <circle cx="30" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="30" y="38" text-anchor="middle" fill="white" font-weight="bold">0</text>
+    <circle cx="80" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="80" y="38" text-anchor="middle" fill="white" font-weight="bold">1</text>
+    <circle cx="130" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="130" y="38" text-anchor="middle" fill="white" font-weight="bold">2</text>
+    <circle cx="180" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="180" y="38" text-anchor="middle" fill="white" font-weight="bold">3</text>
+    <circle cx="230" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="230" y="38" text-anchor="middle" fill="white" font-weight="bold">4</text>
+    <circle cx="280" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="280" y="38" text-anchor="middle" fill="white" font-weight="bold">5</text>
+    <circle cx="330" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="330" y="38" text-anchor="middle" fill="white" font-weight="bold">6</text>
+    <circle cx="380" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="380" y="38" text-anchor="middle" fill="white" font-weight="bold">7</text>
+    <circle cx="430" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="430" y="38" text-anchor="middle" fill="white" font-weight="bold">8</text>
+    <circle cx="480" cy="35" r="14" fill="#4caf50" stroke="#2e7d32"/><text x="480" y="38" text-anchor="middle" fill="white" font-weight="bold">9</text>
+    <line x1="44" y1="35" x2="66" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <line x1="94" y1="35" x2="116" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <line x1="144" y1="35" x2="166" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <line x1="194" y1="35" x2="216" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <line x1="244" y1="35" x2="266" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <line x1="294" y1="35" x2="316" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <line x1="344" y1="35" x2="366" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <line x1="394" y1="35" x2="416" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <line x1="444" y1="35" x2="466" y2="35" stroke="#2e7d32" stroke-width="2"/>
+    <text x="30" y="65" text-anchor="middle">Fond.</text>
+    <text x="130" y="65" text-anchor="middle">Inventaire</text>
+    <text x="230" y="65" text-anchor="middle">Offline</text>
+    <text x="330" y="65" text-anchor="middle">Branche B</text>
+    <text x="430" y="65" text-anchor="middle">Tests</text>
+    <text x="480" y="65" text-anchor="middle">Prod.</text>
+    <text x="280" y="88" text-anchor="middle" font-size="9" fill="#2e7d32" font-weight="bold">Tous les sprints achevés (100 %)</text>
+  </g>
+</svg>
+<figcaption>Figure 1.4 — Frise chronologique des sprints 0 à 9 (version finale)</figcaption>
+</figure>
+
+<p>
+Ce découpage a permis une montée en charge progressive : fondations, métier, résilience offline,
+analyse des écarts et KPI, puis tests et déploiement. À l'issue du sprint 9, la plateforme couvre
+l'intégralité du cycle d'inventaire prévu.
+</p>
+
+<h2>Conclusion</h2>
+<p>
+Ce chapitre a situé le projet dans son contexte VECTORYS, formulé la problématique et présenté la
+solution Vectorys Inventaire ainsi que la méthodologie Scrum retenue. Le chapitre suivant détaillera
+l'analyse des besoins fonctionnels et non fonctionnels, les acteurs et les spécifications du système.
+</p>
+
+<h1>Chapitre 2 — Analyse et spécification des besoins</h1>
+<p class="chapter-intro">
+Ce chapitre traduit les objectifs métier en exigences formalisées. Il identifie les acteurs,
+détaille les besoins fonctionnels et non fonctionnels, présente le diagramme de cas d'utilisation,
+le backlog produit et la matrice de traçabilité vers les sprints réalisés.
+</p>
+
+<h2>Introduction</h2>
+<p>
+L'analyse des besoins constitue une étape structurante entre le cadrage du projet (chapitre 1) et
+sa conception technique (chapitre 3). Elle s'appuie sur des entretiens avec l'encadrant professionnel,
+l'observation des pratiques d'inventaire à VECTORYS Radès et l'analyse des fichiers Excel existants.
+Les exigences ont été priorisées dans un backlog Scrum et implémentées au fil des dix sprints, tous
+achevés dans la version finale du produit.
+</p>
+
+<h2>2.1 Identification des acteurs</h2>
+<h3>2.1.1 Acteurs humains</h3>
+<p>Le système distingue trois rôles applicatifs, matérialisés par l'énumération <em>RoleEnum</em> :</p>
+
+<table>
+  <tr><th>Acteur</th><th>Rôle technique</th><th>Canal</th><th>Responsabilités principales</th></tr>
+  <tr>
+    <td><strong>Superviseur</strong></td><td>SUPERVISEUR</td><td>Application web Angular</td>
+    <td>Créer les inventaires, importer le stock théorique, suivre l'avancement temps réel, détecter et traiter les écarts, consulter les KPI.</td>
+  </tr>
+  <tr>
+    <td><strong>Agent de comptage</strong></td><td>AGENT</td><td>Application mobile Flutter</td>
+    <td>S'authentifier via son code personnel, consulter ses emplacements assignés, scanner les unités de stock, synchroniser les données offline.</td>
+  </tr>
+  <tr>
+    <td><strong>Administrateur</strong></td><td>ADMIN</td><td>Application web</td>
+    <td>Gérer les comptes utilisateurs, disposer des mêmes privilèges de supervision que le superviseur.</td>
+  </tr>
+</table>
+
+<p>
+L'authentification est dual-mode : l'agent se connecte avec son <em>CodePersonnel</em> (ex. AG001),
+tandis que le superviseur utilise email et mot de passe. Un JWT est émis avec une durée de validité
+de 8 h (agent) ou 24 h (superviseur/admin), transportant les claims <em>sub</em>, <em>role</em>,
+<em>nom</em> et <em>codePersonnel</em>.
+</p>
+
+<h3>2.1.2 Acteurs systèmes</h3>
+<ul>
+  <li><strong>ERP / fichier Excel</strong> : source du stock théorique (colonnes CodeEmplacement, CodeUS, Qte, CodeAgent).</li>
+  <li><strong>SQL Server</strong> : persistance centralisée (base VectorysDB).</li>
+  <li><strong>Hub SignalR</strong> : diffusion temps réel des événements <em>NouveauScan</em> et <em>FinComptage</em>.</li>
+  <li><strong>SQLite mobile</strong> : cache local pour le mode hors ligne.</li>
+</ul>
+
+<h2>2.2 Analyse des besoins fonctionnels</h2>
+<p>
+Les besoins fonctionnels ont été regroupés par domaine métier. Chaque exigence est identifiée par
+un code RF-xx et associée à au moins un acteur.
+</p>
+
+<h3>2.2.1 Authentification et gestion des utilisateurs</h3>
+<table>
+  <tr><th>ID</th><th>Exigence</th><th>Acteur</th><th>Priorité</th></tr>
+  <tr><td class="req-id">RF-01</td><td>Connexion agent par code personnel avec émission JWT</td><td>Agent</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-02</td><td>Connexion superviseur/admin par email et mot de passe</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-03</td><td>Contrôle d'accès par rôle sur chaque endpoint API</td><td>Système</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-04</td><td>Rejet des comptes inactifs (Actif = false)</td><td>Système</td><td>Moyenne</td></tr>
+</table>
+
+<h3>2.2.2 Gestion des inventaires et passages</h3>
+<table>
+  <tr><th>ID</th><th>Exigence</th><th>Acteur</th><th>Priorité</th></tr>
+  <tr><td class="req-id">RF-05</td><td>Créer un inventaire avec référence auto INV-{année}-{seq}</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-06</td><td>Créer automatiquement le passage C1 à la création</td><td>Système</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-07</td><td>Lister les inventaires avec pagination</td><td>Superviseur</td><td>Moyenne</td></tr>
+  <tr><td class="req-id">RF-08</td><td>Créer un passage C2 pour recomptage</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-09</td><td>Suivre l'avancement temps réel par agent et emplacement</td><td>Superviseur</td><td>Haute</td></tr>
+</table>
+
+<h3>2.2.3 Import Excel et assignation</h3>
+<table>
+  <tr><th>ID</th><th>Exigence</th><th>Acteur</th><th>Priorité</th></tr>
+  <tr><td class="req-id">RF-10</td><td>Importer un fichier Excel (.xlsx) sur un passage</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-11</td><td>Valider les colonnes obligatoires dont CodeAgent</td><td>Système</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-12</td><td>Créer emplacements, lignes StockThéorique et assignations</td><td>Système</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-13</td><td>Produire un rapport d'import par agent</td><td>Superviseur</td><td>Moyenne</td></tr>
+  <tr><td class="req-id">RF-14</td><td>Passer l'inventaire au statut EN_COURS après import réussi</td><td>Système</td><td>Haute</td></tr>
+</table>
+
+<figure>
+  <img class="screenshot" src="assets/fig2-1-create-inventaire.png" alt="Écran de création d'inventaire et import Excel" />
+  <figcaption>Figure 2.1 — Écran de création d'inventaire et import du stock théorique (interface superviseur Angular)</figcaption>
+</figure>
+
+<h3>2.2.4 Comptage terrain (scan)</h3>
+<table>
+  <tr><th>ID</th><th>Exigence</th><th>Acteur</th><th>Priorité</th></tr>
+  <tr><td class="req-id">RF-15</td><td>Afficher uniquement les emplacements assignés à l'agent connecté</td><td>Agent</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-16</td><td>Enregistrer un scan de code US avec horodatage</td><td>Agent</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-17</td><td>Refuser les scans au-delà du quota QteThéorique par US</td><td>Système</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-18</td><td>Clôturer automatiquement l'emplacement (TERMINE) quand tous les US sont couverts</td><td>Système</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-19</td><td>Afficher la progression par US (scanné / théorique)</td><td>Agent</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-20</td><td>Synchroniser les scans offline par batch sans doublon (IdLocalFlutter)</td><td>Agent</td><td>Haute</td></tr>
+</table>
+
+<figure class="figure-multi">
+  <img class="screenshot screenshot-mobile" src="assets/fig2-2a-zones-agent.png" alt="Liste des emplacements assignés à l'agent" />
+  <img class="screenshot screenshot-mobile" src="assets/fig2-2b-scan-debut.png" alt="Boucle de scan — début du comptage 0/3" />
+  <img class="screenshot screenshot-mobile" src="assets/fig2-2c-scan-progression.png" alt="Boucle de scan — progression 1/3" />
+  <figcaption>Figure 2.2 — Interface agent : liste des zones, scan en boucle et progression par unité de stock (application mobile Flutter)</figcaption>
+</figure>
+
+<h3>2.2.5 Gestion des écarts</h3>
+<table>
+  <tr><th>ID</th><th>Exigence</th><th>Acteur</th><th>Priorité</th></tr>
+  <tr><td class="req-id">RF-21</td><td>Détecter les écarts MANQUANT et SURPLUS sur emplacements TERMINE</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-22</td><td>Lister les écarts par inventaire avec agrégats</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-23</td><td>Appliquer la branche A : marquer écarts traités, créer C2, cloner emplacements</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-24</td><td>Supporter la branche B (recomptage global et fusion)</td><td>Superviseur</td><td>Moyenne</td></tr>
+</table>
+
+<h3>2.2.6 Pilotage KPI et temps réel</h3>
+<table>
+  <tr><th>ID</th><th>Exigence</th><th>Acteur</th><th>Priorité</th></tr>
+  <tr><td class="req-id">RF-25</td><td>Notifier le superviseur en temps réel (SignalR) à chaque scan et clôture</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-26</td><td>Consulter les KPI précision, performance, qualité, clients, WMS</td><td>Superviseur</td><td>Haute</td></tr>
+  <tr><td class="req-id">RF-27</td><td>Filtrer les KPI par inventaire, période et zone</td><td>Superviseur</td><td>Moyenne</td></tr>
+</table>
+
+<figure class="figure-multi">
+  <img class="screenshot" src="assets/fig2-3a-kpi-dashboard.png" alt="Dashboard KPI — précision et performance" />
+  <img class="screenshot" src="assets/fig2-3b-kpi-wms.png" alt="Dashboard KPI — qualité, clients et WMS" />
+  <figcaption>Figure 2.3 — Dashboard KPI : précision, performance, qualité, clients et indicateurs WMS (interface superviseur Angular)</figcaption>
+</figure>
+
+<h2>2.3 Besoins non fonctionnels</h2>
+<p>
+Les exigences non fonctionnelles garantissent la qualité d'exploitation de la plateforme en
+environnement industriel.
+</p>
+
+<table>
+  <tr><th>ID</th><th>Catégorie</th><th>Exigence</th><th>Solution retenue</th></tr>
+  <tr><td class="req-id">RNF-01</td><td>Sécurité</td><td>Authentification et autorisation robustes</td><td>JWT HMAC-SHA256, policies SuperviseurOnly / AgentOnly, BCrypt</td></tr>
+  <tr><td class="req-id">RNF-02</td><td>Performance</td><td>Import Excel de milliers de lignes</td><td>Insertion par batch (1000 lignes), limite upload 50 Mo</td></tr>
+  <tr><td class="req-id">RNF-03</td><td>Disponibilité</td><td>Continuité en zone Wi-Fi faible</td><td>SQLite local + sync batch au retour réseau</td></tr>
+  <tr><td class="req-id">RNF-04</td><td>Intégrité</td><td>Pas de doublons offline</td><td>Index unique IdLocalFlutter, idempotence API</td></tr>
+  <tr><td class="req-id">RNF-05</td><td>Temps réel</td><td>Latence faible superviseur</td><td>SignalR, groupes par inventaireId</td></tr>
+  <tr><td class="req-id">RNF-06</td><td>Maintenabilité</td><td>Séparation des responsabilités</td><td>Clean Architecture, CQRS MediatR, FluentValidation</td></tr>
+  <tr><td class="req-id">RNF-07</td><td>Observabilité</td><td>Traçabilité des erreurs</td><td>Serilog, middleware ExceptionHandlingMiddleware</td></tr>
+  <tr><td class="req-id">RNF-08</td><td>Interopérabilité</td><td>API documentée</td><td>Swagger OpenAPI, JSON camelCase</td></tr>
+  <tr><td class="req-id">RNF-09</td><td>Ergonomie</td><td>Scan rapide terrain</td><td>Boucle scan Flutter, retour visuel/haptique, quotas</td></tr>
+  <tr><td class="req-id">RNF-10</td><td>Scalabilité KPI</td><td>Requêtes agrégées performantes</td><td>Index SQL Sprint 7, vues KPI optionnelles</td></tr>
+</table>
+
+<h2>2.4 Diagramme de cas d'utilisation</h2>
+<p>
+Le diagramme de cas d'utilisation UML ci-dessous modélise l'ensemble des interactions entre les
+acteurs identifiés (section 2.1) et le système Vectorys Inventaire. Il couvre les trente-deux cas
+d'utilisation (UC-01 à UC-32) regroupés en sept packages fonctionnels, en correspondance directe
+avec les exigences RF-01 à RF-27 et les endpoints API implémentés. L'administrateur hérite par
+généralisation des cas du superviseur ; l'agent n'accède qu'aux cas de comptage terrain.
+</p>
+
+<figure class="use-case figure-box">
+  <img class="screenshot use-case-diagram" src="assets/fig2-4-use-case-diagram.png" alt="Diagramme de cas d'utilisation Vectorys Inventaire" />
+  <figcaption>Figure 2.4 — Diagramme de cas d'utilisation détaillé de la plateforme Vectorys Inventaire</figcaption>
+</figure>
+
+<h3>2.4.1 Catalogue des cas d'utilisation</h3>
+<p>Le tableau suivant récapitule les cas d'utilisation principaux, leurs acteurs et les exigences associées.</p>
+
+<table>
+  <tr><th>ID</th><th>Cas d'utilisation</th><th>Acteur(s)</th><th>Exigence</th><th>API / composant</th></tr>
+  <tr><td>UC-01</td><td>Connexion agent (JWT 8h)</td><td>Agent</td><td>RF-01</td><td>POST /api/auth/login</td></tr>
+  <tr><td>UC-02</td><td>Connexion superviseur/admin (JWT 24h)</td><td>Superviseur, Admin</td><td>RF-02</td><td>POST /api/auth/login</td></tr>
+  <tr><td>UC-03</td><td>Contrôle d'accès par rôle</td><td>Système</td><td>RF-03, RF-04</td><td>Policies JWT</td></tr>
+  <tr><td>UC-04</td><td>Créer un inventaire (+ réf. auto)</td><td>Superviseur</td><td>RF-05</td><td>POST /api/inventaires</td></tr>
+  <tr><td>UC-05</td><td>Lister les inventaires</td><td>Superviseur</td><td>RF-07</td><td>GET /api/inventaires</td></tr>
+  <tr><td>UC-06</td><td>Suivi temps réel par agent</td><td>Superviseur</td><td>RF-09</td><td>GET /api/inventaires/{id}/suivi-temps-reel</td></tr>
+  <tr><td>UC-07</td><td>Créer passage C2</td><td>Superviseur</td><td>RF-08</td><td>POST /api/passages</td></tr>
+  <tr><td>UC-08</td><td>Générer passage C1 automatiquement</td><td>Système</td><td>RF-06</td><td>&lt;&lt;include&gt;&gt; UC-04</td></tr>
+  <tr><td>UC-09</td><td>Importer stock théorique Excel</td><td>Superviseur, Excel</td><td>RF-10</td><td>POST /api/passages/{id}/import-stock</td></tr>
+  <tr><td>UC-10</td><td>Valider colonne CodeAgent obligatoire</td><td>Système</td><td>RF-11</td><td>StockImportService</td></tr>
+  <tr><td>UC-11</td><td>Créer emplacements et stock théorique</td><td>Système</td><td>RF-12</td><td>ImportStockCommandHandler</td></tr>
+  <tr><td>UC-12</td><td>Consulter rapport d'import par agent</td><td>Superviseur</td><td>RF-13</td><td>ImportStockResultDto</td></tr>
+  <tr><td>UC-13</td><td>Passer inventaire EN_COURS</td><td>Système</td><td>RF-14</td><td>&lt;&lt;include&gt;&gt; UC-09</td></tr>
+  <tr><td>UC-14</td><td>Lister agents actifs</td><td>Superviseur</td><td>—</td><td>GET /api/agents</td></tr>
+  <tr><td>UC-15</td><td>Consulter mes emplacements assignés</td><td>Agent</td><td>RF-15</td><td>GET /api/emplacements/mes-emplacements</td></tr>
+  <tr><td>UC-16</td><td>Enregistrer scan code US</td><td>Agent</td><td>RF-16</td><td>POST /api/scans</td></tr>
+  <tr><td>UC-17</td><td>Afficher progression par US</td><td>Agent</td><td>RF-19</td><td>GetMesEmplacements + scan loop</td></tr>
+  <tr><td>UC-18</td><td>Vérifier quota QteThéorique</td><td>Système</td><td>RF-17</td><td>ScanCompletionService</td></tr>
+  <tr><td>UC-19</td><td>Clôturer emplacement (TERMINE) auto</td><td>Système</td><td>RF-18</td><td>&lt;&lt;extend&gt;&gt; UC-16</td></tr>
+  <tr><td>UC-20</td><td>Synchroniser scans offline (batch)</td><td>Agent, SQLite</td><td>RF-20</td><td>POST /api/scans/batch</td></tr>
+  <tr><td>UC-21</td><td>Terminer comptage emplacement</td><td>Agent</td><td>—</td><td>PUT /api/scans/{id}/fin-comptage</td></tr>
+  <tr><td>UC-22</td><td>Détecter écarts MANQUANT/SURPLUS</td><td>Superviseur</td><td>RF-21</td><td>POST /api/ecarts/detecter/{id}</td></tr>
+  <tr><td>UC-23</td><td>Consulter liste des écarts</td><td>Superviseur</td><td>RF-22</td><td>GET /api/ecarts</td></tr>
+  <tr><td>UC-24</td><td>Appliquer branche A (→ C2)</td><td>Superviseur</td><td>RF-23</td><td>POST /api/ecarts/branche-a</td></tr>
+  <tr><td>UC-25</td><td>Appliquer branche B (recomptage)</td><td>Superviseur</td><td>RF-24</td><td>Workflow C2 global</td></tr>
+  <tr><td>UC-26</td><td>Recevoir notifications SignalR</td><td>Superviseur, Hub</td><td>RF-25</td><td>/hubs/inventaire</td></tr>
+  <tr><td>UC-27</td><td>Consulter dashboard KPI agrégé</td><td>Superviseur</td><td>RF-26</td><td>GET /api/kpi/dashboard</td></tr>
+  <tr><td>UC-28</td><td>KPI Précision (écarts, taux)</td><td>Superviseur</td><td>RF-26</td><td>GET /api/kpi/precision</td></tr>
+  <tr><td>UC-29</td><td>KPI Performance (avancement, productivité)</td><td>Superviseur</td><td>RF-26</td><td>GET /api/kpi/performance</td></tr>
+  <tr><td>UC-30</td><td>KPI Qualité, clients, WMS</td><td>Superviseur</td><td>RF-26</td><td>GET /api/kpi/qualite, /clients, /wms</td></tr>
+  <tr><td>UC-31</td><td>Filtrer KPI (inventaire, période, zone)</td><td>Superviseur</td><td>RF-27</td><td>&lt;&lt;extend&gt;&gt; UC-27</td></tr>
+  <tr><td>UC-32</td><td>Consulter emplacements par passage</td><td>Superviseur</td><td>—</td><td>GET /api/emplacements</td></tr>
+</table>
+
+<h3>2.4.2 Relations include et extend</h3>
+<ul>
+  <li><strong>&lt;&lt;include&gt;&gt;</strong> : UC-04 inclut UC-08 (génération C1) ; UC-09 inclut UC-10, UC-11 et UC-13 ; UC-16 inclut UC-18 (vérification quota) ; UC-27 inclut UC-28 à UC-30.</li>
+  <li><strong>&lt;&lt;extend&gt;&gt;</strong> : UC-19 étend UC-16 lorsque le quota de tous les US est atteint ; UC-31 étend UC-27 lors de l'application de filtres.</li>
+  <li><strong>Généralisation</strong> : l'administrateur hérite de tous les cas d'utilisation du superviseur, avec des droits étendus sur la gestion des comptes.</li>
+</ul>
+
+<h2>2.5 Scénario principal de comptage C1</h2>
+<p>
+Le scénario nominal ci-dessous décrit le déroulement type d'un inventaire tel qu'il a été implémenté
+et validé sur la plateforme. Les figures 2.1 à 2.3 illustrent respectivement la préparation
+superviseur, le comptage agent et le pilotage KPI.
+</p>
+<ol>
+  <li>Le superviseur crée un inventaire ; le passage C1 est généré automatiquement.</li>
+  <li>Il importe le fichier Excel : emplacements, stock théorique et CodeAgent sont validés.</li>
+  <li>L'inventaire passe EN_COURS ; les agents voient leurs emplacements sur mobile.</li>
+  <li>Chaque scan est enregistré ; l'emplacement passe TERMINE automatiquement au quota complet.</li>
+  <li>Le superviseur reçoit les notifications SignalR et consulte le suivi temps réel.</li>
+  <li>À la fin du C1, il lance la détection d'écarts et applique la branche A si nécessaire.</li>
+</ol>
+
+<h2>2.6 Backlog produit et user stories</h2>
+<p>
+Le backlog produit a été structuré en dix sprints. Le tableau ci-dessous présente les user stories
+clés livrées (format : En tant que… Je veux… Afin de…).
+</p>
+
+<table>
+  <tr><th>Sprint</th><th>User story (résumé)</th><th>Statut</th></tr>
+  <tr><td>0</td><td>En tant que développeur, je veux une solution Clean Architecture avec BDD, afin de poser les fondations.</td><td>Livré</td></tr>
+  <tr><td>1</td><td>En tant qu'agent/superviseur, je veux m'authentifier par JWT, afin d'accéder à mon espace sécurisé.</td><td>Livré</td></tr>
+  <tr><td>2</td><td>En tant que superviseur, je veux créer un inventaire et importer Excel, afin de préparer le C1.</td><td>Livré</td></tr>
+  <tr><td>3</td><td>En tant qu'agent, je veux scanner les US et voir la progression, afin de compter efficacement.</td><td>Livré</td></tr>
+  <tr><td>4</td><td>En tant qu'agent, je veux scanner hors ligne, afin de continuer sans réseau.</td><td>Livré</td></tr>
+  <tr><td>5</td><td>En tant que superviseur, je veux détecter et traiter les écarts (branche A), afin de lancer le C2.</td><td>Livré</td></tr>
+  <tr><td>6</td><td>En tant que superviseur, je veux clôturer et exporter les résultats, afin de finaliser l'inventaire.</td><td>Livré</td></tr>
+  <tr><td>7</td><td>En tant que superviseur, je veux un dashboard KPI, afin de piloter la performance.</td><td>Livré</td></tr>
+  <tr><td>8</td><td>En tant que développeur, je veux des tests et Swagger, afin de garantir la qualité.</td><td>Livré</td></tr>
+  <tr><td>9</td><td>En tant qu'exploitant, je veux déployer sur IIS et APK, afin de mettre en production.</td><td>Livré</td></tr>
+</table>
+
+<h2>2.7 Matrice de traçabilité</h2>
+<p>
+La matrice suivante assure la couverture des exigences fonctionnelles par sprint et composant.
+</p>
+
+<table>
+  <tr><th>Exigence</th><th>Sprint</th><th>API</th><th>Web</th><th>Mobile</th></tr>
+  <tr><td>RF-01 à RF-04</td><td>1</td><td>AuthController</td><td>Login</td><td>Login</td></tr>
+  <tr><td>RF-05 à RF-09</td><td>2</td><td>InventairesController</td><td>Création, suivi</td><td>—</td></tr>
+  <tr><td>RF-10 à RF-14</td><td>2</td><td>PassagesController</td><td>Import wizard</td><td>—</td></tr>
+  <tr><td>RF-15 à RF-19</td><td>3</td><td>ScansController</td><td>SignalR</td><td>Scan loop</td></tr>
+  <tr><td>RF-20</td><td>4</td><td>Scans/batch</td><td>—</td><td>Offline sync</td></tr>
+  <tr><td>RF-21 à RF-24</td><td>5–6</td><td>EcartsController</td><td>Écarts UI</td><td>—</td></tr>
+  <tr><td>RF-25 à RF-27</td><td>7</td><td>KpiController, Hub</td><td>Dashboard KPI</td><td>—</td></tr>
+</table>
+
+<h2>Conclusion</h2>
+<p>
+Ce chapitre a formalisé les acteurs, les besoins fonctionnels (RF-01 à RF-27) et non fonctionnels
+(RNF-01 à RNF-10) de la plateforme Vectorys Inventaire. Le diagramme de cas d'utilisation (figure 2.4),
+les captures d'écran des interfaces superviseur et agent, ainsi que la matrice de traçabilité, confirment
+que l'ensemble des exigences prioritaires a été couvert par les dix sprints réalisés. Le chapitre 3 détaillera la conception architecturale, le modèle de données
+et les diagrammes UML qui concrétisent ces spécifications.
+</p>
+
+
+<!-- PAGE DE GARDE LOT 2 -->
+<p><strong>République Tunisienne</strong><br />
+  Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br />
+  École Supérieure Privée d'Ingénierie et de Technologie — TEK-UP</p>
+  <p class="title">Conception et développement d'une plateforme<br />d'inventaire logistique multi-canal</p>
+  <p class="meta">
+    Rapport de Projet de Fin d'Études — Lot 2<br />
+    Chapitre 3 — Conception de la solution<br /><br />
+    Réalisé par : <strong>Harrabi Yosri</strong><br />
+    Spécialité : Génie Logiciel et Systèmes d'Information<br />
+    Encadrant professionnel : M. Ferchichi Marwen — VECTORYS Tunisie<br />
+    Encadrante académique : Mme Zrelli Siwar — TEK-UP<br />
+    Année universitaire 2025 — 2026
+  </p>
+</div>
+
+<h1>Chapitre 3 — Conception de la solution</h1>
+
+<p class="chapter-intro">
+Ce chapitre traduit les besoins formalisés au chapitre 2 en une conception technique exploitable.
+Il s'appuie sur le diagramme de cas d'utilisation global (Figure 2.4) et détaille, pour chaque
+domaine fonctionnel, un cas d'utilisation raffiné, les classes concernées et/ou un diagramme de
+séquence. Les captures d'écran sont prévues sous forme d'emplacements réservés, à compléter
+ultérieurement.
+</p>
+
+<h2>Introduction</h2>
+<p>
+La conception vise trois objectifs : (1) garantir la cohérence du modèle métier entre les canaux
+web et mobile, (2) isoler la logique métier dans l'API selon une Clean Architecture (CQRS/MediatR),
+et (3) préparer une réalisation progressive alignée sur les sprints 0 à 9, tous menés à terme.
+</p>
+<p>
+Le fil conducteur reprend la structure du use case global : authentification, gestion des inventaires,
+comptage terrain, gestion des écarts, puis pilotage. Chaque sous-section suit le
+même schéma : rappel du cas global, spécification détaillée, diagramme(s) UML, justification des
+choix, emplacement pour illustration.
+</p>
+
+<!-- ========== 3.1 ========== -->
+<h2>3.1 Architecture globale de la solution</h2>
+<p>
+La plateforme Vectorys Inventaire repose sur une architecture multi-canal three-tier. La couche
+présentation regroupe l'application web Angular (superviseur / administrateur) et l'application
+mobile Flutter (agent). La couche métier est exposée par une API REST ASP.NET Core 9, structurée
+en Domain, Application (commands/queries MediatR, FluentValidation) et Infrastructure (EF Core,
+SQL Server, ClosedXML, SignalR). La figure 3.1 rappelle cette organisation.
+</p>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 270" width="500">
+  <rect x="20" y="15" width="200" height="50" rx="4" fill="#fff" stroke="#000"/>
+  <text x="120" y="35" text-anchor="middle" font-size="12" font-family="Times New Roman" font-weight="bold">Angular 19</text>
+  <text x="120" y="52" text-anchor="middle" font-size="10" font-family="Times New Roman">Superviseur / Admin</text>
+  <rect x="300" y="15" width="200" height="50" rx="4" fill="#fff" stroke="#000"/>
+  <text x="400" y="35" text-anchor="middle" font-size="12" font-family="Times New Roman" font-weight="bold">Flutter</text>
+  <text x="400" y="52" text-anchor="middle" font-size="10" font-family="Times New Roman">Agent terrain + SQLite</text>
+  <line x1="120" y1="65" x2="120" y2="95" stroke="#000"/>
+  <line x1="400" y1="65" x2="400" y2="95" stroke="#000"/>
+  <line x1="120" y1="95" x2="400" y2="95" stroke="#000"/>
+  <line x1="260" y1="95" x2="260" y2="115" stroke="#000"/>
+  <rect x="90" y="115" width="340" height="70" rx="4" fill="#fff" stroke="#000"/>
+  <text x="260" y="140" text-anchor="middle" font-size="12" font-family="Times New Roman" font-weight="bold">API ASP.NET Core 9</text>
+  <text x="260" y="160" text-anchor="middle" font-size="10" font-family="Times New Roman">JWT · MediatR · FluentValidation · SignalR</text>
+  <line x1="260" y1="185" x2="260" y2="205" stroke="#000"/>
+  <rect x="90" y="205" width="340" height="45" rx="4" fill="#fff" stroke="#000"/>
+  <text x="260" y="233" text-anchor="middle" font-size="12" font-family="Times New Roman" font-weight="bold">SQL Server — VectorysDB</text>
+</svg>
+<figcaption>Figure 3.1 — Architecture logique three-tier de Vectorys Inventaire</figcaption>
+</figure>
+
+<p>
+Ce choix assure une source de vérité unique côté serveur, une séparation nette des responsabilités
+et une capacité d'évolution (nouveaux KPI, nouveaux passages) sans casser les clients. Le mode hors
+ligne mobile s'appuie sur SQLite local et une synchronisation différée, sans dupliquer la logique
+métier des quotas côté serveur.
+</p>
+
+<!-- ========== 3.2 ========== -->
+<h2>3.2 Modèle de données et diagramme de classes global</h2>
+<p>
+Le modèle métier centralise sept entités principales. La chaîne structurante est :
+<strong>Inventaire → Passage (C1/C2) → Emplacement → StockThéorique / Scan</strong>. L'entité
+<strong>Écart</strong> relie inventaire, passage et emplacement après détection. Les indicateurs KPI
+ne constituent pas une entité persistée : ils sont calculés par agrégation.
+</p>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 380" width="520" font-family="Times New Roman">
+  <!-- Utilisateur -->
+  <rect x="10" y="10" width="130" height="90" fill="#fff" stroke="#000"/>
+  <rect x="10" y="10" width="130" height="20" fill="#eee" stroke="#000"/>
+  <text x="75" y="24" text-anchor="middle" font-size="11" font-weight="bold">Utilisateur</text>
+  <text x="18" y="42" font-size="9">+ Nom, Prenom</text>
+  <text x="18" y="55" font-size="9">+ Email / CodePersonnel</text>
+  <text x="18" y="68" font-size="9">+ Role, Actif</text>
+  <text x="18" y="81" font-size="9">+ PasswordHash</text>
+  <!-- Inventaire -->
+  <rect x="200" y="10" width="140" height="95" fill="#fff" stroke="#000"/>
+  <rect x="200" y="10" width="140" height="20" fill="#eee" stroke="#000"/>
+  <text x="270" y="24" text-anchor="middle" font-size="11" font-weight="bold">Inventaire</text>
+  <text x="208" y="42" font-size="9">+ Reference</text>
+  <text x="208" y="55" font-size="9">+ Intitule, Zone</text>
+  <text x="208" y="68" font-size="9">+ DateDebut / Fin</text>
+  <text x="208" y="81" font-size="9">+ Statut</text>
+  <text x="208" y="94" font-size="9">+ SuperviseurId</text>
+  <!-- Passage -->
+  <rect x="390" y="20" width="130" height="75" fill="#fff" stroke="#000"/>
+  <rect x="390" y="20" width="130" height="20" fill="#eee" stroke="#000"/>
+  <text x="455" y="34" text-anchor="middle" font-size="11" font-weight="bold">Passage</text>
+  <text x="398" y="52" font-size="9">+ Type (C1/C2)</text>
+  <text x="398" y="65" font-size="9">+ Numero</text>
+  <text x="398" y="78" font-size="9">+ Statut</text>
+  <!-- Emplacement -->
+  <rect x="200" y="140" width="140" height="90" fill="#fff" stroke="#000"/>
+  <rect x="200" y="140" width="140" height="20" fill="#eee" stroke="#000"/>
+  <text x="270" y="154" text-anchor="middle" font-size="11" font-weight="bold">Emplacement</text>
+  <text x="208" y="172" font-size="9">+ Code, Designation</text>
+  <text x="208" y="185" font-size="9">+ CodeBarres</text>
+  <text x="208" y="198" font-size="9">+ Statut</text>
+  <text x="208" y="211" font-size="9">+ AgentAssigneId</text>
+  <!-- Stock -->
+  <rect x="20" y="160" width="140" height="70" fill="#fff" stroke="#000"/>
+  <rect x="20" y="160" width="140" height="20" fill="#eee" stroke="#000"/>
+  <text x="90" y="174" text-anchor="middle" font-size="11" font-weight="bold">StockTheorique</text>
+  <text x="28" y="192" font-size="9">+ CodeUS</text>
+  <text x="28" y="205" font-size="9">+ QteTheorique</text>
+  <!-- Scan -->
+  <rect x="390" y="150" width="130" height="85" fill="#fff" stroke="#000"/>
+  <rect x="390" y="150" width="130" height="20" fill="#eee" stroke="#000"/>
+  <text x="455" y="164" text-anchor="middle" font-size="11" font-weight="bold">Scan</text>
+  <text x="398" y="182" font-size="9">+ CodeBarresScan</text>
+  <text x="398" y="195" font-size="9">+ DateHeureScan</text>
+  <text x="398" y="208" font-size="9">+ EstOffline</text>
+  <text x="398" y="221" font-size="9">+ IdLocalFlutter</text>
+  <!-- Ecart -->
+  <rect x="180" y="270" width="180" height="95" fill="#fff" stroke="#000"/>
+  <rect x="180" y="270" width="180" height="20" fill="#eee" stroke="#000"/>
+  <text x="270" y="284" text-anchor="middle" font-size="11" font-weight="bold">Ecart</text>
+  <text x="188" y="302" font-size="9">+ CodeUS, Delta</text>
+  <text x="188" y="315" font-size="9">+ Type (MANQUANT/SURPLUS)</text>
+  <text x="188" y="328" font-size="9">+ Statut (DETECTE / BRANCHE_A)</text>
+  <text x="188" y="341" font-size="9">+ InventaireId, PassageId</text>
+  <text x="188" y="354" font-size="9">+ EmplacementId</text>
+  <!-- links -->
+  <line x1="140" y1="50" x2="200" y2="50" stroke="#000"/>
+  <text x="165" y="45" font-size="8">1</text>
+  <line x1="340" y1="50" x2="390" y2="50" stroke="#000"/>
+  <text x="355" y="45" font-size="8">1..*</text>
+  <line x1="455" y1="95" x2="270" y2="140" stroke="#000"/>
+  <line x1="200" y1="185" x2="160" y2="185" stroke="#000"/>
+  <line x1="340" y1="185" x2="390" y2="185" stroke="#000"/>
+  <line x1="270" y1="230" x2="270" y2="270" stroke="#000"/>
+  <line x1="75" y1="100" x2="75" y2="160" stroke="#000" stroke-dasharray="3,2"/>
+  <text x="80" y="130" font-size="8">agent</text>
+</svg>
+<figcaption>Figure 3.2 — Diagramme de classes global (vue métier)</figcaption>
+</figure>
+
+<table>
+  <tr><th>Énumération</th><th>Valeurs</th></tr>
+  <tr><td>RoleEnum</td><td>SUPERVISEUR, AGENT, ADMIN</td></tr>
+  <tr><td>StatutInventaireEnum</td><td>EN_PREPARATION, EN_COURS, CLOTURE</td></tr>
+  <tr><td>TypePassageEnum</td><td>C1, C2</td></tr>
+  <tr><td>StatutEmplacementEnum</td><td>EN_ATTENTE, EN_COURS, TERMINE</td></tr>
+  <tr><td>TypeEcartEnum</td><td>MANQUANT, SURPLUS</td></tr>
+  <tr><td>StatutEcartEnum</td><td>DETECTE, TRAITE_BRANCHE_A</td></tr>
+</table>
+
+<!-- ========== 3.3 ========== -->
+<h2 class="section-break">3.3 Conception par fonctionnalité</h2>
+<p>
+Les sous-sections suivantes raffinent le use case global. Pour chaque fonctionnalité : fiche de cas
+d'utilisation, diagramme de séquence et/ou de classes ciblé, puis emplacement de capture.
+</p>
+
+<!-- 3.3.1 AUTH -->
+<h3>3.3.1 Authentification</h3>
+<p>
+<strong>Cas global de référence :</strong> « S'authentifier ». Ce point d'entrée est commun au superviseur,
+à l'administrateur et à l'agent. Il conditionne l'accès aux autres domaines via un jeton JWT et des
+policies de rôle.
+</p>
+
+<div class="uc-box">
+  <h4>Cas d'utilisation détaillé — S'authentifier</h4>
+  <table>
+    <tr><th width="28%">Élément</th><th>Description</th></tr>
+    <tr><td>Acteurs</td><td>Superviseur, Administrateur, Agent</td></tr>
+    <tr><td>Préconditions</td><td>Compte existant et actif dans la base</td></tr>
+    <tr><td>Scénario nominal</td><td>
+      1. L'acteur ouvre l'écran de connexion (web ou mobile).<br />
+      2. Superviseur/Admin saisit email et mot de passe ; Agent saisit son code personnel.<br />
+      3. L'API valide les identifiants (BCrypt) et le rôle.<br />
+      4. Un JWT est émis (24 h superviseur/admin, 8 h agent).<br />
+      5. Le client stocke le jeton et accède à son espace.
+    </td></tr>
+    <tr><td>Alternatives</td><td>Identifiants invalides ; compte inactif ; mélange des modes de login → rejet 400/401</td></tr>
+    <tr><td>Postconditions</td><td>Session authentifiée ; appels API autorisés selon le rôle</td></tr>
+  </table>
+</div>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" width="500" font-family="Times New Roman">
+  <text x="60" y="20" text-anchor="middle" font-size="11" font-weight="bold">Client</text>
+  <text x="200" y="20" text-anchor="middle" font-size="11" font-weight="bold">API Auth</text>
+  <text x="350" y="20" text-anchor="middle" font-size="11" font-weight="bold">JwtService</text>
+  <text x="470" y="20" text-anchor="middle" font-size="11" font-weight="bold">BDD</text>
+  <line x1="60" y1="30" x2="60" y2="210" stroke="#000"/>
+  <line x1="200" y1="30" x2="200" y2="210" stroke="#000"/>
+  <line x1="350" y1="30" x2="350" y2="210" stroke="#000"/>
+  <line x1="470" y1="30" x2="470" y2="210" stroke="#000"/>
+  <line x1="60" y1="55" x2="200" y2="55" stroke="#000" marker-end="url(#a)"/>
+  <text x="130" y="50" text-anchor="middle" font-size="9">POST /api/auth/login</text>
+  <line x1="200" y1="80" x2="470" y2="80" stroke="#000"/>
+  <text x="335" y="75" text-anchor="middle" font-size="9">Charger utilisateur</text>
+  <line x1="200" y1="110" x2="200" y2="130" stroke="#000"/>
+  <text x="210" y="125" font-size="9">Vérifier hash / rôle</text>
+  <line x1="200" y1="150" x2="350" y2="150" stroke="#000"/>
+  <text x="275" y="145" text-anchor="middle" font-size="9">Générer JWT</text>
+  <line x1="200" y1="180" x2="60" y2="180" stroke="#000"/>
+  <text x="130" y="175" text-anchor="middle" font-size="9">AuthResponse (token)</text>
+  <defs><marker id="a" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#000"/></marker></defs>
+</svg>
+<figcaption>Figure 3.3 — Diagramme de séquence : authentification</figcaption>
+</figure>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-4-login-angular.png" alt="Authentification Angular" />
+  <figcaption>Figure 3.4 — Interface d'authentification Angular (portail superviseur)</figcaption>
+</figure>
+<figure>
+  <img class="screenshot screenshot-mobile" src="assets/fig3-5-login-flutter.png" alt="Authentification Flutter" />
+  <figcaption>Figure 3.5 — Interface d'authentification Flutter (portail agent)</figcaption>
+</figure>
+
+<!-- 3.3.2 CREATE INV -->
+<h3 class="section-break">3.3.2 Création et configuration d'inventaire</h3>
+<p>
+<strong>Cas global :</strong> « Créer et configurer un inventaire ». Ce cas regroupe la création de
+la mission, l'affectation des agents et la génération automatique du passage C1.
+</p>
+
+<div class="uc-box">
+  <h4>Cas d'utilisation détaillé — Créer et configurer un inventaire</h4>
+  <table>
+    <tr><th width="28%">Élément</th><th>Description</th></tr>
+    <tr><td>Acteur</td><td>Superviseur (authentifié)</td></tr>
+    <tr><td>Préconditions</td><td>JWT valide ; rôle SUPERVISEUR ou ADMIN</td></tr>
+    <tr><td>Scénario nominal</td><td>
+      1. Le superviseur saisit intitulé, zone et dates.<br />
+      2. L'API génère la référence INV-{année}-{seq}.<br />
+      3. Un passage C1 est créé automatiquement.<br />
+      4. L'inventaire est enregistré en statut EN_PREPARATION.
+    </td></tr>
+    <tr><td>Postconditions</td><td>Inventaire et passage C1 persistés ; prêts pour l'import Excel</td></tr>
+  </table>
+</div>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 200" width="460" font-family="Times New Roman">
+  <text x="50" y="18" text-anchor="middle" font-size="11" font-weight="bold">Web</text>
+  <text x="180" y="18" text-anchor="middle" font-size="11" font-weight="bold">API</text>
+  <text x="320" y="18" text-anchor="middle" font-size="11" font-weight="bold">Handler</text>
+  <text x="430" y="18" text-anchor="middle" font-size="11" font-weight="bold">BDD</text>
+  <line x1="50" y1="25" x2="50" y2="190" stroke="#000"/>
+  <line x1="180" y1="25" x2="180" y2="190" stroke="#000"/>
+  <line x1="320" y1="25" x2="320" y2="190" stroke="#000"/>
+  <line x1="430" y1="25" x2="430" y2="190" stroke="#000"/>
+  <line x1="50" y1="50" x2="180" y2="50" stroke="#000"/>
+  <text x="115" y="45" text-anchor="middle" font-size="9">POST /api/inventaires</text>
+  <line x1="180" y1="75" x2="320" y2="75" stroke="#000"/>
+  <text x="250" y="70" text-anchor="middle" font-size="9">CreateInventaireCommand</text>
+  <line x1="320" y1="105" x2="430" y2="105" stroke="#000"/>
+  <text x="375" y="100" text-anchor="middle" font-size="9">Insert Inventaire + Passage C1</text>
+  <line x1="180" y1="145" x2="50" y2="145" stroke="#000"/>
+  <text x="115" y="140" text-anchor="middle" font-size="9">InventaireDto (réf. auto)</text>
+</svg>
+<figcaption>Figure 3.6 — Diagramme de séquence : création d'inventaire et génération C1</figcaption>
+</figure>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-7-create-inventaire.png" alt="Création inventaire" />
+  <figcaption>Figure 3.7 — Formulaire de création / configuration d'inventaire</figcaption>
+</figure>
+
+<!-- 3.3.3 IMPORT -->
+<h3>3.3.3 Import du stock théorique</h3>
+<p>
+<strong>Cas global :</strong> « Importer le stock depuis un fichier Excel » (acteur complémentaire :
+Système ERP). L'import matérialise les emplacements, le stock théorique et l'assignation stricte
+via la colonne <em>CodeAgent</em>.
+</p>
+
+<div class="uc-box">
+  <h4>Cas d'utilisation détaillé — Importer le stock</h4>
+  <table>
+    <tr><th width="28%">Élément</th><th>Description</th></tr>
+    <tr><td>Acteurs</td><td>Superviseur ; Système ERP (fichier Excel)</td></tr>
+    <tr><td>Préconditions</td><td>Inventaire et passage C1 existants ; fichier .xlsx conforme</td></tr>
+    <tr><td>Scénario nominal</td><td>
+      1. Le superviseur téléverse le fichier sur le passage.<br />
+      2. ClosedXML lit les lignes (CodeEmplacement, CodeUS, Qte, CodeAgent…).<br />
+      3. Validation : CodeAgent obligatoire et cohérent.<br />
+      4. Création batch des emplacements et stocks théoriques.<br />
+      5. Inventaire passé EN_COURS ; rapport d'import renvoyé.
+    </td></tr>
+    <tr><td>Alternatives</td><td>Colonnes manquantes, agent inconnu, fichier trop volumineux → rejet avec message</td></tr>
+  </table>
+</div>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 160" width="480" font-family="Times New Roman">
+  <rect x="10" y="40" width="90" height="40" fill="#fff" stroke="#000"/><text x="55" y="65" text-anchor="middle" font-size="10">Excel</text>
+  <line x1="100" y1="60" x2="130" y2="60" stroke="#000"/>
+  <rect x="130" y="40" width="100" height="40" fill="#fff" stroke="#000"/><text x="180" y="65" text-anchor="middle" font-size="10">ImportService</text>
+  <line x1="230" y1="60" x2="260" y2="60" stroke="#000"/>
+  <rect x="260" y="20" width="100" height="40" fill="#fff" stroke="#000"/><text x="310" y="45" text-anchor="middle" font-size="10">Emplacement</text>
+  <rect x="260" y="70" width="100" height="40" fill="#fff" stroke="#000"/><text x="310" y="95" text-anchor="middle" font-size="10">StockTheorique</text>
+  <line x1="360" y1="40" x2="390" y2="40" stroke="#000"/>
+  <line x1="360" y1="90" x2="390" y2="90" stroke="#000"/>
+  <rect x="390" y="45" width="100" height="40" fill="#fff" stroke="#000"/><text x="440" y="70" text-anchor="middle" font-size="10">SQL Server</text>
+  <text x="250" y="145" text-anchor="middle" font-size="10">CodeAgent obligatoire → AgentAssigneId</text>
+</svg>
+<figcaption>Figure 3.8 — Vue conceptuelle de l'import Excel vers le modèle de données</figcaption>
+</figure>
+
+<div class="placeholder">
+  <strong>[Insérer ici la capture d'écran de la zone d'import Excel / rapport d'assignation]</strong><br />
+  Figure 3.9 — Import du stock théorique et validation CodeAgent
+</div>
+
+<!-- 3.3.4 SCAN -->
+<h3 class="section-break">3.3.4 Comptage terrain</h3>
+<p>
+<strong>Cas globaux :</strong> « Consulter les emplacements assignés », « Réaliser le comptage des
+unités de stock », « Travailler en mode hors ligne » (extension). Ces cas couvrent le cœur métier
+agent : liste des tâches, boucle de scan, quotas, clôture automatique et synchronisation batch.
+</p>
+
+<div class="uc-box">
+  <h4>Cas d'utilisation détaillé — Réaliser le comptage</h4>
+  <table>
+    <tr><th width="28%">Élément</th><th>Description</th></tr>
+    <tr><td>Acteur</td><td>Agent</td></tr>
+    <tr><td>Préconditions</td><td>Inventaire EN_COURS ; emplacements assignés à l'agent</td></tr>
+    <tr><td>Scénario nominal</td><td>
+      1. L'agent consulte ses emplacements (mes-emplacements).<br />
+      2. Il scanne le code US ; le serveur vérifie le quota QteThéorique.<br />
+      3. Le scan est enregistré ; la progression US est mise à jour.<br />
+      4. Lorsque tous les US sont couverts, l'emplacement passe TERMINE automatiquement.<br />
+      5. SignalR notifie le superviseur (NouveauScan / FinComptage).
+    </td></tr>
+    <tr><td>Extension offline</td><td>Scans stockés en SQLite avec IdLocalFlutter ; sync POST /api/scans/batch au retour réseau</td></tr>
+  </table>
+</div>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 240" width="500" font-family="Times New Roman">
+  <text x="50" y="18" text-anchor="middle" font-size="11" font-weight="bold">Mobile</text>
+  <text x="180" y="18" text-anchor="middle" font-size="11" font-weight="bold">API Scans</text>
+  <text x="330" y="18" text-anchor="middle" font-size="11" font-weight="bold">Completion</text>
+  <text x="460" y="18" text-anchor="middle" font-size="11" font-weight="bold">SignalR</text>
+  <line x1="50" y1="25" x2="50" y2="230" stroke="#000"/>
+  <line x1="180" y1="25" x2="180" y2="230" stroke="#000"/>
+  <line x1="330" y1="25" x2="330" y2="230" stroke="#000"/>
+  <line x1="460" y1="25" x2="460" y2="230" stroke="#000"/>
+  <line x1="50" y1="50" x2="180" y2="50" stroke="#000"/>
+  <text x="115" y="45" text-anchor="middle" font-size="9">POST /api/scans</text>
+  <line x1="180" y1="80" x2="330" y2="80" stroke="#000"/>
+  <text x="255" y="75" text-anchor="middle" font-size="9">Vérifier quota US</text>
+  <line x1="330" y1="115" x2="180" y2="115" stroke="#000"/>
+  <text x="255" y="110" text-anchor="middle" font-size="9">autoTermine ?</text>
+  <line x1="180" y1="150" x2="460" y2="150" stroke="#000"/>
+  <text x="320" y="145" text-anchor="middle" font-size="9">NouveauScan / FinComptage</text>
+  <line x1="180" y1="185" x2="50" y2="185" stroke="#000"/>
+  <text x="115" y="180" text-anchor="middle" font-size="9">Résultat + lignesStock</text>
+  <text x="260" y="220" text-anchor="middle" font-size="9">Si offline : file locale → POST /api/scans/batch</text>
+</svg>
+<figcaption>Figure 3.10 — Diagramme de séquence : scan, quota et notification</figcaption>
+</figure>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 150" width="400" font-family="Times New Roman">
+  <rect x="20" y="20" width="120" height="70" fill="#fff" stroke="#000"/>
+  <rect x="20" y="20" width="120" height="18" fill="#eee" stroke="#000"/>
+  <text x="80" y="33" text-anchor="middle" font-size="11" font-weight="bold">Emplacement</text>
+  <text x="28" y="52" font-size="9">Statut</text>
+  <text x="28" y="65" font-size="9">AgentAssigne</text>
+  <rect x="200" y="10" width="120" height="55" fill="#fff" stroke="#000"/>
+  <rect x="200" y="10" width="120" height="18" fill="#eee" stroke="#000"/>
+  <text x="260" y="23" text-anchor="middle" font-size="11" font-weight="bold">StockTheorique</text>
+  <text x="208" y="42" font-size="9">CodeUS, Qte</text>
+  <rect x="200" y="80" width="120" height="55" fill="#fff" stroke="#000"/>
+  <rect x="200" y="80" width="120" height="18" fill="#eee" stroke="#000"/>
+  <text x="260" y="93" text-anchor="middle" font-size="11" font-weight="bold">Scan</text>
+  <text x="208" y="112" font-size="9">EstOffline, IdLocal</text>
+  <line x1="140" y1="40" x2="200" y2="35" stroke="#000"/>
+  <line x1="140" y1="55" x2="200" y2="100" stroke="#000"/>
+  <text x="210" y="145" font-size="9">Quota = count(Scan) ≤ QteTheorique</text>
+</svg>
+<figcaption>Figure 3.11 — Classes concernées par le comptage terrain</figcaption>
+</figure>
+
+<figure>
+  <img class="screenshot screenshot-mobile" src="assets/fig3-12-emplacements.png" alt="Emplacements assignés" />
+  <figcaption>Figure 3.12 — Emplacements assignés (mobile)</figcaption>
+</figure>
+<figure>
+  <img class="screenshot screenshot-mobile" src="assets/fig3-13-scan-loop.png" alt="Scan en boucle" />
+  <figcaption>Figure 3.13 — Scan en boucle et progression par unité de stock</figcaption>
+</figure>
+
+<!-- 3.3.5 ECARTS -->
+<h3 class="section-break">3.3.5 Gestion des écarts</h3>
+<p>
+<strong>Cas globaux :</strong> « Gérer les écarts et choisir une stratégie », extensions Branche A /
+Branche B, et « Générer le fichier d'inventaire final ». Après le C1, le superviseur compare stock
+théorique et quantités scannées, puis oriente le traitement.
+</p>
+
+<div class="uc-box">
+  <h4>Cas d'utilisation détaillé — Gérer les écarts</h4>
+  <table>
+    <tr><th width="28%">Élément</th><th>Description</th></tr>
+    <tr><td>Acteur</td><td>Superviseur</td></tr>
+    <tr><td>Préconditions</td><td>Emplacements C1 en statut TERMINE ; détection lancée</td></tr>
+    <tr><td>Scénario nominal</td><td>
+      1. Détection des écarts MANQUANT / SURPLUS.<br />
+      2. Consultation de la liste et des agrégats.<br />
+      3a. <em>Branche A</em> : marquage TRAITE_BRANCHE_A, création C2, clonage des emplacements concernés.<br />
+      3b. <em>Branche B</em> : recomptage global (extension).<br />
+      4. Génération / export du fichier final d'inventaire.
+    </td></tr>
+  </table>
+</div>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200" width="480" font-family="Times New Roman">
+  <text x="40" y="18" text-anchor="middle" font-size="10" font-weight="bold">Superviseur</text>
+  <text x="160" y="18" text-anchor="middle" font-size="10" font-weight="bold">API Ecarts</text>
+  <text x="300" y="18" text-anchor="middle" font-size="10" font-weight="bold">Domaine</text>
+  <text x="430" y="18" text-anchor="middle" font-size="10" font-weight="bold">BDD</text>
+  <line x1="40" y1="25" x2="40" y2="190" stroke="#000"/>
+  <line x1="160" y1="25" x2="160" y2="190" stroke="#000"/>
+  <line x1="300" y1="25" x2="300" y2="190" stroke="#000"/>
+  <line x1="430" y1="25" x2="430" y2="190" stroke="#000"/>
+  <line x1="40" y1="50" x2="160" y2="50" stroke="#000"/>
+  <text x="100" y="45" text-anchor="middle" font-size="8">POST .../detecter/{id}</text>
+  <line x1="160" y1="80" x2="300" y2="80" stroke="#000"/>
+  <text x="230" y="75" text-anchor="middle" font-size="8">Comparer theo / scanné</text>
+  <line x1="300" y1="110" x2="430" y2="110" stroke="#000"/>
+  <text x="365" y="105" text-anchor="middle" font-size="8">Insert Ecart (DETECTE)</text>
+  <line x1="40" y1="145" x2="160" y2="145" stroke="#000"/>
+  <text x="100" y="140" text-anchor="middle" font-size="8">POST .../branche-a</text>
+  <line x1="160" y1="175" x2="430" y2="175" stroke="#000"/>
+  <text x="295" y="170" text-anchor="middle" font-size="8">C2 + clone emplacements</text>
+</svg>
+<figcaption>Figure 3.14 — Diagramme de séquence : détection et Branche A</figcaption>
+</figure>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-15-ecarts.png" alt="Gestion des écarts" />
+  <figcaption>Figure 3.15 — Liste des écarts et choix de stratégie (Branche A / B)</figcaption>
+</figure>
+
+<!-- 3.3.6 KPI -->
+<h3>3.3.6 Pilotage et suivi</h3>
+<p>
+<strong>Cas globaux :</strong> « Suivre l'avancement en temps réel » et « Consulter le tableau de
+bord KPI ». Le suivi s'appuie sur SignalR et l'endpoint de suivi ; les KPI sont des agrégats
+(précision, performance, qualité, clients, WMS).
+</p>
+
+<div class="uc-box">
+  <h4>Cas d'utilisation détaillé — Consulter le tableau de bord KPI</h4>
+  <table>
+    <tr><th width="28%">Élément</th><th>Description</th></tr>
+    <tr><td>Acteur</td><td>Superviseur</td></tr>
+    <tr><td>Préconditions</td><td>Données d'inventaire / scans / écarts disponibles</td></tr>
+    <tr><td>Scénario nominal</td><td>
+      1. Le superviseur ouvre le module KPI.<br />
+      2. Il applique éventuellement des filtres (inventaire, période, zone).<br />
+      3. L'API agrège les indicateurs et renvoie le dashboard.<br />
+      4. Les graphiques Chart.js affichent précision, performance, qualité, WMS.
+    </td></tr>
+  </table>
+</div>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 150" width="460" font-family="Times New Roman">
+  <text x="50" y="18" text-anchor="middle" font-size="10" font-weight="bold">Web KPI</text>
+  <text x="180" y="18" text-anchor="middle" font-size="10" font-weight="bold">API /kpi</text>
+  <text x="320" y="18" text-anchor="middle" font-size="10" font-weight="bold">KpiRepository</text>
+  <text x="430" y="18" text-anchor="middle" font-size="10" font-weight="bold">SQL</text>
+  <line x1="50" y1="25" x2="50" y2="140" stroke="#000"/>
+  <line x1="180" y1="25" x2="180" y2="140" stroke="#000"/>
+  <line x1="320" y1="25" x2="320" y2="140" stroke="#000"/>
+  <line x1="430" y1="25" x2="430" y2="140" stroke="#000"/>
+  <line x1="50" y1="55" x2="180" y2="55" stroke="#000"/>
+  <text x="115" y="50" text-anchor="middle" font-size="8">GET /api/kpi/dashboard</text>
+  <line x1="180" y1="85" x2="320" y2="85" stroke="#000"/>
+  <text x="250" y="80" text-anchor="middle" font-size="8">Agrégats filtrés</text>
+  <line x1="320" y1="110" x2="430" y2="110" stroke="#000"/>
+  <line x1="180" y1="130" x2="50" y2="130" stroke="#000"/>
+  <text x="115" y="125" text-anchor="middle" font-size="8">KpiDashboardDto</text>
+</svg>
+<figcaption>Figure 3.16 — Diagramme de séquence : consultation KPI</figcaption>
+</figure>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-17-monitoring.png" alt="Suivi temps réel" />
+  <figcaption>Figure 3.17 — Suivi d'avancement en temps réel</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-18-kpi.png" alt="Dashboard KPI" />
+  <figcaption>Figure 3.18 — Tableau de bord KPI</figcaption>
+</figure>
+
+<!-- 3.4 -->
+<h2 class="section-break">3.4 Vue synthétique de l'API</h2>
+<p>
+Le tableau suivant relie les packages du use case global aux principaux endpoints réalisés.
+</p>
+
+<table>
+  <tr><th>Domaine</th><th>Endpoints principaux</th><th>Client</th></tr>
+  <tr><td>Authentification</td><td>POST /api/auth/login</td><td>Web + Mobile</td></tr>
+  <tr><td>Inventaires</td><td>GET/POST /api/inventaires ; suivi-temps-reel</td><td>Web</td></tr>
+  <tr><td>Import</td><td>POST /api/passages/{id}/import-stock</td><td>Web</td></tr>
+  <tr><td>Emplacements</td><td>GET /emplacements ; GET /mes-emplacements</td><td>Web / Mobile</td></tr>
+  <tr><td>Scans</td><td>POST /scans ; POST /scans/batch ; fin-comptage</td><td>Mobile</td></tr>
+  <tr><td>Écarts</td><td>detecter ; branche-a ; GET /ecarts</td><td>Web</td></tr>
+  <tr><td>KPI</td><td>/kpi/dashboard, precision, performance, qualite, clients, wms</td><td>Web</td></tr>
+  <tr><td>Temps réel</td><td>Hub /hubs/inventaire</td><td>Web</td></tr>
+</table>
+
+<h2>Conclusion</h2>
+<p>
+Ce chapitre a formalisé la conception de Vectorys Inventaire à partir du use case global : architecture
+three-tier, modèle de classes métier, puis raffinement fonctionnalité par fonctionnalité (cas
+d'utilisation détaillés, séquences et classes ciblées). Les emplacements réservés permettront
+d'intégrer les captures d'écran fournies ultérieurement. Le chapitre 4 présentera la réalisation
+technique sprint par sprint, en illustrant la mise en œuvre concrète de cette conception.
+</p>
+
+
+
+
+<!-- PAGE DE GARDE LOT 3 -->
+<p><strong>République Tunisienne</strong><br />
+  Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br />
+  École Supérieure Privée d'Ingénierie et de Technologie — TEK-UP</p>
+  <p class="title">Conception et développement d'une plateforme<br />d'inventaire logistique multi-canal</p>
+  <p class="meta">
+    Rapport de Projet de Fin d'Études — Lot 3<br />
+    Chapitre 4 — Réalisation technique<br /><br />
+    Réalisé par : <strong>Harrabi Yosri</strong><br />
+    Spécialité : Génie Logiciel et Systèmes d'Information<br />
+    Encadrant professionnel : M. Ferchichi Marwen — VECTORYS Tunisie<br />
+    Encadrante académique : Mme Zrelli Siwar — TEK-UP<br />
+    Année universitaire 2025 — 2026
+  </p>
+</div>
+
+<h1>Chapitre 4 — Réalisation technique</h1>
+
+<p class="chapter-intro">
+Ce chapitre décrit la mise en œuvre concrète de la conception présentée au chapitre 3. Il détaille
+l'environnement de travail, l'implémentation de l'API centrale, des clients web et mobile, le
+déroulement des sprints Scrum, puis les choix de déploiement sur un serveur local adapté au
+contexte d'exploitation VECTORYS. Les illustrations reprennent les captures déjà intégrées aux
+chapitres précédents et réservent des emplacements pour les vues de déploiement.
+</p>
+
+<h2>Introduction</h2>
+<p>
+La réalisation a suivi une logique de <em>tranches verticales</em> : chaque sprint livre un bout de
+fonctionnalité traversant l'API, la base de données et au moins un canal client (web ou mobile).
+Cette approche réduit le risque d'un backend « orphelin » ou d'interfaces déconnectées du métier.
+Le fil conducteur demeure le cycle inventaire C1 → comptage → écarts → pilotage KPI.
+</p>
+<p>
+Les sections suivantes s'organisent d'abord par couche technique (outillage, API, web, mobile),
+puis par chronologie des sprints, afin de relier les décisions de conception aux artefacts livrés
+dans le dépôt et aux interfaces réellement utilisées en démonstration.
+</p>
+
+<!-- ========== 4.1 ========== -->
+<h2>4.1 Environnement de développement et outillage</h2>
+<p>
+Le poste de développement et le serveur de démonstration s'appuient sur un stack Microsoft/Flutter
+homogène avec les choix du chapitre 1.
+</p>
+
+<table>
+  <tr><th>Composant</th><th>Technologie / version</th><th>Rôle dans la réalisation</th></tr>
+  <tr><td>IDE / outils</td><td>Visual Studio / VS Code, Flutter SDK, SSMS</td><td>Édition, debug, inspection SQL</td></tr>
+  <tr><td>Backend</td><td>ASP.NET Core 9, C#, MediatR, FluentValidation</td><td>API REST + hub SignalR</td></tr>
+  <tr><td>ORM</td><td>Entity Framework Core + migrations</td><td>Schéma VectorysDB, seed utilisateurs</td></tr>
+  <tr><td>SGBD</td><td>Microsoft SQL Server Express (<span class="mono">YOSRI\SQLEXPRESS</span>)</td><td>Persistance centrale</td></tr>
+  <tr><td>Web supervision</td><td>Angular 19, TypeScript, Chart.js</td><td>Portail superviseur / KPI</td></tr>
+  <tr><td>Mobile agent</td><td>Flutter (Dart), Dio, SQLite</td><td>Scan terrain et sync offline</td></tr>
+  <tr><td>Excel</td><td>ClosedXML</td><td>Import du stock théorique</td></tr>
+  <tr><td>Docs API</td><td>Swagger / OpenAPI (profil Development)</td><td>Exploration et tests manuels</td></tr>
+  <tr><td>Qualité / logs</td><td>Serilog, middleware d'exceptions</td><td>Diagnostic runtime</td></tr>
+  <tr><td>Versionnement</td><td>Git</td><td>Historique des sprints et branches</td></tr>
+</table>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" width="500" font-family="Times New Roman">
+  <rect x="10" y="40" width="110" height="55" fill="#fff" stroke="#000"/>
+  <text x="65" y="62" text-anchor="middle" font-size="10" font-weight="bold">Dev</text>
+  <text x="65" y="78" text-anchor="middle" font-size="9">dotnet / flutter</text>
+  <line x1="120" y1="67" x2="155" y2="67" stroke="#000"/>
+  <rect x="155" y="25" width="120" height="85" fill="#fff" stroke="#000"/>
+  <text x="215" y="48" text-anchor="middle" font-size="10" font-weight="bold">API :5000</text>
+  <text x="215" y="66" text-anchor="middle" font-size="9">JWT · MediatR</text>
+  <text x="215" y="84" text-anchor="middle" font-size="9">SignalR hub</text>
+  <line x1="275" y1="67" x2="310" y2="67" stroke="#000"/>
+  <rect x="310" y="40" width="100" height="55" fill="#fff" stroke="#000"/>
+  <text x="360" y="62" text-anchor="middle" font-size="10" font-weight="bold">SQL</text>
+  <text x="360" y="78" text-anchor="middle" font-size="9">VectorysDB</text>
+  <rect x="430" y="15" width="80" height="40" fill="#fff" stroke="#000"/>
+  <text x="470" y="40" text-anchor="middle" font-size="9">Angular</text>
+  <rect x="430" y="70" width="80" height="40" fill="#fff" stroke="#000"/>
+  <text x="470" y="95" text-anchor="middle" font-size="9">Flutter</text>
+  <line x1="430" y1="35" x2="275" y2="50" stroke="#666" stroke-dasharray="3,2"/>
+  <line x1="430" y1="90" x2="275" y2="85" stroke="#666" stroke-dasharray="3,2"/>
+  <text x="260" y="140" text-anchor="middle" font-size="9">Figure conceptuelle — environnement de réalisation locale</text>
+</svg>
+<figcaption>Figure 4.1 — Chaîne de développement locale (clients → API → SQL Server)</figcaption>
+</figure>
+
+<p>
+Un script PowerShell (<span class="mono">scripts/setup-database.ps1</span>) applique les migrations EF Core
+et prépare le seed des comptes de démonstration. Un fichier Excel de test
+(<span class="mono">scripts/test-import-stock.xlsx</span>) et un générateur dédié facilitent la
+reproductibilité des scénarios d'import et de scan.
+</p>
+
+<!-- ========== 4.2 ========== -->
+<h2 class="section-break">4.2 Réalisation de l'API ASP.NET Core</h2>
+<p>
+L'API constitue le point unique de vérité métier. Tous les canaux consomment les mêmes commandes
+et requêtes ; aucune règle de quotas, d'écarts ou d'assignation n'est dupliquée côté client.
+</p>
+
+<h3>4.2.1 Organisation Clean Architecture et CQRS</h3>
+<p>
+La solution Visual Studio est découpée en quatre projets :
+</p>
+<ul>
+  <li><strong>VectorysInventaire.Domain</strong> — entités (<em>Inventaire</em>, <em>Passage</em>,
+    <em>Emplacement</em>, <em>StockTheorique</em>, <em>Scan</em>, <em>Ecart</em>, <em>Utilisateur</em>)
+    et enumérations de statut ;</li>
+  <li><strong>VectorysInventaire.Application</strong> — Features organisées en Commands/Queries
+    (MediatR), DTOs, validateurs FluentValidation et contrats d'interfaces ;</li>
+  <li><strong>VectorysInventaire.Infrastructure</strong> — EF Core, repositories, JWT, ClosedXML,
+    hash BCrypt, seeders ;</li>
+  <li><strong>VectorysInventaire.API</strong> — contrôleurs HTTP, hub SignalR, middleware,
+    composition DI (<span class="mono">Program.cs</span>).</li>
+</ul>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 130" width="460" font-family="Times New Roman">
+  <rect x="20" y="20" width="100" height="90" fill="#fff" stroke="#000"/>
+  <text x="70" y="55" text-anchor="middle" font-size="11" font-weight="bold">API</text>
+  <text x="70" y="72" text-anchor="middle" font-size="9">Controllers</text>
+  <text x="70" y="88" text-anchor="middle" font-size="9">Hubs</text>
+  <line x1="120" y1="65" x2="150" y2="65" stroke="#000"/>
+  <rect x="150" y="20" width="110" height="90" fill="#fff" stroke="#000"/>
+  <text x="205" y="50" text-anchor="middle" font-size="11" font-weight="bold">Application</text>
+  <text x="205" y="68" text-anchor="middle" font-size="9">MediatR</text>
+  <text x="205" y="84" text-anchor="middle" font-size="9">Validators</text>
+  <line x1="260" y1="50" x2="290" y2="40" stroke="#000"/>
+  <line x1="260" y1="80" x2="290" y2="90" stroke="#000"/>
+  <rect x="290" y="10" width="80" height="50" fill="#fff" stroke="#000"/>
+  <text x="330" y="40" text-anchor="middle" font-size="10">Domain</text>
+  <rect x="290" y="70" width="160" height="50" fill="#fff" stroke="#000"/>
+  <text x="370" y="100" text-anchor="middle" font-size="10">Infrastructure (EF, JWT…)</text>
+</svg>
+<figcaption>Figure 4.2 — Couches de la solution .NET réalisées</figcaption>
+</figure>
+
+<p>
+Exemple de flux typique : le contrôleur reçoit un DTO, dispatche une commande MediatR, le handler
+orchestre les repositories, puis un service de notification publie éventuellement un événement
+SignalR. Cette discipline évite le « fat controller » et facilite l'ajout de validations sans
+modifier le protocole HTTP.
+</p>
+
+<h3>4.2.2 Sécurité JWT et politiques d'autorisation</h3>
+<p>
+L'authentification est centralisée dans <span class="mono">POST /api/auth/login</span> :
+</p>
+<ul>
+  <li>superviseur / administrateur : email + mot de passe ;</li>
+  <li>agent : code personnel (identifiant terrain), avec vérification BCrypt du hash stocké.</li>
+</ul>
+<p>
+Le service JWT émet un jeton de 8 heures pour les agents et de 24 heures pour les superviseurs.
+Les politiques <span class="mono">SuperviseurOnly</span> et <span class="mono">AgentOnly</span>
+protègent les contrôleurs. Le hub SignalR lit le jeton via le query string
+<span class="mono">access_token</span> afin d'autoriser les connexions WebSocket depuis Angular.
+</p>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-4-login-angular.png" alt="Login Angular" />
+  <figcaption>Figure 4.3 — Portail web : authentification superviseur (réalisation Angular)</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-5-login-flutter.png" alt="Login Flutter" />
+  <figcaption>Figure 4.4 — Application mobile : authentification agent (réalisation Flutter)</figcaption>
+</figure>
+
+<h3>4.2.3 Persistance SQL Server et migrations</h3>
+<p>
+Les migrations EF Core matérialisent l'évolution du schéma au fil des sprints :
+</p>
+<table>
+  <tr><th>Migration</th><th>Contenu principal</th></tr>
+  <tr><td>InitialCreate</td><td>Utilisateurs, fondations sécurité</td></tr>
+  <tr><td>Sprint2_InventaireSchema</td><td>Inventaires, passages, emplacements, stock théorique</td></tr>
+  <tr><td>Sprint3_ScansSchema</td><td>Scans, clés et relations comptage</td></tr>
+  <tr><td>Sprint5_EcartsSchema</td><td>Écarts MANQUANT / SURPLUS et statuts de traitement</td></tr>
+  <tr><td>Sprint7_KpiIndexes</td><td>Index en soutien aux agrégats KPI</td></tr>
+</table>
+<p>
+Au démarrage, <span class="mono">Program.cs</span> applique automatiquement
+<span class="mono">MigrateAsync</span> puis exécute le seeder (comptes
+<span class="mono">superviseur@vectorys.local</span>, agents <span class="mono">AG001</span> /
+<span class="mono">AG002</span>, etc.). Cette stratégie simplifie la mise en route d'un environnement
+local neuf.
+</p>
+
+<h3>4.2.4 Endpoints métier et hub SignalR</h3>
+<p>
+Le tableau suivant synthétise les endpoints effectivement exposés par l'API réalisée.
+</p>
+<table>
+  <tr><th>Contrôleur</th><th>Méthodes clés</th><th>Rôle métier</th></tr>
+  <tr><td>Auth</td><td>POST login</td><td>Émission JWT multi-rôle</td></tr>
+  <tr><td>Inventaires</td><td>GET, POST, suivi-temps-reel</td><td>Création, liste, monitoring</td></tr>
+  <tr><td>Passages</td><td>POST, import-stock</td><td>C2 manuel ; import Excel ClosedXML</td></tr>
+  <tr><td>Emplacements</td><td>GET, mes-emplacements</td><td>Supervision / tâches agent</td></tr>
+  <tr><td>Scans</td><td>POST, batch, fin-comptage</td><td>Comptage online et sync offline</td></tr>
+  <tr><td>Ecarts</td><td>detecter, branche-a, GET</td><td>Détection et recomptage ciblé</td></tr>
+  <tr><td>Kpi</td><td>dashboard, precision, performance, qualite, clients, wms</td><td>Pilotage analytique</td></tr>
+  <tr><td>Agents</td><td>GET</td><td>Liste agents actifs pour assignation</td></tr>
+  <tr><td>Hub</td><td>/hubs/inventaire</td><td>Groupes par inventaire, push temps réel</td></tr>
+</table>
+
+<div class="note-box">
+  <strong>Règle métier structurante (scan).</strong> Lors de
+  <span class="mono">EnregistrerScan</span>, l'emplacement passe de <em>EN_ATTENTE</em> à
+  <em>EN_COURS</em>, puis à <em>TERMINE</em> dès que l'ensemble des codes US a atteint la quantité
+  théorique. La clôture manuelle terrain est volontairement désactivée côté mobile afin d'éviter
+  les fins de comptage prématurées.
+</div>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-7-create-inventaire.png" alt="Création inventaire" />
+  <figcaption>Figure 4.5 — Création d'inventaire et préparation de l'import (interface réalisée)</figcaption>
+</figure>
+
+<!-- ========== 4.3 ========== -->
+<h2 class="section-break">4.3 Réalisation de l'application web de supervision</h2>
+<p>
+Le portail Angular 19 s'adresse au superviseur (et à l'administrateur). Il consomme l'API via des
+services HTTP, stocke le JWT, protège les routes par garde d'authentification et affiche le
+suivi temps réel en s'abonnant au hub SignalR après sélection d'un inventaire.
+</p>
+<p>
+Les modules fonctionnels réalisés côté supervision sont :
+</p>
+<ul>
+  <li><strong>Authentification</strong> — formulaire email / mot de passe, intercepteur Bearer,
+    redirection vers le tableau de bord ;</li>
+  <li><strong>Inventaires</strong> — création (intitulé, zone, dates), liste paginée, statut
+    EN_PREPARATION puis EN_COURS après import ;</li>
+  <li><strong>Import Excel</strong> — téléversement multipart vers
+    <span class="mono">POST /api/passages/{id}/import-stock</span>, affichage du rapport
+    (emplacements créés, assignations par CodeAgent) ;</li>
+  <li><strong>Monitoring</strong> — avancement des agents et des emplacements, notifications de
+    nouveaux scans ;</li>
+  <li><strong>Écarts</strong> — détection C1, consultation MANQUANT / SURPLUS, déclenchement de
+    la branche A (recomptage ciblé C2) ;</li>
+  <li><strong>KPI</strong> — dashboard agrégé (précision, performance, qualité, clients, WMS)
+    avec filtres et graphiques Chart.js.</li>
+</ul>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-17-monitoring.png" alt="Monitoring" />
+  <figcaption>Figure 4.6 — Suivi d'avancement temps réel (canal web)</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-15-ecarts.png" alt="Écarts" />
+  <figcaption>Figure 4.7 — Gestion des écarts et stratégie de recomptage (branche A)</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-18-kpi.png" alt="KPI" />
+  <figcaption>Figure 4.8 — Tableau de bord KPI réalisé</figcaption>
+</figure>
+
+<p>
+Le paramétrage CORS de l'API autorise notamment
+<span class="mono">http://localhost:4200</span> en développement. Sur le serveur local de
+démonstration, cette origine est remplacée par l'URL réelle du portail (adresse IP ou nom d'hôte
+du serveur), afin que les appels XHR et SignalR restent conformes à la politique du navigateur.
+</p>
+
+<!-- ========== 4.4 ========== -->
+<h2 class="section-break">4.4 Réalisation de l'application mobile agent</h2>
+<p>
+L'application Flutter est structurée par fonctionnalités (<span class="mono">features/auth</span>,
+<span class="mono">scan</span>, <span class="mono">offline_sync</span>, <span class="mono">agent</span>)
+avec une couche réseau Dio, un stockage local SQLite et une configuration d'URL API adaptable
+(<span class="mono">API_BASE_URL</span> via <span class="mono">--dart-define</span>).
+</p>
+
+<h3>4.4.1 Authentification et navigation</h3>
+<p>
+L'agent s'authentifie par code personnel. Après succès, un shell de navigation donne accès au
+tableau de bord, à la liste des emplacements assignés, à la synchronisation et aux réglages.
+Seuls les emplacements de l'agent connecté, rattachés à un inventaire <em>EN_COURS</em>, sont
+exposés par <span class="mono">GET /api/emplacements/mes-emplacements</span>.
+</p>
+
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-12-emplacements.png" alt="Emplacements" />
+  <figcaption>Figure 4.9 — Liste des emplacements assignés (mobile)</figcaption>
+</figure>
+
+<h3>4.4.2 Boucle de scan et quotas</h3>
+<p>
+La page de boucle de scan orchestre :
+</p>
+<ol>
+  <li>la lecture du code-barres (caméra / scanner) ;</li>
+  <li>l'envoi de <span class="mono">POST /api/scans</span> (ou file locale si hors ligne) ;</li>
+  <li>l'affichage de la progression par code US (quantité scannée / quantité théorique) ;</li>
+  <li>le passage automatique de l'emplacement à <em>TERMINE</em> lorsque le quota global est
+    atteint ;</li>
+  <li>le refus des scans supplémentaires (« quota atteint »).</li>
+</ol>
+
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-13-scan-loop.png" alt="Scan loop" />
+  <figcaption>Figure 4.10 — Boucle de scan et progression par unité de stock</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig2-2b-scan-debut.png" alt="Début scan" />
+  <figcaption>Figure 4.11 — Démarrage du comptage sur un emplacement</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig2-2c-scan-progression.png" alt="Progression scan" />
+  <figcaption>Figure 4.12 — Progression du scan pendant le passage C1</figcaption>
+</figure>
+
+<h3>4.4.3 Mode hors ligne et synchronisation</h3>
+<p>
+Lorsque la connectivité chute, les repositories « offline-aware » enregistrent les scans (et, le
+cas échéant, les fins de comptage) dans SQLite avec un identifiant local. Un service
+<span class="mono">OfflineSyncService</span> observe le retour réseau, pousse un
+<span class="mono">POST /api/scans/batch</span>, gère les doublons et met à jour une bannière /
+page de synchronisation destinée à l'agent.
+</p>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 120" width="480" font-family="Times New Roman">
+  <rect x="15" y="35" width="100" height="50" fill="#fff" stroke="#000"/>
+  <text x="65" y="65" text-anchor="middle" font-size="10">Scan offline</text>
+  <line x1="115" y1="60" x2="150" y2="60" stroke="#000"/>
+  <rect x="150" y="35" width="100" height="50" fill="#fff" stroke="#000"/>
+  <text x="200" y="65" text-anchor="middle" font-size="10">SQLite file</text>
+  <line x1="250" y1="60" x2="285" y2="60" stroke="#000"/>
+  <rect x="285" y="35" width="110" height="50" fill="#fff" stroke="#000"/>
+  <text x="340" y="58" text-anchor="middle" font-size="10">POST /scans/batch</text>
+  <text x="340" y="72" text-anchor="middle" font-size="9">(retour réseau)</text>
+  <line x1="395" y1="60" x2="430" y2="60" stroke="#000"/>
+  <rect x="430" y="35" width="55" height="50" fill="#fff" stroke="#000"/>
+  <text x="457" y="65" text-anchor="middle" font-size="10">API</text>
+</svg>
+<figcaption>Figure 4.13 — Chaîne de synchronisation offline réalisée sur Flutter</figcaption>
+</figure>
+
+<!-- ========== 4.5 ========== -->
+<h2 class="section-break">4.5 Déroulement des sprints et livrables</h2>
+<p>
+Le tableau ci-dessous relie chaque sprint aux artefacts techniques principaux. Il complète la
+frise du chapitre 1 en précisant <em>ce qui a été réalisé</em> dans le code et les interfaces.
+</p>
+
+<table>
+  <tr><th>Sprint</th><th>Objectif</th><th>Livrables techniques</th></tr>
+  <tr>
+    <td>0</td>
+    <td>Fondations</td>
+    <td>Solution .NET Clean Architecture, projet Flutter, dépôt Git, SQL Server, script de setup DB</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>Authentification</td>
+    <td>Login JWT multi-rôle, policies, login Angular, login Flutter, seed utilisateurs</td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Inventaire &amp; import</td>
+    <td>CreateInventaire + C1 auto, ImportStock ClosedXML, assignation CodeAgent, UI création / import</td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Scan &amp; temps réel</td>
+    <td>EnregistrerScan, quotas, auto-TERMINE, InventaireHub, suivi-temps-reel, UI monitoring</td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Offline</td>
+    <td>SQLite, OfflineSyncService, POST /scans/batch, bannière et page de sync</td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Écarts (branche A)</td>
+    <td>DetecterEcarts, AppliquerBrancheA (C2 ciblé), UI liste d'écarts</td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Clôture &amp; consolidation</td>
+    <td>Workflows de recomptage / finalisation inventaire, export résultats, extensions branche B selon besoin terrain</td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>KPI</td>
+    <td>KpiController + repository agrégé, index SQL, dashboard Chart.js, filtres</td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Tests &amp; doc</td>
+    <td>Swagger annoté Bearer, scénarios manuels Postman / guide d'import, consolidation des jeux de test</td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Mise en service locale</td>
+    <td>Publication API + portail sur serveur local, APK paramétré vers l'IP serveur, validation E2E</td>
+  </tr>
+</table>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 70" width="500" font-family="Arial">
+  <circle cx="26" cy="28" r="12" fill="#4caf50"/><text x="26" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">0</text>
+  <circle cx="74" cy="28" r="12" fill="#4caf50"/><text x="74" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">1</text>
+  <circle cx="122" cy="28" r="12" fill="#4caf50"/><text x="122" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">2</text>
+  <circle cx="170" cy="28" r="12" fill="#4caf50"/><text x="170" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">3</text>
+  <circle cx="218" cy="28" r="12" fill="#4caf50"/><text x="218" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">4</text>
+  <circle cx="266" cy="28" r="12" fill="#4caf50"/><text x="266" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">5</text>
+  <circle cx="314" cy="28" r="12" fill="#4caf50"/><text x="314" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">6</text>
+  <circle cx="362" cy="28" r="12" fill="#4caf50"/><text x="362" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">7</text>
+  <circle cx="410" cy="28" r="12" fill="#4caf50"/><text x="410" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">8</text>
+  <circle cx="458" cy="28" r="12" fill="#1565c0"/><text x="458" y="32" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">9</text>
+  <line x1="38" y1="28" x2="62" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="86" y1="28" x2="110" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="134" y1="28" x2="158" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="182" y1="28" x2="206" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="230" y1="28" x2="254" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="278" y1="28" x2="302" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="326" y1="28" x2="350" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="374" y1="28" x2="398" y2="28" stroke="#2e7d32" stroke-width="2"/>
+  <line x1="422" y1="28" x2="446" y2="28" stroke="#1565c0" stroke-width="2"/>
+  <text x="240" y="58" text-anchor="middle" font-size="9">S0–S8 : réalisation fonctionnelle — S9 : mise en service serveur local</text>
+</svg>
+<figcaption>Figure 4.14 — Enchaînement des sprints de réalisation</figcaption>
+</figure>
+
+<!-- ========== 4.6 ========== -->
+<h2 class="section-break">4.6 Déploiement sur serveur local</h2>
+<p>
+Conformément au contexte entreprise, la mise en service retenue pour la démonstration et
+l'exploitation interne n'est pas un hébergement cloud public, mais un <strong>déploiement sur
+serveur local</strong> (machine Windows du réseau VECTORYS). Ce choix limite les contraintes de
+sécurité externe, rapproche l'API de SQL Server Express et autorise les terminaux mobiles à
+joindre l'API via l'adresse IP privée du serveur.
+</p>
+
+<h3>4.6.1 Architecture cible de déploiement</h3>
+<table>
+  <tr><th>Composant</th><th>Déploiement local prévu</th></tr>
+  <tr><td>SQL Server</td><td>Instance locale ou machine serveur (<span class="mono">VectorysDB</span>), Trusted Connection ou compte SQL dédié</td></tr>
+  <tr><td>API ASP.NET Core</td><td><span class="mono">dotnet publish</span> puis exécution Kestrel (service Windows) ou site IIS local</td></tr>
+  <tr><td>Portail Angular</td><td><span class="mono">ng build</span> ; fichiers statiques servis (IIS / reverse proxy) vers le réseau LAN</td></tr>
+  <tr><td>Application mobile</td><td>APK généré avec <span class="mono">--dart-define=API_BASE_URL=http://&lt;IP-serveur&gt;:&lt;port&gt;/api</span></td></tr>
+  <tr><td>CORS / SignalR</td><td>Origins = URL du portail ; ouverture du port API sur le pare-feu Windows</td></tr>
+</table>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" width="500" font-family="Times New Roman">
+  <rect x="10" y="50" width="120" height="60" fill="#fff" stroke="#000"/>
+  <text x="70" y="75" text-anchor="middle" font-size="10" font-weight="bold">Serveur local</text>
+  <text x="70" y="93" text-anchor="middle" font-size="9">API + SQL + Web</text>
+  <rect x="200" y="20" width="110" height="45" fill="#fff" stroke="#000"/>
+  <text x="255" y="47" text-anchor="middle" font-size="10">PC superviseur</text>
+  <rect x="200" y="95" width="110" height="45" fill="#fff" stroke="#000"/>
+  <text x="255" y="122" text-anchor="middle" font-size="10">PDA / Android</text>
+  <line x1="130" y1="70" x2="200" y2="42" stroke="#000"/>
+  <line x1="130" y1="90" x2="200" y2="117" stroke="#000"/>
+  <rect x="380" y="55" width="120" height="50" fill="#fff" stroke="#000"/>
+  <text x="440" y="85" text-anchor="middle" font-size="10">Réseau LAN</text>
+  <text x="260" y="155" text-anchor="middle" font-size="9">Clients du même réseau → IP du serveur (pas localhost mobile)</text>
+</svg>
+<figcaption>Figure 4.15 — Topologie de déploiement sur serveur local</figcaption>
+</figure>
+
+<figure class="figure-multi">
+  <img class="screenshot" src="assets/fig4-16a-swagger-api.png" alt="Swagger API — partie 1" />
+  <img class="screenshot" src="assets/fig4-16b-swagger-api.png" alt="Swagger API — partie 2" />
+  <figcaption>Figure 4.16 — API publiée sur le serveur local (documentation Swagger)</figcaption>
+</figure>
+<div class="placeholder">
+  <strong>[Insérer ici une capture : portail Angular accessible via l'IP / nom du serveur]</strong><br />
+  Figure 4.17 — Portail superviseur déployé en local
+</div>
+<div class="placeholder">
+  <strong>[Insérer ici une capture : APK / réglages pointant vers l'URL API du serveur]</strong><br />
+  Figure 4.18 — Application mobile configurée pour le serveur local
+</div>
+
+<h3>4.6.2 Points de configuration critiques</h3>
+<ol>
+  <li><strong>Chaîne de connexion</strong> — pointer vers l'instance SQL du serveur dans
+    <span class="mono">appsettings.Production.json</span> (ou variables d'environnement) ;</li>
+  <li><strong>Secrets JWT</strong> — remplacer la clé de développement par un secret fort hors dépôt ;</li>
+  <li><strong>URL Flutter</strong> — ne plus utiliser <span class="mono">10.0.2.2</span>
+    (émulateur) ni <span class="mono">localhost</span> depuis un téléphone physique ;</li>
+  <li><strong>HTTPS</strong> — optionnel en LAN contrôlé ; recommandé si exposition plus large ;</li>
+  <li><strong>Pare-feu</strong> — autoriser le port de l'API (ex. 5000) et du site web.</li>
+</ol>
+
+<!-- ========== 4.7 ========== -->
+<h2 class="section-break">4.7 Difficultés rencontrées et solutions retenues</h2>
+<table>
+  <tr><th>Difficulté</th><th>Impact</th><th>Solution retenue</th></tr>
+  <tr>
+    <td>Zones entrepôt sans couverture Wi‑Fi stable</td>
+    <td>Perte de scans, reprise manuelle coûteuse</td>
+    <td>File SQLite + sync batch avec dédoublonnage côté API</td>
+  </tr>
+  <tr>
+    <td>Risque de clôture anticipée d'emplacement</td>
+    <td>Sous-comptage, écarts artificiels</td>
+    <td>Terminaison automatique pilotée par QteTheorique ; fin manuelle désactivée</td>
+  </tr>
+  <tr>
+    <td>Assignation ambiguë des emplacements</td>
+    <td>Agents travaillant hors périmètre</td>
+    <td>Colonne CodeAgent obligatoire à l'import ; filtrage strict mes-emplacements</td>
+  </tr>
+  <tr>
+    <td>Besoin de supervision instantanée</td>
+    <td>Retards de pilotage si simple polling</td>
+    <td>Hub SignalR par groupe inventaire + endpoint de suivi</td>
+  </tr>
+  <tr>
+    <td>URL API différente selon émulateur / device / serveur</td>
+    <td>Échecs de connexion silencieusement confus</td>
+    <td>Résolution conditionnelle + surcharge <span class="mono">API_BASE_URL</span></td>
+  </tr>
+  <tr>
+    <td>Fichiers Excel hétérogènes issus de l'ERP</td>
+    <td>Imports partiels ou rejetés</td>
+    <td>Schéma de colonnes figé, validation ligne à ligne, rapport d'import explicite</td>
+  </tr>
+</table>
+
+<p>
+Ces arbitrages confirment la priorité donnée à la <em>robustesse terrain</em> plutôt qu'à la
+richesse purement esthétique des interfaces. Ils seront réévalués lors des retours d'utilisation
+après déploiement local.
+</p>
+
+<h2>Conclusion</h2>
+<p>
+Le chapitre 4 a présenté la réalisation technique de Vectorys Inventaire : outillage, API Clean
+Architecture (CQRS, JWT, EF Core, SignalR, ClosedXML), portail Angular de supervision, application
+Flutter agent (scan, quotas, offline), enchaînement des sprints et stratégie de mise en service
+sur serveur local. Les figures illustrent les principaux écrans livrés ; les emplacements 4.16 à
+4.18 permettront d'intégrer les captures de déploiement. Le chapitre 5 abordera les tests, la
+validation fonctionnelle et les perspectives d'évolution de la plateforme.
+</p>
+
+
+
+
+<!-- PAGE DE GARDE LOT 4 -->
+<p><strong>République Tunisienne</strong><br />
+  Ministère de l'Enseignement Supérieur et de la Recherche Scientifique<br />
+  École Supérieure Privée d'Ingénierie et de Technologie — TEK-UP</p>
+  <p class="title">Conception et développement d'une plateforme<br />d'inventaire logistique multi-canal</p>
+  <p class="meta">
+    Rapport de Projet de Fin d'Études — Lot 4<br />
+    Chapitre 5 — Tests et validation<br /><br />
+    Réalisé par : <strong>Harrabi Yosri</strong><br />
+    Spécialité : Génie Logiciel et Systèmes d'Information<br />
+    Encadrant professionnel : M. Ferchichi Marwen — VECTORYS Tunisie<br />
+    Encadrante académique : Mme Zrelli Siwar — TEK-UP<br />
+    Année universitaire 2025 — 2026
+  </p>
+</div>
+
+<h1>Chapitre 5 — Tests et validation</h1>
+
+<p class="chapter-intro">
+Ce chapitre présente la démarche de vérification de Vectorys Inventaire. Après la réalisation
+technique (chapitre 4), il s'agit de démontrer que les fonctionnalités critiques — authentification,
+import Excel, comptage avec quotas, synchronisation hors ligne, détection d'écarts et consultation
+KPI — se comportent conformément aux exigences du chapitre 2. La stratégie privilégie des scénarios
+reproductibles, des jeux de données contrôlés et une validation multi-canal (API, web, mobile).
+</p>
+
+<h2>Introduction</h2>
+<p>
+Dans un contexte logistique, une erreur de comptage ou d'assignation a un coût métier immédiat.
+Les tests ne se limitent donc pas à « l'API répond 200 » : ils vérifient les transitions de statut
+(<em>EN_ATTENTE</em> → <em>EN_COURS</em> → <em>TERMINE</em>), le respect des quotas US, l'isolation
+des emplacements par agent et la cohérence des données en base SQL Server.
+</p>
+<p>
+La campagne de validation s'appuie principalement sur des tests d'intégration et bout-en-bout
+manuels, assistés par Swagger, Postman, SSMS et un guide opérationnel
+(<span class="mono">scripts/GUIDE-TEST-IMPORT.txt</span>). Ces approches sont complétées par la
+documentation OpenAPI et, côté Flutter, une base de tests unitaires destinée à être enrichie.
+</p>
+
+<!-- ========== 5.1 ========== -->
+<h2>5.1 Stratégie et niveaux de test</h2>
+<p>
+La pyramide de tests adoptée pour le projet est volontairement pragmatique : fort accent sur les
+scénarios métier traversant plusieurs couches, faute d'une suite unitaire exhaustive à ce stade
+du stage.
+</p>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 150" width="400" font-family="Times New Roman">
+  <polygon points="210,15 320,55 100,55" fill="#e8f5e9" stroke="#2e7d32"/>
+  <text x="210" y="42" text-anchor="middle" font-size="10">E2E métier (web + mobile + BDD)</text>
+  <polygon points="120,60 300,60 345,100 75,100" fill="#fff3e0" stroke="#ef6c00"/>
+  <text x="210" y="85" text-anchor="middle" font-size="10">Intégration API (Postman / Swagger)</text>
+  <polygon points="80,105 340,105 380,140 40,140" fill="#e3f2fd" stroke="#1565c0"/>
+  <text x="210" y="128" text-anchor="middle" font-size="10">Unitaire (handlers, widgets) — consolidation</text>
+</svg>
+<figcaption>Figure 5.1 — Niveaux de test privilégiés sur Vectorys Inventaire</figcaption>
+</figure>
+
+<table>
+  <tr><th>Niveau</th><th>Objectif</th><th>Outils / méthodes</th></tr>
+  <tr>
+    <td>Unitaire</td>
+    <td>Isoler une règle (validation, calcul de quota)</td>
+    <td>xUnit / Flutter test (enrichissement progressif)</td>
+  </tr>
+  <tr>
+    <td>Intégration API</td>
+    <td>Vérifier endpoints, JWT, codes HTTP, payloads</td>
+    <td>Swagger, Postman, Serilog</td>
+  </tr>
+  <tr>
+    <td>Bout-en-bout (E2E)</td>
+    <td>Parcourir le cycle inventaire réel</td>
+    <td>Angular + Flutter + SQL Server + guide import</td>
+  </tr>
+  <tr>
+    <td>Non fonctionnel</td>
+    <td>Sécurité des rôles, volume d'import, offline</td>
+    <td>Tests manuels ciblés, observations terrain</td>
+  </tr>
+  <tr>
+    <td>Recette</td>
+    <td>Valider avec l'encadrant professionnel</td>
+    <td>Démonstration scénario C1 / écarts / KPI</td>
+  </tr>
+</table>
+
+<p>
+Chaque scénario formalise : préconditions, étapes, résultat attendu et critère de succès. Les
+anomalies détectées sont corrigées avant de basculer vers le sprint suivant (définition de « Done »
+Scrum).
+</p>
+
+<!-- ========== 5.2 ========== -->
+<h2 class="section-break">5.2 Environnement et jeux de données</h2>
+
+<h3>5.2.1 Environnement de test</h3>
+<table>
+  <tr><th>Élément</th><th>Configuration</th></tr>
+  <tr><td>API</td><td><span class="mono">http://localhost:5000</span> (profil Development, Swagger actif)</td></tr>
+  <tr><td>Base de données</td><td>SQL Server Express <span class="mono">YOSRI\SQLEXPRESS</span>, base <span class="mono">VectorysDB</span></td></tr>
+  <tr><td>Portail web</td><td><span class="mono">http://localhost:4200</span></td></tr>
+  <tr><td>Mobile</td><td>Émulateur Android et/ou appareil physique (URL API adaptée)</td></tr>
+  <tr><td>Comptes seed</td><td>superviseur@vectorys.local / agents AG001, AG002…</td></tr>
+</table>
+
+<figure class="figure-multi">
+  <img class="screenshot" src="assets/fig4-16a-swagger-api.png" alt="Swagger" />
+  <figcaption>Figure 5.2 — Point d'entrée des tests API : interface Swagger</figcaption>
+</figure>
+
+<h3>5.2.2 Jeu de données Excel de référence</h3>
+<p>
+Un fichier reproductible (<span class="mono">scripts/test-import-stock.xlsx</span>), généré par un
+petit outil .NET, structure un inventaire de démonstration :
+</p>
+<table>
+  <tr><th>Emplacement</th><th>Agent</th><th>Contenu US (quantités)</th><th>Scans pour TERMINE</th></tr>
+  <tr><td>TEST-A01</td><td>AG001</td><td>US-T001 ×2 ; US-T002 ×1</td><td>3</td></tr>
+  <tr><td>TEST-A02</td><td>AG001</td><td>US-T003 ×2</td><td>2</td></tr>
+  <tr><td>TEST-B01</td><td>AG002</td><td>US-T101 ×1 ; US-T102 ×2</td><td>3</td></tr>
+  <tr><td>TEST-B02</td><td>AG002</td><td>US-T201 ×1</td><td>1</td></tr>
+</table>
+<p>
+Résultat d'import attendu : 4 emplacements, 6 lignes de stock théorique, répartition
+<span class="mono">{"AG001": 2, "AG002": 2}</span>. Ce jeu permet de tester à la fois l'assignation
+stricte et l'auto-terminaison.
+</p>
+
+<div class="placeholder">
+  <strong>[Insérer ici une capture du fichier Excel de test ou du rapport d'import]</strong><br />
+  Figure 5.3 — Jeu de données Excel et/ou rapport d'assignation
+</div>
+
+<!-- ========== 5.3 ========== -->
+<h2 class="section-break">5.3 Tests d'API (Swagger et Postman)</h2>
+<p>
+Les tests d'intégration API valident le contrat HTTP indépendamment de l'interface graphique.
+La procédure type est la suivante.
+</p>
+
+<ol>
+  <li>Obtenir un JWT superviseur via <span class="mono">POST /api/auth/login</span>
+    (email + mot de passe).</li>
+  <li>Créer un inventaire (<span class="mono">POST /api/inventaires</span>) et noter
+    <span class="mono">inventaireId</span> / <span class="mono">passageC1Id</span>.</li>
+  <li>Importer le stock
+    (<span class="mono">POST /api/passages/{id}/import-stock</span>, multipart).</li>
+  <li>Vérifier <span class="mono">GET /api/emplacements?passageId=…</span>.</li>
+  <li>Obtenir un JWT agent (code personnel) et appeler
+    <span class="mono">GET /api/emplacements/mes-emplacements</span>.</li>
+  <li>Enregistrer des scans (<span class="mono">POST /api/scans</span>) jusqu'à
+    <em>TERMINE</em>.</li>
+  <li>Déclencher <span class="mono">POST /api/ecarts/detecter/{inventaireId}</span> puis consulter
+    la liste.</li>
+  <li>Interroger <span class="mono">GET /api/kpi/dashboard</span> avec filtre inventaire.</li>
+</ol>
+
+<table>
+  <tr><th>ID</th><th>Cas de test API</th><th>Attendu</th><th>Résultat</th></tr>
+  <tr><td>T-API-01</td><td>Login superviseur valide</td><td>200 + token JWT</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-02</td><td>Login agent code invalide</td><td>401</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-03</td><td>GET inventaires sans token</td><td>401</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-04</td><td>Agent appelle endpoint superviseur</td><td>403</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-05</td><td>Création inventaire + C1 auto</td><td>201 + passage C1</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-06</td><td>Import Excel conforme</td><td>emplacements + stocks créés</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-07</td><td>Import CodeAgent manquant / inconnu</td><td>rejet / message explicite</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-08</td><td>Scan jusqu'au quota</td><td>statut TERMINE</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-09</td><td>Scan au-delà du quota</td><td>erreur métier</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-10</td><td>Batch offline (doublons)</td><td>idempotence / compteurs sync</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-11</td><td>Détection écarts après C1</td><td>MANQUANT / SURPLUS selon cas</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-12</td><td>Branche A</td><td>passage C2 ciblé + écarts traités</td><td class="ok">OK</td></tr>
+  <tr><td>T-API-13</td><td>KPI dashboard</td><td>DTO agrégé cohérent</td><td class="ok">OK</td></tr>
+</table>
+
+<div class="placeholder">
+  <strong>[Insérer ici une capture Postman : login + réponse JWT, ou collection]</strong><br />
+  Figure 5.4 — Exemple de test d'intégration API (Postman)
+</div>
+
+<!-- ========== 5.4 ========== -->
+<h2 class="section-break">5.4 Scénario bout-en-bout : import et comptage</h2>
+<p>
+Le scénario nominal de recette reprend le guide d'import/scan. Il constitue le test E2E principal
+du projet.
+</p>
+
+<div class="note-box">
+  <strong>Objectif.</strong> Vérifier qu'un inventaire créé côté superviseur peut être compté
+  correctement par deux agents distincts, avec auto-terminaison et isolation des tâches.
+</div>
+
+<h3>5.4.1 Procédure</h3>
+<ol>
+  <li><strong>Démarrer l'API</strong> et contrôler Swagger
+    (<span class="mono">http://localhost:5000/swagger</span>).</li>
+  <li><strong>Superviseur</strong> : se connecter, créer un inventaire, importer
+    <span class="mono">test-import-stock.xlsx</span>.</li>
+  <li><strong>Contrôle SQL</strong> : les emplacements TEST-* sont associés aux bons
+    <span class="mono">CodePersonnel</span>.</li>
+  <li><strong>Agent AG001</strong> : ne voit que TEST-A01 et TEST-A02 ; scanne TEST-A01 jusqu'à
+    TERMINE (US-T001×2 puis US-T002×1) ; un scan supplémentaire est refusé.</li>
+  <li><strong>Agent AG002</strong> : ne voit que TEST-B* ; termine TEST-B01 et TEST-B02 selon quotas.</li>
+  <li><strong>Contrôle SQL final</strong> : statut TERMINE et nombre de scans cohérents avec les
+    quantités théoriques.</li>
+</ol>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-7-create-inventaire.png" alt="Création inventaire test" />
+  <figcaption>Figure 5.5 — Étape superviseur : création / configuration avant import de test</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-12-emplacements.png" alt="Emplacements agent" />
+  <figcaption>Figure 5.6 — Étape agent : liste filtrée des emplacements assignés</figcaption>
+</figure>
+<figure>
+  <img class="screenshot-mobile" src="assets/fig3-13-scan-loop.png" alt="Scan loop test" />
+  <figcaption>Figure 5.7 — Étape agent : progression du scan et quotas</figcaption>
+</figure>
+
+<h3>5.4.2 Résultats attendus (critères d'acceptation)</h3>
+<table>
+  <tr><th>Critère</th><th>Mesure</th><th>Statut</th></tr>
+  <tr><td>Import complet</td><td>4 emplacements / 6 stocks / 2+2 assignations</td><td class="ok">Validé</td></tr>
+  <tr><td>Isolation AG001 / AG002</td><td>Aucun emplacement croisé visible</td><td class="ok">Validé</td></tr>
+  <tr><td>Auto-terminaison</td><td>TERMINE sans bouton « fin manuelle »</td><td class="ok">Validé</td></tr>
+  <tr><td>Quota strict</td><td>Message d'erreur sur sur-scan</td><td class="ok">Validé</td></tr>
+  <tr><td>Persistance</td><td>Cohérence SSMS (scans vs QteTheorique)</td><td class="ok">Validé</td></tr>
+</table>
+
+<div class="placeholder">
+  <strong>[Insérer ici une capture SSMS du SELECT de vérification post-scan]</strong><br />
+  Figure 5.8 — Vérification base de données après scénario E2E
+</div>
+
+<!-- ========== 5.5 ========== -->
+<h2 class="section-break">5.5 Tests mobile, offline et supervision</h2>
+
+<h3>5.5.1 Mode hors ligne</h3>
+<p>
+Le test offline simule une coupure réseau pendant la boucle de scan :
+</p>
+<ol>
+  <li>Activer le mode avion (ou couper le Wi‑Fi) après ouverture d'un emplacement.</li>
+  <li>Scanner plusieurs US : les enregistrements doivent rester en file SQLite locale.</li>
+  <li>Rétablir le réseau : synchronisation automatique ou manuelle via
+    <span class="mono">POST /api/scans/batch</span>.</li>
+  <li>Vérifier l'absence de doublons côté serveur et la mise à jour des statuts d'emplacement.</li>
+</ol>
+
+<figure class="figure-box">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 100" width="460" font-family="Times New Roman">
+  <rect x="10" y="25" width="90" height="50" fill="#fff" stroke="#000"/><text x="55" y="55" text-anchor="middle" font-size="10">Scan offline</text>
+  <line x1="100" y1="50" x2="130" y2="50" stroke="#000"/>
+  <rect x="130" y="25" width="90" height="50" fill="#fff" stroke="#000"/><text x="175" y="55" text-anchor="middle" font-size="10">SQLite</text>
+  <line x1="220" y1="50" x2="250" y2="50" stroke="#000"/>
+  <rect x="250" y="25" width="100" height="50" fill="#fff" stroke="#000"/><text x="300" y="55" text-anchor="middle" font-size="10">sync batch</text>
+  <line x1="350" y1="50" x2="380" y2="50" stroke="#000"/>
+  <rect x="380" y="25" width="90" height="50" fill="#fff" stroke="#000"/><text x="425" y="55" text-anchor="middle" font-size="10">API/SQL</text>
+</svg>
+<figcaption>Figure 5.9 — Chaîne vérifiée lors des tests offline</figcaption>
+</figure>
+
+<table>
+  <tr><th>ID</th><th>Cas offline</th><th>Attendu</th><th>Résultat</th></tr>
+  <tr><td>T-OFF-01</td><td>Scan sans réseau</td><td>Pas d'erreur bloquante ; file locale</td><td class="ok">OK</td></tr>
+  <tr><td>T-OFF-02</td><td>Retour réseau</td><td>Sync réussie ; bannière à jour</td><td class="ok">OK</td></tr>
+  <tr><td>T-OFF-03</td><td>Re-sync accidentelle</td><td>Pas de double comptage serveur</td><td class="ok">OK</td></tr>
+</table>
+
+<h3>5.5.2 Supervision et KPI</h3>
+<p>
+Côté web, la validation porte sur :
+</p>
+<ul>
+  <li>le suivi temps réel (SignalR / endpoint de suivi) pendant les scans agents ;</li>
+  <li>la détection d'écarts après terminaison C1 et le déclenchement de la branche A ;</li>
+  <li>l'affichage du dashboard KPI (précision, performance, qualité, WMS) pour l'inventaire de test.</li>
+</ul>
+
+<figure>
+  <img class="screenshot" src="assets/fig3-17-monitoring.png" alt="Monitoring test" />
+  <figcaption>Figure 5.10 — Contrôle superviseur : suivi d'avancement</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-15-ecarts.png" alt="Écarts test" />
+  <figcaption>Figure 5.11 — Contrôle superviseur : écarts détectés</figcaption>
+</figure>
+<figure>
+  <img class="screenshot" src="assets/fig3-18-kpi.png" alt="KPI test" />
+  <figcaption>Figure 5.12 — Contrôle superviseur : indicateurs KPI</figcaption>
+</figure>
+
+<!-- ========== 5.6 ========== -->
+<h2 class="section-break">5.6 Matrice de couverture des exigences</h2>
+<p>
+Le tableau suivant relie les familles d'exigences fonctionnelles (chapitre 2) aux scénarios de
+test exécutés.
+</p>
+
+<table>
+  <tr><th>Exigences (famille)</th><th>Scénarios / tests</th><th>Couverture</th></tr>
+  <tr><td>RF-01 … RF-04 Authentification</td><td>T-API-01 à T-API-04 ; login web/mobile</td><td class="ok">Couvert</td></tr>
+  <tr><td>RF-05 … RF-09 Inventaires / passages</td><td>T-API-05 ; Fig. 5.5</td><td class="ok">Couvert</td></tr>
+  <tr><td>RF-10 … RF-14 Import / assignation</td><td>T-API-06/07 ; guide Excel ; E2E §5.4</td><td class="ok">Couvert</td></tr>
+  <tr><td>RF-15 … RF-20 Comptage terrain</td><td>T-API-08/09 ; Fig. 5.6–5.7 ; E2E</td><td class="ok">Couvert</td></tr>
+  <tr><td>Offline / sync</td><td>T-OFF-01 à T-OFF-03 ; T-API-10</td><td class="ok">Couvert</td></tr>
+  <tr><td>RF-21 … RF-24 Écarts</td><td>T-API-11/12 ; Fig. 5.11</td><td class="ok">Couvert (Branche A)</td></tr>
+  <tr><td>RF-25 … RF-27 KPI / temps réel</td><td>T-API-13 ; Fig. 5.10 / 5.12</td><td class="ok">Couvert</td></tr>
+</table>
+
+<p>
+Cette matrice confirme que le périmètre prioritaire du backlog a fait l'objet d'une validation
+explicite. Les extensions (clôture inventaire formalisée, export Excel final, branche B globale)
+continuent d'être éprouvées lors des itérations de consolidation et du déploiement local.
+</p>
+
+<!-- ========== 5.7 ========== -->
+<h2>5.7 Tests non fonctionnels</h2>
+<table>
+  <tr><th>Critère (RNF)</th><th>Vérification réalisée</th><th>Observation</th></tr>
+  <tr>
+    <td>Sécurité / rôles</td>
+    <td>Accès refusés sans JWT ou hors policy</td>
+    <td>Policies SuperviseurOnly / AgentOnly effectives</td>
+  </tr>
+  <tr>
+    <td>Confidentialité tokens</td>
+    <td>TTL 8 h agent / 24 h superviseur</td>
+    <td>Conforme conception</td>
+  </tr>
+  <tr>
+    <td>Robustesse import</td>
+    <td>Fichier volumineux limité (50 Mo), validation colonnes</td>
+    <td>Rejets explicites</td>
+  </tr>
+  <tr>
+    <td>Disponibilité offline</td>
+    <td>Scans en file locale puis sync</td>
+    <td>Fonctionnel sur parcours testé</td>
+  </tr>
+  <tr>
+    <td>Temps réel</td>
+    <td>Notifications hub pendant scan</td>
+    <td>Suivi utilisable en démo</td>
+  </tr>
+  <tr>
+    <td>Maintenabilité API</td>
+    <td>Swagger + messages d'erreur middleware</td>
+    <td>Facilite le diagnostic</td>
+  </tr>
+</table>
+
+<p>
+Des tests de charge massifs (milliers d'emplacements simultanés) n'entrent pas dans le périmètre
+du stage ; en revanche, les index KPI (sprint 7) et le batch de sync préparatoire ont été
+conçus pour limiter les risques de saturation lors d'un inventaire réel.
+</p>
+
+<!-- ========== 5.8 ========== -->
+<h2 class="section-break">5.8 Synthèse des résultats et limites</h2>
+
+<h3>5.8.1 Bilan</h3>
+<ul>
+  <li>Le <strong>chemin critique C1</strong> (création → import → scan → TERMINE → contrôle BDD)
+    est validé de bout en bout.</li>
+  <li>La <strong>séparation des rôles</strong> et l'<strong>assignation par CodeAgent</strong>
+    sont stables.</li>
+  <li>Le <strong>mode offline</strong> et les <strong>KPI de base</strong> répondent aux besoins
+    de démonstration et de pilotage.</li>
+  <li>La <strong>branche A</strong> (recomptage ciblé) a été vérifiée via API et interface écarts.</li>
+</ul>
+
+<h3>5.8.2 Limites assumées</h3>
+<ul>
+  <li>La couverture de tests <em>automatisés</em> unitaires reste partielle : la valeur immédiate
+    a été placée sur les scénarios d'intégration et E2E, plus représentatifs du métier terrain.</li>
+  <li>Les figures de déploiement LAN (portail et APK pointant vers l'IP serveur) seront
+    consolidées lors de la mise en service locale (cf. placeholders 4.17 et 4.18).</li>
+  <li>Certains indicateurs KPI restent partiels faute de données métier riches (valeur monétaire,
+    occupation WMS maximale, etc.).</li>
+</ul>
+
+<div class="note-box">
+  Ces limites n'invalident pas la recette du cœur fonctionnel : elles orientent plutôt les
+  travaux post-rapport (automatisation, durcissement S6/S8, déploiement serveur local S9).
+</div>
+
+<div class="placeholder">
+  <strong>[Insérer ici une capture de démonstration / recette avec l'encadrant (optionnel)]</strong><br />
+  Figure 5.13 — Séance de validation / démonstration
+</div>
+
+<h2>Conclusion</h2>
+<p>
+Ce chapitre a formalisé la stratégie de test de Vectorys Inventaire : environnement contrôlé,
+jeux de données Excel reproductibles, batterie de cas API, scénario E2E import/comptage, validation
+offline et supervision KPI, matrice de couverture des RF et revue non fonctionnelle. Les résultats
+montrent que le cycle inventaire multi-canal est opérationnel pour une exploitation en conditions
+de démonstration et de déploiement local. Les perspectives d'évolution (automatisation accrue,
+finalisation des workflows de clôture/export, mise en production sur serveur d'entreprise)
+seront reprises dans la conclusion générale du rapport.
+</p>
+
+
+<h1>Conclusion générale</h1>
+<p>
+Au terme de ce projet de fin d'études, la problématique posée au chapitre 1 —
+concevoir une plateforme d'inventaire multi-canal fiable, capable de synchroniser le comptage
+terrain et le pilotage superviseur, y compris hors connexion — a trouvé une réponse concrète à
+travers <strong>Vectorys Inventaire</strong>.
+</p>
+<p>
+Le cheminement du rapport a permis de passer d'une analyse métier (acteurs, RF/RNF, cas
+d'utilisation, backlog Scrum) à une conception technique structurée (architecture three-tier,
+modèle de classes, séquences par fonctionnalité), puis à une réalisation multi-canal (API Clean
+Architecture, portail Angular, application Flutter offline) et enfin à une validation par
+scénarios reproductibles. La plateforme couvre désormais le cœur du cycle inventaire VECTORYS :
+import Excel, assignation CodeAgent, scan à quotas, auto-terminaison, sync batch, détection
+d'écarts avec branche A, suivi temps réel et indicateurs KPI.
+</p>
+<p>
+Sur le plan méthodologique, Scrum a favorisé des livraisons incrémentales et une priorisation
+guidée par la valeur terrain. Sur le plan organisationnel, le binôme encadrant professionnel /
+encadrante académique a ancré les choix techniques dans les contraintes réelles de l'entrepôt
+(zones couvertes partiellement, fichiers ERP hétérogènes, besoin de supervision immédiate).
+</p>
+<p>
+Les limites identifiées — couverture encore partielle des tests unitaires automatisés, finalisation
+de certains workflows de clôture/export, captures de déploiement LAN encore à compléter —
+n'effacent pas le résultat principal : une plateforme opérationnelle, documentée et prête à être
+mise en service sur un <strong>serveur local</strong> du réseau VECTORYS.
+</p>
+<p>
+Ce travail a également constitué une expérience professionnelle complète : compréhension d'un
+métier logistique 3PL, conception logicielle en Clean Architecture, développement multi-technologie
+et conduite de tests d'acceptation. Il ouvre naturellement sur les perspectives exposées ci-après.
+</p>
+
+<!-- ========== PERSPECTIVES ========== -->
+<h2 class="section-break">Perspectives</h2>
+<p>
+Plusieurs axes d'évolution se dégagent à l'issue du stage :
+</p>
+<ol>
+  <li><strong>Mise en service sur serveur local.</strong> Publier l'API et le portail sur la machine
+    d'entreprise, configurer CORS/SignalR et générer l'APK avec
+    <span style="font-family:Consolas,monospace;font-size:10pt;">API_BASE_URL</span> pointant vers
+    l'IP du serveur ; compléter alors les figures 4.17 et 4.18.</li>
+  <li><strong>Consolidation des workflows de fin d'inventaire.</strong> Formaliser la clôture
+    inventaire (statut <em>CLOTURE</em>), l'export Excel des résultats et, selon besoin terrain,
+    le recomptage global (branche B).</li>
+  <li><strong>Automatisation des tests.</strong> Enrichir la suite xUnit / Flutter Test autour des
+    handlers critiques (quotas, écarts, import) pour sécuriser les régressions.</li>
+  <li><strong>Enrichissement analytique.</strong> Affiner les KPI WMS/clients (référentiel client,
+    valeur monétaire des écarts, occupation maximale) à partir de données ERP complémentarisées.</li>
+  <li><strong>Expérience terrain.</strong> Intégrer retours opérateurs (ergonomie scan, alertes,
+    impressions de rapports) et éventuellement le mode tablette pour les chefs d'équipe.</li>
+  <li><strong>Industrialisation.</strong> Scripts de publication, secrets hors dépôt, journaling
+    opérationnel et procédure de reprise après incident.</li>
+</ol>
+<p>
+Ces perspectives marquent la transition entre un livrable académique réussi et un produit
+d'exploitation durable au sein de VECTORYS Tunisie.
+</p>
+
+<!-- ========== BIBLIOGRAPHIE ========== -->
+<h1>Bibliographie</h1>
+<div class="biblio">
+
+<p>
+[1] Microsoft, <em>ASP.NET Core documentation</em>, available at:
+https://learn.microsoft.com/aspnet/core/ (consulted 2026).
+</p>
+<p>
+[2] Microsoft, <em>Entity Framework Core documentation</em>, available at:
+https://learn.microsoft.com/ef/core/ (consulted 2026).
+</p>
+<p>
+[3] Microsoft, <em>ASP.NET Core SignalR</em>, available at:
+https://learn.microsoft.com/aspnet/core/signalr/ (consulted 2026).
+</p>
+<p>
+[4] Angular Team, <em>Angular Developers Documentation</em>, available at:
+https://angular.dev/ (consulted 2026).
+</p>
+<p>
+[5] Flutter Team / Google, <em>Flutter documentation</em>, available at:
+https://docs.flutter.dev/ (consulted 2026).
+</p>
+<p>
+[6] OASIS / OpenAPI Initiative, <em>OpenAPI Specification</em>, available at:
+https://swagger.io/specification/ (consulted 2026).
+</p>
+<p>
+[7] Schwaber, K. &amp; Sutherland, J., <em>The Scrum Guide</em>, Scrum.org, latest official
+edition, available at: https://scrumguides.org/ (consulted 2026).
+</p>
+<p>
+[8] Martin, R. C., <em>Clean Architecture: A Craftsman's Guide to Software Structure and Design</em>,
+Prentice Hall, 2017.
+</p>
+<p>
+[9] Fowler, M., <em>Patterns of Enterprise Application Architecture</em>, Addison-Wesley, 2002
+(CQRS / layered design — foundation concepts).
+</p>
+<p>
+[10] Object Management Group, <em>Unified Modeling Language (UML) specification</em>, available at:
+https://www.omg.org/spec/UML/ (consulted 2026).
+</p>
+<p>
+[11] ClosedXML contributors, <em>ClosedXML documentation</em> (Excel for .NET), available at:
+https://closedxml.readthedocs.io/ (consulted 2026).
+</p>
+<p>
+[12] IETF, <em>JSON Web Token (JWT) — RFC 7519</em>, available at:
+https://datatracker.ietf.org/doc/html/rfc7519 (consulted 2026).
+</p>
+<p>
+[13] VECTORYS Tunisie, documentation interne et besoins métier inventaire (notes de stage,
+entretiens encadrant, 2025–2026).
+</p>
+<p>
+[14] TEK-UP, <em>Template et consignes de rédaction du rapport de Projet de Fin d'Études</em>,
+École Supérieure Privée d'Ingénierie et de Technologie, année universitaire 2025–2026.
+</p>
+
+</div>
+
+
+</body></html>
