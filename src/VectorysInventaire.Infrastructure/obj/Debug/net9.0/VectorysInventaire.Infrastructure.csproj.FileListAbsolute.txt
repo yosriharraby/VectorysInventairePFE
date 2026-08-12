@@ -15,3 +15,6 @@ C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\refint\VectorysInventaire.Infrastructure.dll
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.pdb
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\ref\VectorysInventaire.Infrastructure.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\bin\Debug\net9.0\VectorysInventaire.Infrastructure.runtimeconfig.json
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.sourcelink.json
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Infrastructure\obj\Debug\net9.0\VectorysInventaire.Infrastructure.genruntimeconfig.cache

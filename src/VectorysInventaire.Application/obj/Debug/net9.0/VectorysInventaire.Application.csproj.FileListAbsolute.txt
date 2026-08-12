@@ -13,3 +13,4 @@ C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\refint\VectorysInventaire.Application.dll
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.pdb
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\ref\VectorysInventaire.Application.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Application\obj\Debug\net9.0\VectorysInventaire.Application.sourcelink.json

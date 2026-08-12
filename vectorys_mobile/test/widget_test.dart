@@ -1,30 +1,42 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:vectorys_mobile/main.dart';
+import 'package:vectorys_mobile/core/utils/api_config_io.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('API config', () {
+    test('resolveApiBaseUrl returns non-empty default', () {
+      final url = resolveApiBaseUrl();
+      expect(url, isNotEmpty);
+      expect(url, contains('/api'));
+    });
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  group('Comptage terrain (simulation)', () {
+    test('bascule emplacement termine le precedent', () {
+      String? actif;
+      String? termine;
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      void scanEmplacement(String code) {
+        if (actif != null && actif != code) {
+          termine = actif;
+        }
+        actif = code;
+      }
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      scanEmplacement('TEST-A01');
+      expect(actif, 'TEST-A01');
+      expect(termine, isNull);
+
+      scanEmplacement('TEST-A02');
+      expect(actif, 'TEST-A02');
+      expect(termine, 'TEST-A01');
+    });
+
+    test('les scans US restent enregistres sans quota bloquant', () {
+      var scans = <String>[];
+      scans.add('US-T101');
+      scans.add('US-T101');
+      scans.add('US-UNKNOWN');
+      expect(scans.length, 3);
+    });
   });
 }

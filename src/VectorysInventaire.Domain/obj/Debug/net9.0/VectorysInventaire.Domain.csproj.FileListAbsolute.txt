@@ -9,3 +9,4 @@ C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Domain\obj\Debu
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Domain\obj\Debug\net9.0\refint\VectorysInventaire.Domain.dll
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Domain\obj\Debug\net9.0\VectorysInventaire.Domain.pdb
 C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Domain\obj\Debug\net9.0\ref\VectorysInventaire.Domain.dll
+C:\Users\yosri\Desktop\VectorysInventaire\src\VectorysInventaire.Domain\obj\Debug\net9.0\VectorysInventaire.Domain.sourcelink.json
