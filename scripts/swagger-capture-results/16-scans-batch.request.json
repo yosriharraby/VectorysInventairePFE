@@ -1,0 +1,10 @@
+﻿{
+    "scans":  [
+                  {
+                      "idLocalFlutter":  "offline-b02-9de5a8ccde2549e5ab7d1c29a65f4825",
+                      "dateHeureScan":  "2026-08-18T14:35:10.1886867Z",
+                      "codeBarresScan":  "US-C201",
+                      "emplacementId":  92
+                  }
+              ]
+}

@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Content-Length: 10002
+Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+Date: Tue, 18 Aug 2026 14:35:12 GMT
+Server: Kestrel
+Content-Disposition: attachment; filename=Inventaire_INV-2026-070_20260818_1435.xlsx; filename*=UTF-8''Inventaire_INV-2026-070_20260818_1435.xlsx
+
