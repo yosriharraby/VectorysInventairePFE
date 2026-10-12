@@ -14,6 +14,7 @@ public class EcartConfiguration : IEntityTypeConfiguration<Ecart>
         builder.Property(x => x.DesignationEmplacement).HasMaxLength(200);
         builder.Property(x => x.CodeUS).HasMaxLength(64).IsRequired();
         builder.Property(x => x.DesignationUS).HasMaxLength(200);
+        builder.Property(x => x.Client).HasMaxLength(128);
         builder.HasIndex(x => new { x.InventaireId, x.EmplacementId, x.CodeUS, x.Statut });
         builder.HasIndex(x => new { x.InventaireId, x.DetecteAt });
         builder.HasIndex(x => new { x.Statut, x.DetecteAt });

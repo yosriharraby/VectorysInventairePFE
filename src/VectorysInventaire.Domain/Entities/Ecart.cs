@@ -12,6 +12,7 @@ public class Ecart
     public string DesignationEmplacement { get; set; } = string.Empty;
     public string CodeUS { get; set; } = string.Empty;
     public string DesignationUS { get; set; } = string.Empty;
+    public string? Client { get; set; }
     public int QteTheorique { get; set; }
     public int QteScannee { get; set; }
     public int Delta { get; set; }

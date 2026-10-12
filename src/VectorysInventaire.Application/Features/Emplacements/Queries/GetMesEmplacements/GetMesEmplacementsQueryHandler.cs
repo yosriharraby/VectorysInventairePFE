@@ -1,6 +1,7 @@
 using MediatR;
 using VectorysInventaire.Application.DTOs;
 using VectorysInventaire.Application.Interfaces.Services;
+using VectorysInventaire.Domain.Entities;
 using VectorysInventaire.Domain.Enums;
 using VectorysInventaire.Domain.Interfaces.Repositories;
 
@@ -32,6 +33,8 @@ public class GetMesEmplacementsQueryHandler : IRequestHandler<GetMesEmplacements
         return list
             .Where(e => e.Passage?.Inventaire?.Statut == StatutInventaireEnum.EN_COURS)
             .OrderBy(e => e.Passage!.InventaireId)
+            .ThenBy(e => e.RecomptageId == null ? 0 : 1)
+            .ThenBy(e => e.RecomptageId)
             .ThenBy(e => e.Code)
             .Select(e =>
             {
@@ -45,7 +48,8 @@ public class GetMesEmplacementsQueryHandler : IRequestHandler<GetMesEmplacements
                         s.CodeUS,
                         s.DesignationUS,
                         s.QteTheorique,
-                        scanCounts.GetValueOrDefault(s.CodeUS, 0)))
+                        scanCounts.GetValueOrDefault(s.CodeUS, 0),
+                        s.Client))
                     .ToList();
 
                 return new MesEmplacementDto(
@@ -60,7 +64,13 @@ public class GetMesEmplacementsQueryHandler : IRequestHandler<GetMesEmplacements
                     e.Passage.Inventaire?.Reference ?? string.Empty,
                     e.Passage.Inventaire?.Intitule ?? string.Empty,
                     e.Passage.Inventaire?.Zone ?? string.Empty,
-                    lignes);
+                    lignes,
+                    e.Passage.Type.ToString(),
+                    e.RecomptageId,
+                    e.Recomptage is null
+                        ? null
+                        : RecomptageStatuts.Libelle(e.Recomptage.Mode, e.Recomptage.FichierNom),
+                    e.Recomptage?.Statut);
             })
             .ToList();
     }

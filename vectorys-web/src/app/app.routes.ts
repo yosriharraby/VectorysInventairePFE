@@ -20,6 +20,12 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'ecarts/recomptages/:inventaireId',
+    loadComponent: () =>
+      import('./features/ecarts/recomptages-dashboard.component').then((m) => m.RecomptagesDashboardComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: 'ecarts',
     loadComponent: () =>
       import('./features/ecarts/ecart-management.component').then((m) => m.EcartManagementComponent),

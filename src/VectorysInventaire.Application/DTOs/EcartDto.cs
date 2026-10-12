@@ -9,6 +9,7 @@ public class EcartDto
     public string DesignationEmplacement { get; set; } = string.Empty;
     public string CodeUS { get; set; } = string.Empty;
     public string DesignationUS { get; set; } = string.Empty;
+    public string? Client { get; set; }
     public int QteTheorique { get; set; }
     public int QteScannee { get; set; }
     public int Delta { get; set; }
@@ -26,6 +27,7 @@ public class EcartsListDto
     public int TotalTraites { get; set; }
     public int TotalManquants { get; set; }
     public int TotalSurplus { get; set; }
+    public bool TousRecomptagesCorriges { get; set; }
     public IReadOnlyList<EcartDto> Items { get; set; } = Array.Empty<EcartDto>();
 }
 
@@ -33,6 +35,8 @@ public class DetecterEcartsResultDto
 {
     public int InventaireId { get; set; }
     public int EcartsDetectes { get; set; }
+    public int EcartsDejaTraitesNonRouverts { get; set; }
+    public string Message { get; set; } = string.Empty;
     public IReadOnlyList<EcartDto> Items { get; set; } = Array.Empty<EcartDto>();
 }
 
@@ -51,15 +55,11 @@ public class AppliquerBrancheAResultDto
     public string Message { get; set; } = string.Empty;
 }
 
-public class AppliquerBrancheBRequestDto
-{
-    public int InventaireId { get; set; }
-}
-
 public class AppliquerBrancheBResultDto
 {
     public int InventaireId { get; set; }
     public int PassageC2Id { get; set; }
+    public int RecomptageId { get; set; }
     public int EcartsTraites { get; set; }
     public int EmplacementsCreesC2 { get; set; }
     public string Message { get; set; } = string.Empty;

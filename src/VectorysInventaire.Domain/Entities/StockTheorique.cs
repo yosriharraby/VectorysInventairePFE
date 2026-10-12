@@ -6,6 +6,7 @@ public class StockTheorique
     public int EmplacementId { get; set; }
     public string CodeUS { get; set; } = string.Empty;
     public string DesignationUS { get; set; } = string.Empty;
+    public string? Client { get; set; }
     public int QteTheorique { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

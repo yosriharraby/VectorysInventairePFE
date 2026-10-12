@@ -40,8 +40,15 @@ public class TraiterScanTerrainCommandHandler : IRequestHandler<TraiterScanTerra
         var code = request.CodeBarresScan.Trim();
         var agentId = _currentUser.UserId.Value;
 
-        var matchedEmplacement = await _emplacementRepository.GetByAgentIdAndBarcodeAsync(
-            agentId, code, cancellationToken);
+        int? preferredInventaireId = null;
+        if (request.EmplacementActifId is int actifPourContexte)
+        {
+            var actifContexte = await _emplacementRepository.GetByIdAsync(actifPourContexte, cancellationToken);
+            preferredInventaireId = actifContexte?.Passage?.InventaireId;
+        }
+
+        var matchedEmplacement = await _emplacementRepository.GetByBarcodeInActiveInventairesAsync(
+            code, preferredInventaireId, agentId, cancellationToken);
 
         if (matchedEmplacement is not null)
         {
@@ -124,9 +131,6 @@ public class TraiterScanTerrainCommandHandler : IRequestHandler<TraiterScanTerra
     {
         var emplacement = await _emplacementRepository.GetByIdForUpdateAsync(emplacementId, cancellationToken)
             ?? throw new KeyNotFoundException("Emplacement introuvable.");
-
-        if (emplacement.AgentAssigneId != _currentUser.UserId)
-            throw new UnauthorizedAccessException("Cet emplacement ne vous est pas assigné.");
 
         if (emplacement.Statut == StatutEmplacementEnum.TERMINE)
             throw new InvalidOperationException("Cet emplacement est déjà terminé.");

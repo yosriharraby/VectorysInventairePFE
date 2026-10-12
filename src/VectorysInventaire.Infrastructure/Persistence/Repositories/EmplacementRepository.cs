@@ -30,6 +30,7 @@ public class EmplacementRepository : IEmplacementRepository
         await _db.Emplacements.AsNoTracking()
             .Include(e => e.Passage)
                 .ThenInclude(p => p!.Inventaire)
+            .Include(e => e.Recomptage)
             .Include(e => e.StocksTheoriques)
             .Include(e => e.Scans)
             .Where(e => e.AgentAssigneId == agentId)
@@ -78,6 +79,38 @@ public class EmplacementRepository : IEmplacementRepository
         return list.FirstOrDefault(e =>
             string.Equals(e.Code, normalized, StringComparison.OrdinalIgnoreCase)
             || string.Equals(e.CodeBarres, normalized, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public async Task<Emplacement?> GetByBarcodeInActiveInventairesAsync(
+        string code,
+        int? preferredInventaireId,
+        int? preferredAgentId,
+        CancellationToken cancellationToken = default)
+    {
+        var normalized = code.Trim();
+        var list = await _db.Emplacements.AsNoTracking()
+            .Include(e => e.Passage)
+                .ThenInclude(p => p!.Inventaire)
+            .Include(e => e.StocksTheoriques)
+            .Include(e => e.Scans)
+            .Where(e => e.Passage!.Inventaire!.Statut == StatutInventaireEnum.EN_COURS)
+            .ToListAsync(cancellationToken);
+
+        var matches = list.Where(e =>
+                string.Equals(e.Code, normalized, StringComparison.OrdinalIgnoreCase)
+                || string.Equals(e.CodeBarres, normalized, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        if (matches.Count == 0)
+            return null;
+
+        return matches
+            .OrderByDescending(e => preferredInventaireId.HasValue
+                && e.Passage?.InventaireId == preferredInventaireId.Value)
+            .ThenByDescending(e => preferredAgentId.HasValue && e.AgentAssigneId == preferredAgentId.Value)
+            .ThenBy(e => e.Statut == StatutEmplacementEnum.TERMINE)
+            .ThenByDescending(e => e.Id)
+            .First();
     }
 
     public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>

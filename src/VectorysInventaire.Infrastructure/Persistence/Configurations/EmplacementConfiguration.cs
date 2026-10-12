@@ -17,7 +17,10 @@ public class EmplacementConfiguration : IEntityTypeConfiguration<Emplacement>
         builder.HasIndex(x => new { x.PassageId, x.AgentAssigneId });
         builder.HasOne(x => x.Passage).WithMany(p => p.Emplacements).HasForeignKey(x => x.PassageId)
             .OnDelete(DeleteBehavior.Cascade);
+        builder.HasIndex(x => x.RecomptageId);
         builder.HasOne(x => x.AgentAssigne).WithMany().HasForeignKey(x => x.AgentAssigneId)
             .OnDelete(DeleteBehavior.SetNull);
+        builder.HasOne(x => x.Recomptage).WithMany(r => r.Emplacements).HasForeignKey(x => x.RecomptageId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

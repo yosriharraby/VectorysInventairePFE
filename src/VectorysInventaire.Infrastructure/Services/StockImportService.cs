@@ -1,5 +1,7 @@
+using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 using VectorysInventaire.Application.DTOs;
+using VectorysInventaire.Application.Features.Ecarts.Commands.AppliquerBrancheB;
 using VectorysInventaire.Application.Interfaces.Services;
 using VectorysInventaire.Domain.Entities;
 using VectorysInventaire.Domain.Enums;
@@ -31,32 +33,444 @@ public class StockImportService : IStockImportService
         var passage = await _db.Passages.FirstOrDefaultAsync(p => p.Id == passageId, cancellationToken)
             ?? throw new KeyNotFoundException("Passage introuvable.");
 
-        var agents = await _db.Utilisateurs.AsNoTracking()
-            .Where(u => u.CodePersonnel != null)
-            .ToDictionaryAsync(u => u.CodePersonnel!, u => u.Id, StringComparer.OrdinalIgnoreCase, cancellationToken);
+        var agents = await LoadAgentsAsync(cancellationToken);
+        var (emplacementsByCode, agentCodeByEmplacement, stocks, _) =
+            await BuildEmplacementsFromExcelAsync(fileStream, passage.Id, agents, allowedCodes: null, cancellationToken);
+
+        await PersistImportAsync(passage, emplacementsByCode, stocks, cancellationToken);
+
+        var assignationsParAgent = agentCodeByEmplacement.Values
+            .GroupBy(code => code, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.Count(), StringComparer.OrdinalIgnoreCase);
+
+        return new ImportStockResultDto
+        {
+            EmplacementsCrees = emplacementsByCode.Count,
+            LignesStockImportees = stocks.Count,
+            AssignationsParAgent = assignationsParAgent,
+            AgentsInconnus = Array.Empty<string>()
+        };
+    }
+
+    public async Task<AppliquerBrancheBResultDto> ImportBrancheBAsync(
+        int inventaireId,
+        Stream fileStream,
+        string mode,
+        string? fichierNom = null,
+        string? assignationMode = null,
+        string? agentCode = null,
+        int? superviseurId = null,
+        CancellationToken cancellationToken = default)
+    {
+        var inventaire = await _db.Inventaires.FirstOrDefaultAsync(i => i.Id == inventaireId, cancellationToken)
+            ?? throw new KeyNotFoundException("Inventaire introuvable.");
+
+        if (inventaire.Statut == StatutInventaireEnum.CLOTURE)
+            throw new InvalidOperationException("Impossible d'appliquer la Branche B : inventaire déjà clôturé.");
+
+        var passageC1 = await _db.Passages.FirstOrDefaultAsync(
+            p => p.InventaireId == inventaireId && p.Type == TypePassageEnum.C1, cancellationToken)
+            ?? throw new KeyNotFoundException("Passage C1 introuvable.");
+
+        var emplacementsC1 = await _db.Emplacements.AsNoTracking()
+            .Include(e => e.AgentAssigne)
+            .Where(e => e.PassageId == passageC1.Id)
+            .ToListAsync(cancellationToken);
+
+        if (emplacementsC1.Count == 0)
+            throw new InvalidOperationException("Aucun emplacement dans le passage C1 (import initial manquant).");
+
+        var c1Set = new HashSet<string>(emplacementsC1.Select(e => e.Code), StringComparer.OrdinalIgnoreCase);
+        var c1AgentByCode = emplacementsC1.ToDictionary(
+            e => e.Code,
+            e => e.AgentAssigne?.CodePersonnel ?? string.Empty,
+            StringComparer.OrdinalIgnoreCase);
+
+        var normalizedMode = BrancheBModes.Normalize(mode);
+        var isCible = string.Equals(normalizedMode, BrancheBModes.Cible, StringComparison.OrdinalIgnoreCase);
+        var normalizedAssignation = AssignationRecomptageModes.Normalize(assignationMode, normalizedMode);
+
+        if (string.Equals(normalizedAssignation, AssignationRecomptageModes.NouveauAgent, StringComparison.OrdinalIgnoreCase)
+            && string.IsNullOrWhiteSpace(agentCode))
+        {
+            throw new InvalidOperationException("Veuillez sélectionner un agent pour l'assignation « nouveau agent ».");
+        }
+
+        var agents = await LoadAgentsAsync(cancellationToken);
+        var allAgentCodes = agents.Keys.OrderBy(c => c).ToList();
 
         var rows = await _excelImportService.ParseStockFileAsync(fileStream, cancellationToken);
         if (rows.Count == 0)
             throw new InvalidOperationException("Le fichier Excel ne contient aucune ligne de données.");
 
+        var excelCodes = rows
+            .Select(r => r.CodeEmplacement.Trim())
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (excelCodes.Count == 0)
+            throw new InvalidOperationException("Aucun code emplacement valide dans le fichier Excel.");
+
+        if (isCible)
+        {
+            var inconnus = excelCodes
+                .Where(c => !c1Set.Contains(c))
+                .OrderBy(c => c)
+                .ToList();
+
+            if (inconnus.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    "Branche B (ciblé) : emplacement(s) absent(s) de l'import Excel initial : "
+                    + string.Join(", ", inconnus)
+                    + ". Le fichier ne peut contenir que des emplacements déjà présents au C1.");
+            }
+        }
+
+        var forcedAgentByEmplacement = ResolveForcedAgents(
+            excelCodes,
+            normalizedAssignation,
+            agentCode,
+            c1AgentByCode,
+            allAgentCodes);
+
+        await using var transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
+
+        var passageC2 = await _db.Passages.FirstOrDefaultAsync(
+            p => p.InventaireId == inventaireId && p.Type == TypePassageEnum.C2, cancellationToken);
+
+        if (passageC2 is null)
+        {
+            passageC2 = new Passage
+            {
+                InventaireId = inventaireId,
+                Type = TypePassageEnum.C2,
+                Numero = 2,
+                Statut = "EN_PREPARATION",
+                CreatedAt = DateTime.UtcNow
+            };
+            _db.Passages.Add(passageC2);
+            await _db.SaveChangesAsync(cancellationToken);
+        }
+
+        var now = DateTime.UtcNow;
+        var recomptage = new Recomptage
+        {
+            InventaireId = inventaireId,
+            PassageC2Id = passageC2.Id,
+            Mode = normalizedMode,
+            AssignationMode = normalizedAssignation,
+            FichierNom = fichierNom,
+            SuperviseurId = superviseurId ?? inventaire.SuperviseurId,
+            EmplacementsCrees = 0,
+            EcartsTraites = 0,
+            Statut = RecomptageStatuts.EnAttente,
+            CreatedAt = now
+        };
+        _db.Recomptages.Add(recomptage);
+        await _db.SaveChangesAsync(cancellationToken);
+
+        var existingC2Codes = await _db.Emplacements.AsNoTracking()
+            .Where(e => e.PassageId == passageC2.Id)
+            .Select(e => e.Code)
+            .ToListAsync(cancellationToken);
+        var existingSet = new HashSet<string>(existingC2Codes, StringComparer.OrdinalIgnoreCase);
+
+        var (emplacementsByCode, agentCodeByEmplacement, stocks, skippedExisting) =
+            BuildEmplacementsFromRows(
+                rows,
+                passageC2.Id,
+                agents,
+                existingSet,
+                isCible ? c1Set : null,
+                forcedAgentByEmplacement,
+                recomptage.Id);
+
+        await PersistImportAsync(passageC2, emplacementsByCode, stocks, cancellationToken, wrapTransaction: false);
+
+        recomptage.EmplacementsCrees = emplacementsByCode.Count;
+
+        var importedCodes = new HashSet<string>(
+            emplacementsByCode.Keys.Concat(skippedExisting),
+            StringComparer.OrdinalIgnoreCase);
+
+        recomptage.EcartsTraites = await _db.Ecarts.CountAsync(
+            e => e.InventaireId == inventaireId
+                 && e.Statut == StatutEcartEnum.DETECTE
+                 && importedCodes.Contains(e.CodeEmplacement),
+            cancellationToken);
+
+        foreach (var group in agentCodeByEmplacement.Values
+                     .GroupBy(c => c, StringComparer.OrdinalIgnoreCase))
+        {
+            if (!agents.TryGetValue(group.Key, out var agentId))
+                continue;
+
+            recomptage.Agents.Add(new RecomptageAgent
+            {
+                AgentId = agentId,
+                EmplacementsAssignes = group.Count()
+            });
+        }
+
+        await _db.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        var modeLabel = isCible ? "ciblé" : "intégral";
+        return new AppliquerBrancheBResultDto
+        {
+            InventaireId = inventaireId,
+            PassageC2Id = passageC2.Id,
+            RecomptageId = recomptage.Id,
+            EcartsTraites = recomptage.EcartsTraites,
+            EmplacementsCreesC2 = emplacementsByCode.Count,
+            Message =
+                $"Recomptage {modeLabel} lancé : {emplacementsByCode.Count} emplacement(s). "
+                + "Statut En attente — la correction se fait par le scan de l'agent."
+                + (skippedExisting.Count > 0 ? $" {skippedExisting.Count} déjà sur C2 ignoré(s)." : string.Empty)
+        };
+    }
+
+    public async Task<byte[]> ExportC1StockAsync(int inventaireId, CancellationToken cancellationToken = default)
+    {
+        var passageC1 = await _db.Passages.AsNoTracking()
+            .FirstOrDefaultAsync(p => p.InventaireId == inventaireId && p.Type == TypePassageEnum.C1, cancellationToken)
+            ?? throw new KeyNotFoundException("Passage C1 introuvable.");
+
+        var rows = await _db.Emplacements.AsNoTracking()
+            .Include(e => e.AgentAssigne)
+            .Include(e => e.StocksTheoriques)
+            .Where(e => e.PassageId == passageC1.Id)
+            .OrderBy(e => e.Code)
+            .SelectMany(e => e.StocksTheoriques.Select(s => new
+            {
+                e.Code,
+                e.Designation,
+                s.CodeUS,
+                s.DesignationUS,
+                s.QteTheorique,
+                s.Client,
+                Agent = e.AgentAssigne != null ? e.AgentAssigne.CodePersonnel : string.Empty
+            }))
+            .ToListAsync(cancellationToken);
+
+        using var workbook = new XLWorkbook();
+        var ws = workbook.Worksheets.Add("Stock");
+        string[] headers =
+        [
+            "CodeEmplacement", "DesignationEmplacement", "CodeUS", "DesignationUS", "QteTheorique", "CodeAgent", "Client"
+        ];
+        for (var c = 0; c < headers.Length; c++)
+            ws.Cell(1, c + 1).Value = headers[c];
+
+        var row = 2;
+        foreach (var r in rows)
+        {
+            ws.Cell(row, 1).Value = r.Code;
+            ws.Cell(row, 2).Value = r.Designation;
+            ws.Cell(row, 3).Value = r.CodeUS;
+            ws.Cell(row, 4).Value = r.DesignationUS;
+            ws.Cell(row, 5).Value = r.QteTheorique;
+            ws.Cell(row, 6).Value = r.Agent ?? string.Empty;
+            ws.Cell(row, 7).Value = r.Client ?? string.Empty;
+            row++;
+        }
+
+        ws.Columns().AdjustToContents();
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
+    }
+
+    public async Task<(byte[] Content, string FileName)> ExportRecomptageAsync(
+        int recomptageId,
+        CancellationToken cancellationToken = default)
+    {
+        var recomptage = await _db.Recomptages.AsNoTracking()
+            .FirstOrDefaultAsync(r => r.Id == recomptageId, cancellationToken)
+            ?? throw new KeyNotFoundException("Recomptage introuvable.");
+
+        var rows = await _db.Emplacements.AsNoTracking()
+            .Include(e => e.AgentAssigne)
+            .Include(e => e.StocksTheoriques)
+            .Where(e => e.RecomptageId == recomptageId)
+            .OrderBy(e => e.Code)
+            .SelectMany(e => e.StocksTheoriques.Select(s => new
+            {
+                e.Code,
+                e.Designation,
+                s.CodeUS,
+                s.DesignationUS,
+                s.QteTheorique,
+                s.Client,
+                Agent = e.AgentAssigne != null ? e.AgentAssigne.CodePersonnel : string.Empty
+            }))
+            .ToListAsync(cancellationToken);
+
+        var bytes = WriteStockWorkbook(rows.Select(r => (
+            r.Code, r.Designation, r.CodeUS, r.DesignationUS, r.QteTheorique, r.Agent ?? string.Empty, r.Client)));
+        var safeName = string.IsNullOrWhiteSpace(recomptage.FichierNom)
+            ? $"recomptage-{recomptage.Id}.xlsx"
+            : Path.GetFileNameWithoutExtension(recomptage.FichierNom) + "-export.xlsx";
+        return (bytes, safeName);
+    }
+
+    private static byte[] WriteStockWorkbook(
+        IEnumerable<(string Code, string Designation, string CodeUS, string DesignationUS, int QteTheorique, string Agent, string? Client)> rows)
+    {
+        using var workbook = new XLWorkbook();
+        var ws = workbook.Worksheets.Add("Stock");
+        string[] headers =
+        [
+            "CodeEmplacement", "DesignationEmplacement", "CodeUS", "DesignationUS", "QteTheorique", "CodeAgent", "Client"
+        ];
+        for (var c = 0; c < headers.Length; c++)
+            ws.Cell(1, c + 1).Value = headers[c];
+
+        var row = 2;
+        foreach (var r in rows)
+        {
+            ws.Cell(row, 1).Value = r.Code;
+            ws.Cell(row, 2).Value = r.Designation;
+            ws.Cell(row, 3).Value = r.CodeUS;
+            ws.Cell(row, 4).Value = r.DesignationUS;
+            ws.Cell(row, 5).Value = r.QteTheorique;
+            ws.Cell(row, 6).Value = r.Agent;
+            ws.Cell(row, 7).Value = r.Client ?? string.Empty;
+            row++;
+        }
+
+        ws.Columns().AdjustToContents();
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
+    }
+
+    private static Dictionary<string, string> ResolveForcedAgents(
+        IReadOnlyList<string> excelCodes,
+        string assignationMode,
+        string? agentCode,
+        Dictionary<string, string> c1AgentByCode,
+        IReadOnlyList<string> allAgentCodes)
+    {
+        if (string.Equals(assignationMode, AssignationRecomptageModes.Excel, StringComparison.OrdinalIgnoreCase))
+            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        if (string.Equals(assignationMode, AssignationRecomptageModes.MemeAgent, StringComparison.OrdinalIgnoreCase))
+        {
+            foreach (var code in excelCodes)
+            {
+                if (c1AgentByCode.TryGetValue(code, out var c1Agent) && !string.IsNullOrWhiteSpace(c1Agent))
+                    result[code] = c1Agent;
+            }
+            return result;
+        }
+
+        if (string.Equals(assignationMode, AssignationRecomptageModes.NouveauAgent, StringComparison.OrdinalIgnoreCase))
+        {
+            var code = agentCode!.Trim();
+            foreach (var emp in excelCodes)
+                result[emp] = code;
+            return result;
+        }
+
+        if (string.Equals(assignationMode, AssignationRecomptageModes.TousAgents, StringComparison.OrdinalIgnoreCase))
+        {
+            if (allAgentCodes.Count == 0)
+                throw new InvalidOperationException("Aucun agent disponible pour l'assignation.");
+
+            for (var i = 0; i < excelCodes.Count; i++)
+                result[excelCodes[i]] = allAgentCodes[i % allAgentCodes.Count];
+        }
+
+        return result;
+    }
+
+    private async Task<Dictionary<string, int>> LoadAgentsAsync(CancellationToken cancellationToken) =>
+        await _db.Utilisateurs.AsNoTracking()
+            .Where(u => u.CodePersonnel != null)
+            .ToDictionaryAsync(u => u.CodePersonnel!, u => u.Id, StringComparer.OrdinalIgnoreCase, cancellationToken);
+
+    private async Task<(
+            Dictionary<string, Emplacement> Emplacements,
+            Dictionary<string, string> AgentByEmp,
+            List<StockTheorique> Stocks,
+            List<string> Skipped)>
+        BuildEmplacementsFromExcelAsync(
+            Stream fileStream,
+            int passageId,
+            Dictionary<string, int> agents,
+            HashSet<string>? allowedCodes,
+            CancellationToken cancellationToken)
+    {
+        var rows = await _excelImportService.ParseStockFileAsync(fileStream, cancellationToken);
+        if (rows.Count == 0)
+            throw new InvalidOperationException("Le fichier Excel ne contient aucune ligne de données.");
+
+        return BuildEmplacementsFromRows(rows, passageId, agents, existingOnPassage: null, allowedCodes, forcedAgentByEmplacement: null);
+    }
+
+    private static (
+            Dictionary<string, Emplacement> Emplacements,
+            Dictionary<string, string> AgentByEmp,
+            List<StockTheorique> Stocks,
+            List<string> Skipped)
+        BuildEmplacementsFromRows(
+            IReadOnlyList<ExcelStockRow> rows,
+            int passageId,
+            Dictionary<string, int> agents,
+            HashSet<string>? existingOnPassage,
+            HashSet<string>? allowedCodes,
+            Dictionary<string, string>? forcedAgentByEmplacement = null,
+            int? recomptageId = null)
+    {
         var validationErrors = new List<string>();
         var unknownAgents = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var emplacementsByCode = new Dictionary<string, Emplacement>(StringComparer.OrdinalIgnoreCase);
         var agentCodeByEmplacement = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var stocks = new List<StockTheorique>();
+        var skippedExisting = new List<string>();
 
         foreach (var row in rows)
         {
-            if (!emplacementsByCode.TryGetValue(row.CodeEmplacement, out var emplacement))
+            var codeEmp = row.CodeEmplacement.Trim();
+
+            if (allowedCodes is not null && !allowedCodes.Contains(codeEmp))
             {
-                if (string.IsNullOrWhiteSpace(row.CodeAgentPersonnel))
+                validationErrors.Add(
+                    $"Ligne {row.RowNumber} : emplacement « {codeEmp} » absent de l'import C1 initial.");
+                continue;
+            }
+
+            if (existingOnPassage is not null && existingOnPassage.Contains(codeEmp))
+            {
+                if (!skippedExisting.Contains(codeEmp, StringComparer.OrdinalIgnoreCase))
+                    skippedExisting.Add(codeEmp);
+                continue;
+            }
+
+            if (!emplacementsByCode.TryGetValue(codeEmp, out var emplacement))
+            {
+                string codeAgent;
+                if (forcedAgentByEmplacement is not null
+                    && forcedAgentByEmplacement.TryGetValue(codeEmp, out var forced))
+                {
+                    codeAgent = forced;
+                }
+                else if (string.IsNullOrWhiteSpace(row.CodeAgentPersonnel))
                 {
                     validationErrors.Add(
-                        $"Ligne {row.RowNumber} : la colonne CodeAgent est obligatoire pour l'emplacement « {row.CodeEmplacement} ».");
+                        $"Ligne {row.RowNumber} : la colonne CodeAgent est obligatoire pour l'emplacement « {codeEmp} ».");
                     continue;
                 }
+                else
+                {
+                    codeAgent = row.CodeAgentPersonnel.Trim();
+                }
 
-                var codeAgent = row.CodeAgentPersonnel.Trim();
                 if (!agents.ContainsKey(codeAgent))
                 {
                     unknownAgents.Add(codeAgent);
@@ -65,24 +479,25 @@ public class StockImportService : IStockImportService
 
                 emplacement = new Emplacement
                 {
-                    PassageId = passage.Id,
-                    Code = row.CodeEmplacement,
-                    Designation = row.DesignationEmplacement ?? row.CodeEmplacement,
-                    CodeBarres = row.CodeEmplacement,
+                    PassageId = passageId,
+                    Code = codeEmp,
+                    Designation = row.DesignationEmplacement ?? codeEmp,
+                    CodeBarres = codeEmp,
                     Statut = StatutEmplacementEnum.EN_ATTENTE,
-                    AgentAssigneId = agents[codeAgent]
+                    AgentAssigneId = agents[codeAgent],
+                    RecomptageId = recomptageId
                 };
-                emplacementsByCode[row.CodeEmplacement] = emplacement;
-                agentCodeByEmplacement[row.CodeEmplacement] = codeAgent;
+                emplacementsByCode[codeEmp] = emplacement;
+                agentCodeByEmplacement[codeEmp] = codeAgent;
             }
             else if (!string.IsNullOrWhiteSpace(row.CodeAgentPersonnel))
             {
-                var expectedCode = agentCodeByEmplacement[row.CodeEmplacement];
+                var expectedCode = agentCodeByEmplacement[codeEmp];
                 if (!string.Equals(expectedCode, row.CodeAgentPersonnel.Trim(), StringComparison.OrdinalIgnoreCase))
                 {
                     validationErrors.Add(
-                        $"Ligne {row.RowNumber} : CodeAgent incohérent pour « {row.CodeEmplacement} » " +
-                        $"(attendu « {expectedCode} », reçu « {row.CodeAgentPersonnel.Trim()} »).");
+                        $"Ligne {row.RowNumber} : CodeAgent incohérent pour « {codeEmp} » "
+                        + $"(attendu « {expectedCode} », reçu « {row.CodeAgentPersonnel.Trim()} »).");
                     continue;
                 }
             }
@@ -93,6 +508,7 @@ public class StockImportService : IStockImportService
                 CodeUS = row.CodeUS,
                 DesignationUS = row.DesignationUS ?? row.CodeUS,
                 QteTheorique = row.QteTheorique,
+                Client = string.IsNullOrWhiteSpace(row.Client) ? null : row.Client.Trim(),
                 CreatedAt = DateTime.UtcNow
             });
         }
@@ -105,46 +521,62 @@ public class StockImportService : IStockImportService
 
         if (validationErrors.Count > 0)
         {
-            throw new InvalidOperationException(string.Join(" ", validationErrors.Take(5)) +
-                (validationErrors.Count > 5 ? $" (+{validationErrors.Count - 5} autre(s) erreur(s))" : string.Empty));
+            throw new InvalidOperationException(string.Join(" ", validationErrors.Take(5))
+                + (validationErrors.Count > 5 ? $" (+{validationErrors.Count - 5} autre(s) erreur(s))" : string.Empty));
         }
 
-        if (emplacementsByCode.Count == 0)
+        if (emplacementsByCode.Count == 0 && skippedExisting.Count == 0)
             throw new InvalidOperationException("Aucun emplacement valide à importer.");
 
-        await using var transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
+        if (emplacementsByCode.Count == 0 && skippedExisting.Count > 0)
+            throw new InvalidOperationException(
+                "Tous les emplacements du fichier existent déjà sur le passage C2. Aucune création effectuée.");
 
-        var emplacementList = emplacementsByCode.Values.ToList();
-        for (var i = 0; i < emplacementList.Count; i += BatchSize)
+        return (emplacementsByCode, agentCodeByEmplacement, stocks, skippedExisting);
+    }
+
+    private async Task PersistImportAsync(
+        Passage passage,
+        Dictionary<string, Emplacement> emplacementsByCode,
+        List<StockTheorique> stocks,
+        CancellationToken cancellationToken,
+        bool wrapTransaction = true)
+    {
+        if (emplacementsByCode.Count == 0)
+            return;
+
+        Microsoft.EntityFrameworkCore.Storage.IDbContextTransaction? transaction = null;
+        if (wrapTransaction)
+            transaction = await _db.Database.BeginTransactionAsync(cancellationToken);
+
+        try
         {
-            await _db.Emplacements.AddRangeAsync(emplacementList.Skip(i).Take(BatchSize), cancellationToken);
+            var emplacementList = emplacementsByCode.Values.ToList();
+            for (var i = 0; i < emplacementList.Count; i += BatchSize)
+            {
+                await _db.Emplacements.AddRangeAsync(emplacementList.Skip(i).Take(BatchSize), cancellationToken);
+                await _db.SaveChangesAsync(cancellationToken);
+            }
+
+            for (var i = 0; i < stocks.Count; i += BatchSize)
+            {
+                await _db.StocksTheoriques.AddRangeAsync(stocks.Skip(i).Take(BatchSize), cancellationToken);
+                await _db.SaveChangesAsync(cancellationToken);
+            }
+
+            var inventaire = await _db.Inventaires.FindAsync([passage.InventaireId], cancellationToken);
+            if (inventaire is not null && inventaire.Statut == StatutInventaireEnum.EN_PREPARATION)
+                inventaire.Statut = StatutInventaireEnum.EN_COURS;
+
+            passage.Statut = "EN_COURS";
             await _db.SaveChangesAsync(cancellationToken);
+            if (transaction is not null)
+                await transaction.CommitAsync(cancellationToken);
         }
-
-        for (var i = 0; i < stocks.Count; i += BatchSize)
+        finally
         {
-            await _db.StocksTheoriques.AddRangeAsync(stocks.Skip(i).Take(BatchSize), cancellationToken);
-            await _db.SaveChangesAsync(cancellationToken);
+            if (transaction is not null)
+                await transaction.DisposeAsync();
         }
-
-        var inventaire = await _db.Inventaires.FindAsync([passage.InventaireId], cancellationToken);
-        if (inventaire is not null && inventaire.Statut == StatutInventaireEnum.EN_PREPARATION)
-            inventaire.Statut = StatutInventaireEnum.EN_COURS;
-
-        passage.Statut = "EN_COURS";
-        await _db.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        var assignationsParAgent = agentCodeByEmplacement.Values
-            .GroupBy(code => code, StringComparer.OrdinalIgnoreCase)
-            .ToDictionary(g => g.Key, g => g.Count(), StringComparer.OrdinalIgnoreCase);
-
-        return new ImportStockResultDto
-        {
-            EmplacementsCrees = emplacementList.Count,
-            LignesStockImportees = stocks.Count,
-            AssignationsParAgent = assignationsParAgent,
-            AgentsInconnus = Array.Empty<string>()
-        };
     }
 }

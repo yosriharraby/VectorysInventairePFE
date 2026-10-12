@@ -48,9 +48,6 @@ public class EnregistrerScanCommandHandler : IRequestHandler<EnregistrerScanComm
         var emplacement = await _emplacementRepository.GetByIdForUpdateAsync(request.EmplacementId, cancellationToken)
             ?? throw new KeyNotFoundException("Emplacement introuvable.");
 
-        if (emplacement.AgentAssigneId != _currentUser.UserId)
-            throw new UnauthorizedAccessException("Cet emplacement ne vous est pas assigné.");
-
         if (emplacement.Statut == StatutEmplacementEnum.TERMINE)
             throw new InvalidOperationException("Cet emplacement est déjà terminé.");
 

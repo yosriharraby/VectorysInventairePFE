@@ -40,6 +40,10 @@ namespace VectorysInventaire.Infrastructure.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
+                    b.Property<string>("Client")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.Property<int>("Delta")
                         .HasColumnType("int");
 
@@ -124,6 +128,9 @@ namespace VectorysInventaire.Infrastructure.Migrations
                     b.Property<int>("PassageId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RecomptageId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Statut")
                         .IsRequired()
                         .HasMaxLength(32)
@@ -132,6 +139,8 @@ namespace VectorysInventaire.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AgentAssigneId");
+
+                    b.HasIndex("RecomptageId");
 
                     b.HasIndex("PassageId", "AgentAssigneId");
 
@@ -229,6 +238,88 @@ namespace VectorysInventaire.Infrastructure.Migrations
                     b.ToTable("Passages", (string)null);
                 });
 
+            modelBuilder.Entity("VectorysInventaire.Domain.Entities.Recomptage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AssignationMode")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EcartsTraites")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmplacementsCrees")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FichierNom")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int>("InventaireId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<int>("PassageC2Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Statut")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<int>("SuperviseurId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PassageC2Id");
+
+                    b.HasIndex("SuperviseurId");
+
+                    b.HasIndex("InventaireId", "CreatedAt");
+
+                    b.ToTable("Recomptages", (string)null);
+                });
+
+            modelBuilder.Entity("VectorysInventaire.Domain.Entities.RecomptageAgent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmplacementsAssignes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecomptageId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("RecomptageId", "AgentId")
+                        .IsUnique();
+
+                    b.ToTable("RecomptageAgents", (string)null);
+                });
+
             modelBuilder.Entity("VectorysInventaire.Domain.Entities.Scan", b =>
                 {
                     b.Property<int>("Id")
@@ -288,6 +379,10 @@ namespace VectorysInventaire.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
+
+                    b.Property<string>("Client")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -406,9 +501,16 @@ namespace VectorysInventaire.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("VectorysInventaire.Domain.Entities.Recomptage", "Recomptage")
+                        .WithMany("Emplacements")
+                        .HasForeignKey("RecomptageId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("AgentAssigne");
 
                     b.Navigation("Passage");
+
+                    b.Navigation("Recomptage");
                 });
 
             modelBuilder.Entity("VectorysInventaire.Domain.Entities.Inventaire", b =>
@@ -431,6 +533,52 @@ namespace VectorysInventaire.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Inventaire");
+                });
+
+            modelBuilder.Entity("VectorysInventaire.Domain.Entities.Recomptage", b =>
+                {
+                    b.HasOne("VectorysInventaire.Domain.Entities.Inventaire", "Inventaire")
+                        .WithMany()
+                        .HasForeignKey("InventaireId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VectorysInventaire.Domain.Entities.Passage", "PassageC2")
+                        .WithMany()
+                        .HasForeignKey("PassageC2Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("VectorysInventaire.Domain.Entities.Utilisateur", "Superviseur")
+                        .WithMany()
+                        .HasForeignKey("SuperviseurId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Inventaire");
+
+                    b.Navigation("PassageC2");
+
+                    b.Navigation("Superviseur");
+                });
+
+            modelBuilder.Entity("VectorysInventaire.Domain.Entities.RecomptageAgent", b =>
+                {
+                    b.HasOne("VectorysInventaire.Domain.Entities.Utilisateur", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("VectorysInventaire.Domain.Entities.Recomptage", "Recomptage")
+                        .WithMany("Agents")
+                        .HasForeignKey("RecomptageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Recomptage");
                 });
 
             modelBuilder.Entity("VectorysInventaire.Domain.Entities.Scan", b =>
@@ -477,6 +625,13 @@ namespace VectorysInventaire.Infrastructure.Migrations
 
             modelBuilder.Entity("VectorysInventaire.Domain.Entities.Passage", b =>
                 {
+                    b.Navigation("Emplacements");
+                });
+
+            modelBuilder.Entity("VectorysInventaire.Domain.Entities.Recomptage", b =>
+                {
+                    b.Navigation("Agents");
+
                     b.Navigation("Emplacements");
                 });
 #pragma warning restore 612, 618

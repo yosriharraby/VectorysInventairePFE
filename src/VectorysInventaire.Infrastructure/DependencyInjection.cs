@@ -25,6 +25,7 @@ public static class DependencyInjection
         services.AddScoped<IStockTheoriqueRepository, StockTheoriqueRepository>();
         services.AddScoped<IScanRepository, ScanRepository>();
         services.AddScoped<IEcartRepository, EcartRepository>();
+        services.AddScoped<IRecomptageRepository, RecomptageRepository>();
         services.AddScoped<IKpiRepository, KpiRepository>();
 
         services.AddSingleton<IPasswordHasher, BcryptPasswordHasher>();
@@ -32,6 +33,7 @@ public static class DependencyInjection
         services.AddScoped<IExcelImportService, ExcelImportService>();
         services.AddScoped<IInventaireExportService, InventaireExportService>();
         services.AddScoped<IStockImportService, StockImportService>();
+        services.AddScoped<IRecomptageProgressService, RecomptageProgressService>();
 
         return services;
     }

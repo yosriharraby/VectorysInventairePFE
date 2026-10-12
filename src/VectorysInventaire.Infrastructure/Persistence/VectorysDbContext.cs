@@ -17,6 +17,8 @@ public class VectorysDbContext : DbContext
     public DbSet<StockTheorique> StocksTheoriques => Set<StockTheorique>();
     public DbSet<Scan> Scans => Set<Scan>();
     public DbSet<Ecart> Ecarts => Set<Ecart>();
+    public DbSet<Recomptage> Recomptages => Set<Recomptage>();
+    public DbSet<RecomptageAgent> RecomptageAgents => Set<RecomptageAgent>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

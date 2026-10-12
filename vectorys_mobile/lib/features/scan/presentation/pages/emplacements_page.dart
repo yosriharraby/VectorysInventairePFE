@@ -298,17 +298,27 @@ class _EmplacementsPageState extends State<EmplacementsPage> {
                 )
               else
                 ...groups.expand((group) sync* {
-                  if (groups.length > 1) {
+                  yield Padding(
+                    padding: const EdgeInsets.only(bottom: 8, top: 4),
+                    child: _InventaireSectionHeader(group: group),
+                  );
+                  for (final section in group.sections) {
                     yield Padding(
-                      padding: const EdgeInsets.only(bottom: 8, top: 4),
-                      child: _InventaireSectionHeader(group: group),
+                      padding: const EdgeInsets.only(left: 8, bottom: 6, top: 4),
+                      child: Text(
+                        section.title,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: const Color(0xFF5B66F5),
+                            ),
+                      ),
                     );
-                  }
-                  for (final e in group.emplacements) {
-                    yield _EmplacementCard(
-                      e,
-                      onTap: () => context.go('/scan/loop'),
-                    );
+                    for (final e in section.items) {
+                      yield _EmplacementCard(
+                        e,
+                        onTap: () => context.go('/scan/loop'),
+                      );
+                    }
                   }
                 }),
             ],

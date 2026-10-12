@@ -12,15 +12,35 @@ public class Sprint6ValidatorsTests
     public void AppliquerBrancheB_Rejects_NonPositive_InventaireId()
     {
         var validator = new AppliquerBrancheBCommandValidator();
-        var result = validator.TestValidate(new AppliquerBrancheBCommand(0));
+        using var stream = new MemoryStream(new byte[] { 1 });
+        var result = validator.TestValidate(new AppliquerBrancheBCommand(0, BrancheBModes.Global, stream));
         result.ShouldHaveValidationErrorFor(x => x.InventaireId);
     }
 
     [Fact]
-    public void AppliquerBrancheB_Accepts_Valid_InventaireId()
+    public void AppliquerBrancheB_Rejects_Invalid_Mode()
     {
         var validator = new AppliquerBrancheBCommandValidator();
-        var result = validator.TestValidate(new AppliquerBrancheBCommand(12));
+        using var stream = new MemoryStream(new byte[] { 1 });
+        var result = validator.TestValidate(new AppliquerBrancheBCommand(12, "XYZ", stream));
+        result.ShouldHaveValidationErrorFor(x => x.Mode);
+    }
+
+    [Fact]
+    public void AppliquerBrancheB_Accepts_Valid_Global()
+    {
+        var validator = new AppliquerBrancheBCommandValidator();
+        using var stream = new MemoryStream(new byte[] { 1 });
+        var result = validator.TestValidate(new AppliquerBrancheBCommand(12, BrancheBModes.Global, stream));
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public void AppliquerBrancheB_Accepts_Valid_Cible()
+    {
+        var validator = new AppliquerBrancheBCommandValidator();
+        using var stream = new MemoryStream(new byte[] { 1 });
+        var result = validator.TestValidate(new AppliquerBrancheBCommand(12, BrancheBModes.Cible, stream));
         result.ShouldNotHaveAnyValidationErrors();
     }
 

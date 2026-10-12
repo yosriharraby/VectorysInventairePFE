@@ -17,4 +17,8 @@ public record MesEmplacementDto(
     string InventaireReference,
     string InventaireIntitule,
     string InventaireZone,
-    IReadOnlyList<StockLigneProgressDto> LignesStock);
+    IReadOnlyList<StockLigneProgressDto> LignesStock,
+    string PassageType = "C1",
+    int? RecomptageId = null,
+    string? RecomptageLibelle = null,
+    string? RecomptageStatut = null);

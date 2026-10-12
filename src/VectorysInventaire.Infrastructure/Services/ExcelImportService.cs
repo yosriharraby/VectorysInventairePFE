@@ -30,6 +30,7 @@ public class ExcelImportService : IExcelImportService
             var qteCell = worksheet.Cell(r, 5);
             var qte = qteCell.TryGetValue<int>(out var q) ? q : (int)qteCell.GetDouble();
             var codeAgent = worksheet.Cell(r, 6).GetString().Trim();
+            var client = worksheet.Cell(r, 7).GetString().Trim();
 
             if (qte < 0)
                 continue;
@@ -41,7 +42,8 @@ public class ExcelImportService : IExcelImportService
                 codeUs,
                 string.IsNullOrWhiteSpace(designationUs) ? null : designationUs,
                 qte,
-                string.IsNullOrWhiteSpace(codeAgent) ? null : codeAgent));
+                string.IsNullOrWhiteSpace(codeAgent) ? null : codeAgent,
+                string.IsNullOrWhiteSpace(client) ? null : client));
         }
 
         return Task.FromResult<IReadOnlyList<ExcelStockRow>>(rows);

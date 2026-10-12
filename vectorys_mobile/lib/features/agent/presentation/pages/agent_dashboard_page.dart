@@ -153,6 +153,16 @@ class _AgentDashboardPageState extends State<AgentDashboardPage> {
                             Text('Zone : ${g.zone}', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.blueGrey[600])),
                           const SizedBox(height: 4),
                           Text('$gDone/$gTotal emplacements terminés', style: Theme.of(context).textTheme.labelMedium?.copyWith(color: const Color(0xFF5B66F5), fontWeight: FontWeight.w800)),
+                          ...g.sections.map((section) => Padding(
+                                padding: const EdgeInsets.only(top: 6),
+                                child: Text(
+                                  '${section.title} — ${section.items.where((e) => e.isTermine).length}/${section.items.length}',
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: Colors.blueGrey[700],
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                ),
+                              )),
                         ],
                       ),
                     );

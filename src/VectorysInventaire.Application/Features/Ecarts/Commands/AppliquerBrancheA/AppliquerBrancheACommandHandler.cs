@@ -1,5 +1,6 @@
 using MediatR;
 using VectorysInventaire.Application.DTOs;
+using VectorysInventaire.Application.Features.Ecarts;
 using VectorysInventaire.Domain.Entities;
 using VectorysInventaire.Domain.Enums;
 using VectorysInventaire.Domain.Interfaces.Repositories;
@@ -51,9 +52,16 @@ public class AppliquerBrancheACommandHandler : IRequestHandler<AppliquerBrancheA
             ecarts = await _ecartRepository.GetByIdsAsync(ids, cancellationToken);
         }
 
-        var aTraiter = ecarts.Where(e => e.Statut == StatutEcartEnum.DETECTE).ToList();
+        var inventaireEcarts = await _ecartRepository.GetByInventaireIdAsync(request.InventaireId, cancellationToken);
+        var dejaTraitesB = EcartBusinessKey.TraitesBrancheB(inventaireEcarts);
+
+        var aTraiter = ecarts
+            .Where(e => e.Statut == StatutEcartEnum.DETECTE
+                        && !dejaTraitesB.Contains(EcartBusinessKey.Of(e)))
+            .ToList();
         if (aTraiter.Count == 0)
-            throw new InvalidOperationException("Aucun écart en attente de traitement Branche A.");
+            throw new InvalidOperationException(
+                "Aucun écart en attente de traitement Branche A (déjà traités par un recomptage ou aucun écart DETECTE).");
 
         var passageC2 = await _passageRepository.GetByInventaireAndTypeAsync(
             request.InventaireId, TypePassageEnum.C2, cancellationToken);
@@ -104,6 +112,7 @@ public class AppliquerBrancheACommandHandler : IRequestHandler<AppliquerBrancheA
                 {
                     CodeUS = stock.CodeUS,
                     DesignationUS = stock.DesignationUS,
+                    Client = stock.Client,
                     QteTheorique = stock.QteTheorique,
                     CreatedAt = now
                 });

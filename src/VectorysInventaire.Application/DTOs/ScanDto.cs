@@ -59,7 +59,8 @@ public record StockLigneProgressDto(
     string CodeUs,
     string? DesignationUs,
     int QteTheorique,
-    int QteScannee);
+    int QteScannee,
+    string? Client = null);
 
 public class ScanEnregistreResultDto
 {

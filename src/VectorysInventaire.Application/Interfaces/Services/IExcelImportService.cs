@@ -7,7 +7,8 @@ public record ExcelStockRow(
     string CodeUS,
     string? DesignationUS,
     int QteTheorique,
-    string? CodeAgentPersonnel);
+    string? CodeAgentPersonnel,
+    string? Client);
 
 public interface IExcelImportService
 {

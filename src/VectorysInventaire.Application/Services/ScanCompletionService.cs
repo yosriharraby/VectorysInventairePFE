@@ -64,7 +64,8 @@ public class ScanCompletionService : IScanCompletionService
                 stock.CodeUS,
                 stock.DesignationUS,
                 stock.QteTheorique,
-                qteScannee));
+                qteScannee,
+                stock.Client));
         }
 
         return progress;

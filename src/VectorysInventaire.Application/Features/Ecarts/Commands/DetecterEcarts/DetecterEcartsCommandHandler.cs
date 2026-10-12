@@ -1,5 +1,6 @@
 using MediatR;
 using VectorysInventaire.Application.DTOs;
+using VectorysInventaire.Application.Features.Ecarts;
 using VectorysInventaire.Application.Features.Ecarts.Queries.GetEcarts;
 using VectorysInventaire.Domain.Entities;
 using VectorysInventaire.Domain.Enums;
@@ -36,8 +37,11 @@ public class DetecterEcartsCommandHandler : IRequestHandler<DetecterEcartsComman
             ?? throw new KeyNotFoundException("Passage C1 introuvable pour cet inventaire.");
 
         var emplacements = await _emplacementRepository.GetByPassageIdWithProgressAsync(passage.Id, cancellationToken);
+        var existants = await _ecartRepository.GetByInventaireIdAsync(request.InventaireId, cancellationToken);
+        var dejaTraites = EcartBusinessKey.Traites(existants);
         var now = DateTime.UtcNow;
         var ecarts = new List<Ecart>();
+        var nonRouverts = 0;
 
         foreach (var emp in emplacements.Where(e => e.Statut == StatutEmplacementEnum.TERMINE))
         {
@@ -51,6 +55,12 @@ public class DetecterEcartsCommandHandler : IRequestHandler<DetecterEcartsComman
                 if (qteScannee == stock.QteTheorique)
                     continue;
 
+                if (dejaTraites.Contains(EcartBusinessKey.Of(emp.Code, stock.CodeUS)))
+                {
+                    nonRouverts++;
+                    continue;
+                }
+
                 var delta = qteScannee - stock.QteTheorique;
                 ecarts.Add(new Ecart
                 {
@@ -61,6 +71,7 @@ public class DetecterEcartsCommandHandler : IRequestHandler<DetecterEcartsComman
                     DesignationEmplacement = emp.Designation,
                     CodeUS = stock.CodeUS,
                     DesignationUS = stock.DesignationUS,
+                    Client = stock.Client,
                     QteTheorique = stock.QteTheorique,
                     QteScannee = qteScannee,
                     Delta = delta,
@@ -78,6 +89,12 @@ public class DetecterEcartsCommandHandler : IRequestHandler<DetecterEcartsComman
             {
                 if (stockCodes.Contains(code))
                     continue;
+
+                if (dejaTraites.Contains(EcartBusinessKey.Of(emp.Code, code)))
+                {
+                    nonRouverts++;
+                    continue;
+                }
 
                 ecarts.Add(new Ecart
                 {
@@ -108,7 +125,20 @@ public class DetecterEcartsCommandHandler : IRequestHandler<DetecterEcartsComman
         {
             InventaireId = request.InventaireId,
             EcartsDetectes = items.Count,
+            EcartsDejaTraitesNonRouverts = nonRouverts,
+            Message = BuildMessage(items.Count, nonRouverts),
             Items = items
         };
+    }
+
+    private static string BuildMessage(int detectes, int nonRouverts)
+    {
+        if (detectes == 0 && nonRouverts == 0)
+            return "Aucun écart détecté.";
+        if (detectes == 0)
+            return $"Aucun nouvel écart. {nonRouverts} écart(s) déjà traités (A/B), non rouverts.";
+        if (nonRouverts == 0)
+            return $"{detectes} écart(s) détecté(s).";
+        return $"{detectes} écart(s) détecté(s). {nonRouverts} écart(s) déjà traités (A/B), non rouverts.";
     }
 }

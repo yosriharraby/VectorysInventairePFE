@@ -19,5 +19,10 @@ public interface IEmplacementRepository
         CancellationToken cancellationToken = default);
     Task<Emplacement?> GetByAgentIdAndBarcodeAsync(int agentId, string code,
         CancellationToken cancellationToken = default);
+    Task<Emplacement?> GetByBarcodeInActiveInventairesAsync(
+        string code,
+        int? preferredInventaireId,
+        int? preferredAgentId,
+        CancellationToken cancellationToken = default);
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

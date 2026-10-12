@@ -91,7 +91,7 @@ public class InventaireExportService : IInventaireExportService
         var sheetEcarts = workbook.Worksheets.Add("Ecarts");
         string[] ecartHeaders =
         [
-            "CodeEmplacement", "CodeUS", "QteTheorique", "QteScannee", "Delta", "Type", "Statut"
+            "CodeEmplacement", "CodeUS", "Client", "QteTheorique", "QteScannee", "Delta", "Type", "Statut"
         ];
         for (var c = 0; c < ecartHeaders.Length; c++)
             sheetEcarts.Cell(1, c + 1).Value = ecartHeaders[c];
@@ -101,11 +101,12 @@ public class InventaireExportService : IInventaireExportService
         {
             sheetEcarts.Cell(row, 1).Value = e.CodeEmplacement;
             sheetEcarts.Cell(row, 2).Value = e.CodeUS;
-            sheetEcarts.Cell(row, 3).Value = e.QteTheorique;
-            sheetEcarts.Cell(row, 4).Value = e.QteScannee;
-            sheetEcarts.Cell(row, 5).Value = e.Delta;
-            sheetEcarts.Cell(row, 6).Value = e.Type.ToString();
-            sheetEcarts.Cell(row, 7).Value = e.Statut.ToString();
+            sheetEcarts.Cell(row, 3).Value = e.Client ?? string.Empty;
+            sheetEcarts.Cell(row, 4).Value = e.QteTheorique;
+            sheetEcarts.Cell(row, 5).Value = e.QteScannee;
+            sheetEcarts.Cell(row, 6).Value = e.Delta;
+            sheetEcarts.Cell(row, 7).Value = e.Type.ToString();
+            sheetEcarts.Cell(row, 8).Value = e.Statut.ToString();
             row++;
         }
         sheetEcarts.Columns().AdjustToContents();

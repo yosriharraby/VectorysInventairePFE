@@ -1,4 +1,4 @@
-﻿<div class="shell">
+<div class="shell">
   <aside class="sidebar">
     <div class="sidebar__brand">
       <img class="brand-logo" src="/brand/vectorys-tunisie-logo.png" alt="Vectorys Tunisie" />
@@ -58,7 +58,7 @@
       <div class="content-header">
         <div>
           <h1 class="h1">Ecart Management</h1>
-          <p class="sub">Analysez les écarts C1 et lancez la Branche A (passage C2 ciblé).</p>
+          <p class="sub">Écarts en attente du 1er inventaire. Les recomptages Branche B sont suivis dans un dashboard dédié.</p>
         </div>
 
         <div class="header-actions">
@@ -75,19 +75,36 @@
             </mat-select>
           </mat-form-field>
 
-          <button mat-stroked-button type="button" (click)="detecter()" [disabled]="detecting || !selectedInventaireId">
+          <button mat-stroked-button type="button" (click)="goToRecomptages()" [disabled]="!selectedInventaireId">
+            <mat-icon>history</mat-icon>
+            Recomptages
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="detecter()"
+            [disabled]="!canDetecter"
+            [title]="canDetecter ? 'Recalculer les écarts C1 encore en attente' : 'Tous les recomptages sont corrigés : les écarts traités ne sont pas rouverts.'"
+          >
             <mat-icon>search</mat-icon>
             {{ detecting ? 'Détection...' : 'Détecter écarts' }}
           </button>
 
-          <button mat-flat-button color="primary" type="button" (click)="appliquerBrancheA()" [disabled]="applying || pendingEcarts.length === 0">
+          <button
+            mat-flat-button
+            color="primary"
+            type="button"
+            (click)="appliquerBrancheA()"
+            [disabled]="!canAppliquerBrancheA"
+          >
             <mat-icon>redo</mat-icon>
             {{ applying ? 'Traitement...' : 'Branche A' }}
           </button>
 
-          <button mat-stroked-button color="warn" type="button" (click)="appliquerBrancheB()" [disabled]="applyingB || !selectedInventaireId">
+          <button mat-stroked-button color="warn" type="button" (click)="openBrancheBModal()" [disabled]="applyingB || !selectedInventaireId">
             <mat-icon>sync</mat-icon>
-            {{ applyingB ? 'Traitement...' : 'Branche B' }}
+            Branche B
           </button>
         </div>
       </div>
@@ -95,7 +112,7 @@
       @if (ecarts) {
         <section class="summary-cards">
           <div class="summary-card">
-            <div class="summary-card__label">Écarts détectés</div>
+            <div class="summary-card__label">Écarts en attente</div>
             <div class="summary-card__value warn">{{ ecarts.totalDetectes }}</div>
           </div>
           <div class="summary-card">
@@ -122,7 +139,7 @@
         <div class="loading">Chargement des écarts...</div>
       } @else if (!ecarts || ecarts.items.length === 0) {
         <div class="empty">
-          Aucun écart enregistré. Terminez les comptages C1 puis cliquez sur « Détecter écarts ».
+          Aucun écart en attente. Les écarts déjà traités par Branche A ou un recomptage ne sont pas rouverts.
         </div>
       } @else {
         <section class="table-card">
@@ -137,13 +154,11 @@
                 />
               </th>
               <td mat-cell *matCellDef="let row">
-                @if (canSelect(row)) {
-                  <mat-checkbox
-                    [checked]="isSelected(row.id)"
-                    (change)="toggleOne(row.id, $event.checked)"
-                    [attr.aria-label]="'Sélectionner écart ' + row.codeUS"
-                  />
-                }
+                <mat-checkbox
+                  [checked]="isSelected(row.id)"
+                  (change)="toggleOne(row.id, $event.checked)"
+                  [attr.aria-label]="'Sélectionner écart ' + row.codeUS"
+                />
               </td>
             </ng-container>
 
@@ -161,6 +176,11 @@
                 <div class="cell-title">{{ row.codeUS }}</div>
                 <div class="cell-sub">{{ row.designationUS }}</div>
               </td>
+            </ng-container>
+
+            <ng-container matColumnDef="client">
+              <th mat-header-cell *matHeaderCellDef>Client</th>
+              <td mat-cell *matCellDef="let row">{{ row.client || '—' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="qteTheorique">
@@ -189,13 +209,6 @@
               </td>
             </ng-container>
 
-            <ng-container matColumnDef="statut">
-              <th mat-header-cell *matHeaderCellDef>Statut</th>
-              <td mat-cell *matCellDef="let row">
-                <span class="badge" [attr.data-statut]="row.statut">{{ statutLabel(row.statut) }}</span>
-              </td>
-            </ng-container>
-
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
           </table>
@@ -205,4 +218,176 @@
   </div>
 </div>
 
+@if (brancheBStep === 1) {
+  <div class="modal-backdrop" (click)="closeBrancheBModal()" role="presentation"></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="branche-b-title">
+    <div class="modal__header">
+      <h2 id="branche-b-title">Branche B — Type de recomptage</h2>
+      <button type="button" class="modal__close" (click)="closeBrancheBModal()" aria-label="Fermer">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
 
+    <div class="modal__body">
+      <p class="modal__intro">
+        Choisissez le type de recomptage. L'étape suivante vous permettra d'importer le fichier Excel et de configurer l'assignation.
+      </p>
+
+      <mat-radio-group class="mode-group" [(ngModel)]="brancheBMode">
+        <label class="mode-card" [class.active]="brancheBMode === 'GLOBAL'">
+          <mat-radio-button value="GLOBAL"></mat-radio-button>
+          <span class="mode-card__text">
+            <strong>Recomptage intégral</strong>
+            <small>Nouvel Excel filtré libre → passage C2 avec le périmètre du fichier.</small>
+          </span>
+        </label>
+
+        <label class="mode-card" [class.active]="brancheBMode === 'CIBLE'">
+          <mat-radio-button value="CIBLE"></mat-radio-button>
+          <span class="mode-card__text">
+            <strong>Recomptage ciblé</strong>
+            <small>Excel limité aux emplacements du C1 initial. Codes hors C1 = erreur.</small>
+          </span>
+        </label>
+      </mat-radio-group>
+    </div>
+
+    <div class="modal__footer">
+      <button mat-stroked-button type="button" (click)="closeBrancheBModal()">Annuler</button>
+      <button mat-flat-button color="warn" type="button" (click)="continueBrancheB()">Continuer</button>
+    </div>
+  </div>
+}
+
+@if (brancheBStep === 2) {
+  <div class="modal-backdrop" (click)="closeBrancheBModal()" role="presentation"></div>
+  <div class="modal modal--wide" role="dialog" aria-modal="true" aria-labelledby="branche-b-step2-title">
+    <div class="modal__header">
+      <h2 id="branche-b-step2-title">
+        {{ brancheBMode === 'GLOBAL' ? 'Recomptage intégral' : 'Recomptage ciblé' }}
+      </h2>
+      <button type="button" class="modal__close" (click)="closeBrancheBModal()" [disabled]="applyingB" aria-label="Fermer">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal__body">
+      @if (brancheBMode === 'GLOBAL') {
+        <p class="modal__intro">
+          Importez un fichier Excel filtré. Vous pouvez exporter le stock C1 initial comme base de travail.
+        </p>
+        <button mat-stroked-button type="button" (click)="exportC1Stock()" [disabled]="exportingC1">
+          <mat-icon>download</mat-icon>
+          {{ exportingC1 ? 'Export...' : 'Exporter stock C1 initial' }}
+        </button>
+      } @else {
+        <p class="modal__intro">
+          Importez un Excel ciblé (emplacements ⊆ C1). Choisissez comment assigner les agents au recomptage.
+        </p>
+      }
+
+        <mat-radio-group class="mode-group" [(ngModel)]="assignationMode" [disabled]="applyingB">
+          <label class="mode-card" [class.active]="assignationMode === 'EXCEL'">
+            <mat-radio-button value="EXCEL"></mat-radio-button>
+            <span class="mode-card__text">
+              <strong>Agents du fichier Excel</strong>
+              <small>Utiliser la colonne CodeAgent du fichier.</small>
+            </span>
+          </label>
+          <label class="mode-card" [class.active]="assignationMode === 'MEME_AGENT'">
+            <mat-radio-button value="MEME_AGENT"></mat-radio-button>
+            <span class="mode-card__text">
+              <strong>Même agent que C1</strong>
+              <small>Conserver l'agent assigné lors du 1er inventaire.</small>
+            </span>
+          </label>
+          <label class="mode-card" [class.active]="assignationMode === 'NOUVEAU_AGENT'">
+            <mat-radio-button value="NOUVEAU_AGENT"></mat-radio-button>
+            <span class="mode-card__text">
+              <strong>Nouvel agent</strong>
+              <small>Assigner tous les emplacements à un agent choisi.</small>
+            </span>
+          </label>
+          <label class="mode-card" [class.active]="assignationMode === 'TOUS_AGENTS'">
+            <mat-radio-button value="TOUS_AGENTS"></mat-radio-button>
+            <span class="mode-card__text">
+              <strong>Répartir entre tous les agents</strong>
+              <small>Distribution automatique sur l'équipe.</small>
+            </span>
+          </label>
+        </mat-radio-group>
+
+        @if (assignationMode === 'NOUVEAU_AGENT') {
+          <div class="chips">
+            @if (selectedAgent) {
+              <span class="chip">
+                {{ agentDisplayName(selectedAgent) }}
+                <button type="button" class="x" (click)="clearRecomptageAgent()" aria-label="Retirer l'agent">×</button>
+              </span>
+            }
+            <button
+              type="button"
+              class="chip add"
+              [matMenuTriggerFor]="recomptageAgentMenu"
+              [disabled]="applyingB || unselectedAgents.length === 0">
+              {{ selectedAgent ? 'Changer d\'agent…' : 'Ajouter un agent…' }}
+            </button>
+            <mat-menu #recomptageAgentMenu="matMenu">
+              @for (agent of unselectedAgents; track agent.id) {
+                <button mat-menu-item type="button" (click)="pickRecomptageAgent(agent)">
+                  <span>{{ agentDisplayName(agent) }}</span>
+                  <span class="menu-code">{{ agent.codePersonnel }}</span>
+                </button>
+              }
+            </mat-menu>
+          </div>
+        }
+
+      <div class="file-field">
+        <label class="file-label" for="branche-b-file">Fichier Excel filtré</label>
+        <input
+          id="branche-b-file"
+          type="file"
+          accept=".xlsx,.xls"
+          (change)="onBrancheBFileSelected($event)"
+          [disabled]="applyingB"
+        />
+        @if (brancheBFile) {
+          <div class="file-name">{{ brancheBFile.name }}</div>
+        }
+        <p class="cell-sub">Colonnes : CodeEmplacement, DesignationEmplacement, CodeUS, DesignationUS, QteTheorique, CodeAgent, Client (optionnel).</p>
+      </div>
+
+      @if (existingRecomptages.length > 0) {
+        <div class="history-block">
+          <h3>Recomptages déjà lancés ({{ existingRecomptages.length }})</h3>
+          <ul class="history-list">
+            @for (r of existingRecomptages; track r.id) {
+              <li>
+                <strong>{{ r.mode === 'GLOBAL' ? 'Intégral' : 'Ciblé' }}</strong>
+                — {{ r.fichierNom ?? 'Sans fichier' }}
+                — {{ r.emplacementsCrees }} empl.
+                — {{ r.createdAt | date:'short' }}
+              </li>
+            }
+          </ul>
+        </div>
+      } @else if (!loadingRecomptages) {
+        <p class="history-empty">Aucun recomptage précédent pour cet inventaire.</p>
+      }
+    </div>
+
+    <div class="modal__footer">
+      <button mat-stroked-button type="button" (click)="backToBrancheBChoice()" [disabled]="applyingB">Retour</button>
+      <button
+        mat-flat-button
+        color="warn"
+        type="button"
+        (click)="confirmBrancheB()"
+        [disabled]="applyingB || !brancheBFile"
+      >
+        {{ applyingB ? 'Lancement...' : 'Valider et lancer' }}
+      </button>
+    </div>
+  </div>
+}

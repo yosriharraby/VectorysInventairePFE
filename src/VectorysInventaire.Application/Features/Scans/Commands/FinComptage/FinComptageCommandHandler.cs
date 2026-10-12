@@ -13,19 +13,22 @@ public class FinComptageCommandHandler : IRequestHandler<FinComptageCommand, Fin
     private readonly IStockTheoriqueRepository _stockRepository;
     private readonly ICurrentUserService _currentUser;
     private readonly IInventaireNotificationService _notificationService;
+    private readonly IRecomptageProgressService _recomptageProgress;
 
     public FinComptageCommandHandler(
         IEmplacementRepository emplacementRepository,
         IScanRepository scanRepository,
         IStockTheoriqueRepository stockRepository,
         ICurrentUserService currentUser,
-        IInventaireNotificationService notificationService)
+        IInventaireNotificationService notificationService,
+        IRecomptageProgressService recomptageProgress)
     {
         _emplacementRepository = emplacementRepository;
         _scanRepository = scanRepository;
         _stockRepository = stockRepository;
         _currentUser = currentUser;
         _notificationService = notificationService;
+        _recomptageProgress = recomptageProgress;
     }
 
     public async Task<FinComptageResultDto> Handle(FinComptageCommand request, CancellationToken cancellationToken)
@@ -35,9 +38,6 @@ public class FinComptageCommandHandler : IRequestHandler<FinComptageCommand, Fin
 
         var emplacement = await _emplacementRepository.GetByIdForUpdateAsync(request.EmplacementId, cancellationToken)
             ?? throw new KeyNotFoundException("Emplacement introuvable.");
-
-        if (emplacement.AgentAssigneId != _currentUser.UserId)
-            throw new UnauthorizedAccessException("Cet emplacement ne vous est pas assigné.");
 
         if (emplacement.Statut == StatutEmplacementEnum.TERMINE)
             throw new InvalidOperationException("Cet emplacement est déjà terminé.");
@@ -71,6 +71,8 @@ public class FinComptageCommandHandler : IRequestHandler<FinComptageCommand, Fin
             QteScannee = qteScannee,
             QteAttendue = qteAttendue
         }, cancellationToken);
+
+        await _recomptageProgress.RefreshByEmplacementIdAsync(emplacement.Id, cancellationToken);
 
         return result;
     }

@@ -10,7 +10,7 @@ class LocalDatabase {
     final basePath = await getDatabasesPath();
     _db = await openDatabase(
       p.join(basePath, 'vectorys_offline.db'),
-      version: 2,
+      version: 3,
       onCreate: (db, version) async {
         await _createSchema(db);
       },
@@ -24,9 +24,12 @@ class LocalDatabase {
               designation_us TEXT NOT NULL,
               qte_theorique INTEGER NOT NULL,
               qte_scannee INTEGER NOT NULL DEFAULT 0,
+              client TEXT,
               UNIQUE(emplacement_id, code_us)
             )
           ''');
+        } else if (oldVersion < 3) {
+          await db.execute('ALTER TABLE cached_stock_lines ADD COLUMN client TEXT');
         }
       },
     );
@@ -55,9 +58,10 @@ class LocalDatabase {
         emplacement_id INTEGER NOT NULL,
         code_us TEXT NOT NULL,
         designation_us TEXT NOT NULL,
-        qte_theorique INTEGER NOT NULL,
-        qte_scannee INTEGER NOT NULL DEFAULT 0,
-        UNIQUE(emplacement_id, code_us)
+            qte_theorique INTEGER NOT NULL,
+            qte_scannee INTEGER NOT NULL DEFAULT 0,
+            client TEXT,
+            UNIQUE(emplacement_id, code_us)
       )
     ''');
     await db.execute('''
@@ -110,6 +114,7 @@ class LocalDatabase {
             'designation_us': ligne.designationUs,
             'qte_theorique': ligne.qteTheorique,
             'qte_scannee': ligne.qteScannee,
+            'client': ligne.client,
           });
         }
       }
@@ -131,6 +136,7 @@ class LocalDatabase {
             designationUs: row['designation_us'] as String,
             qteTheorique: row['qte_theorique'] as int,
             qteScannee: (row['qte_scannee'] as int) + (pendingByCode[row['code_us'] as String] ?? 0),
+            client: row['client'] as String?,
           ),
         )
         .toList(growable: false);

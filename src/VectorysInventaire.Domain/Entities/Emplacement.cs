@@ -11,9 +11,11 @@ public class Emplacement
     public string CodeBarres { get; set; } = string.Empty;
     public StatutEmplacementEnum Statut { get; set; } = StatutEmplacementEnum.EN_ATTENTE;
     public int? AgentAssigneId { get; set; }
+    public int? RecomptageId { get; set; }
 
     public Passage? Passage { get; set; }
     public Utilisateur? AgentAssigne { get; set; }
+    public Recomptage? Recomptage { get; set; }
     public ICollection<StockTheorique> StocksTheoriques { get; set; } = new List<StockTheorique>();
     public ICollection<Scan> Scans { get; set; } = new List<Scan>();
 }

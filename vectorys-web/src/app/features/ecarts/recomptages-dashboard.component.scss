@@ -1,0 +1,39 @@
+@use './ecart-management.component.scss' as *;
+
+.crumb.link {
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.recomptage-table {
+  width: 100%;
+}
+
+.badge[data-mode='GLOBAL'] {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.badge[data-mode='CIBLE'] {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge[data-statut='EN_COURS'],
+.badge[data-statut='EN_ATTENTE'] {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.badge[data-statut='CORRIGE'],
+.badge[data-statut='TERMINE'] {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.cell-sub {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+}
