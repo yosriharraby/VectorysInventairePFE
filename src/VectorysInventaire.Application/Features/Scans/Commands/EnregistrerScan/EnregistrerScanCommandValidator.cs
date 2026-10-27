@@ -6,7 +6,7 @@ public class EnregistrerScanCommandValidator : AbstractValidator<EnregistrerScan
 {
     public EnregistrerScanCommandValidator()
     {
-        RuleFor(x => x.CodeBarresScan).NotEmpty().MaximumLength(128);
+        RuleFor(x => x.CodeBarresScan).NotEmpty().MaximumLength(256);
         RuleFor(x => x.EmplacementId).GreaterThan(0);
         RuleFor(x => x.DateHeureScan).NotEmpty();
         RuleFor(x => x.IdLocalFlutter).MaximumLength(64).When(x => x.IdLocalFlutter != null);

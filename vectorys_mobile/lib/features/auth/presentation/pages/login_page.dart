@@ -267,7 +267,7 @@ class _BrandHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                height: 36,
+                height: 72,
                 child: Image.asset(
                   'assets/brand/vectorys-logo.png',
                   fit: BoxFit.contain,

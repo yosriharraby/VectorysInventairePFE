@@ -47,7 +47,7 @@ class AgentShell extends StatelessWidget {
           ),
           titleSpacing: 0,
           title: SizedBox(
-            height: 26,
+            height: 34,
             child: Image.asset('assets/brand/vectorys-logo.png', fit: BoxFit.contain),
           ),
           actions: [

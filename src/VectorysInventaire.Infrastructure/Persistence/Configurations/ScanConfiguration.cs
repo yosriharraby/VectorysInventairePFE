@@ -10,7 +10,7 @@ public class ScanConfiguration : IEntityTypeConfiguration<Scan>
     {
         builder.ToTable("Scans");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.CodeBarresScan).HasMaxLength(128).IsRequired();
+        builder.Property(x => x.CodeBarresScan).HasMaxLength(256).IsRequired();
         builder.Property(x => x.IdLocalFlutter).HasMaxLength(64);
         builder.HasIndex(x => new { x.EmplacementId, x.DateHeureScan });
         builder.HasIndex(x => x.DateHeureScan);

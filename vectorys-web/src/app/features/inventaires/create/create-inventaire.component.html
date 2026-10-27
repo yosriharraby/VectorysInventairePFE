@@ -1,7 +1,7 @@
 <div class="shell">
   <aside class="sidebar">
     <div class="sidebar__brand">
-      <img class="brand-logo" src="/brand/vectorys-tunisie-logo.png" alt="Vectorys Tunisie" />
+      <img class="brand-logo" src="/brand/vectorys-logo.png" alt="Vectorys Logistics" />
     </div>
 
     <nav class="nav">
@@ -207,11 +207,12 @@
             </div>
 
             <div class="mini-hint">
-              Colonnes attendues : CodeEmplacement, DesignationEmplacement, CodeUS, DesignationUS, QteTheorique, <strong>CodeAgent</strong> (obligatoire — l'assignation agent → emplacement provient du fichier Excel), <strong>Client</strong> (optionnel, ex. Sagemcom, Valeo, Forvia, Lear, Leoni, Dräxlmaier).
+              Colonnes : Code Emplacement, Désignation, Code US, Désignation US, Qté, Code Agent, Client.
+              Tous les formats de cellules sont acceptés (texte, nombre, code-barres). Les en-têtes avec espaces sont reconnus.
             </div>
             <div class="note">
               <mat-icon>info</mat-icon>
-              <span>Chaque emplacement doit avoir un CodeAgent valide dans le fichier. Les agents sélectionnés ci-dessus servent uniquement de référence pour la mission.</span>
+              <span>Si Code Agent est vide ou inconnu, l'emplacement est assigné aux agents sélectionnés ci-dessus. L'inventaire est créé puis le stock est importé.</span>
             </div>
 
             @if (fileError) {

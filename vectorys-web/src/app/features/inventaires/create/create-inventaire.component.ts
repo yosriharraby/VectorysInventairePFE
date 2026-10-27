@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { InventaireApiService } from '../../../core/services/inventaire-api.service';
 import { Agent, agentDisplayName } from '../../../shared/models/agent.model';
 import { CreateInventaireResult } from '../../../shared/models/inventaire.model';
+import { apiErrorMessage } from '../../../core/http/api-error.util';
 
 @Component({
   selector: 'app-create-inventaire',
@@ -122,8 +123,8 @@ export class CreateInventaireComponent implements OnInit {
         this.submitting = false;
         void this.router.navigate(['/dashboard']);
       },
-      error: () => {
-        this.error = "Inventaire créé mais échec de l'import Excel.";
+      error: (err) => {
+        this.error = apiErrorMessage(err, "Inventaire créé mais échec de l'import Excel.");
         this.submitting = false;
       }
     });
@@ -176,8 +177,8 @@ export class CreateInventaireComponent implements OnInit {
             this.importAndFinish(created, created.passageC1Id, codeAgents);
           }
         },
-        error: () => {
-          this.error = "Échec de la création de l'inventaire.";
+        error: (err) => {
+          this.error = apiErrorMessage(err, "Échec de la création de l'inventaire.");
           this.submitting = false;
         }
       });

@@ -12,6 +12,9 @@ namespace VectorysInventaire.Infrastructure.Services;
 public class StockImportService : IStockImportService
 {
     private const int BatchSize = 1000;
+    private const int MaxCodeLength = 256;
+    private const int MaxDesignationLength = 500;
+    private const int MaxClientLength = 256;
 
     private readonly VectorysDbContext _db;
     private readonly IExcelImportService _excelImportService;
@@ -28,14 +31,18 @@ public class StockImportService : IStockImportService
         IReadOnlyList<string>? defaultCodeAgents = null,
         CancellationToken cancellationToken = default)
     {
-        _ = defaultCodeAgents;
-
         var passage = await _db.Passages.FirstOrDefaultAsync(p => p.Id == passageId, cancellationToken)
             ?? throw new KeyNotFoundException("Passage introuvable.");
 
         var agents = await LoadAgentsAsync(cancellationToken);
         var (emplacementsByCode, agentCodeByEmplacement, stocks, _) =
-            await BuildEmplacementsFromExcelAsync(fileStream, passage.Id, agents, allowedCodes: null, cancellationToken);
+            await BuildEmplacementsFromExcelAsync(
+                fileStream,
+                passage.Id,
+                agents,
+                allowedCodes: null,
+                defaultCodeAgents,
+                cancellationToken);
 
         await PersistImportAsync(passage, emplacementsByCode, stocks, cancellationToken);
 
@@ -185,7 +192,8 @@ public class StockImportService : IStockImportService
                 existingSet,
                 isCible ? c1Set : null,
                 forcedAgentByEmplacement,
-                recomptage.Id);
+                recomptage.Id,
+                fallbackAgentCodes: allAgentCodes);
 
         await PersistImportAsync(passageC2, emplacementsByCode, stocks, cancellationToken, wrapTransaction: false);
 
@@ -404,13 +412,22 @@ public class StockImportService : IStockImportService
             int passageId,
             Dictionary<string, int> agents,
             HashSet<string>? allowedCodes,
+            IReadOnlyList<string>? fallbackAgentCodes,
             CancellationToken cancellationToken)
     {
         var rows = await _excelImportService.ParseStockFileAsync(fileStream, cancellationToken);
         if (rows.Count == 0)
             throw new InvalidOperationException("Le fichier Excel ne contient aucune ligne de données.");
 
-        return BuildEmplacementsFromRows(rows, passageId, agents, existingOnPassage: null, allowedCodes, forcedAgentByEmplacement: null);
+        return BuildEmplacementsFromRows(
+            rows,
+            passageId,
+            agents,
+            existingOnPassage: null,
+            allowedCodes,
+            forcedAgentByEmplacement: null,
+            recomptageId: null,
+            fallbackAgentCodes: fallbackAgentCodes);
     }
 
     private static (
@@ -425,18 +442,22 @@ public class StockImportService : IStockImportService
             HashSet<string>? existingOnPassage,
             HashSet<string>? allowedCodes,
             Dictionary<string, string>? forcedAgentByEmplacement = null,
-            int? recomptageId = null)
+            int? recomptageId = null,
+            IReadOnlyList<string>? fallbackAgentCodes = null)
     {
         var validationErrors = new List<string>();
-        var unknownAgents = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var emplacementsByCode = new Dictionary<string, Emplacement>(StringComparer.OrdinalIgnoreCase);
         var agentCodeByEmplacement = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        var stocks = new List<StockTheorique>();
+        var stocksByKey = new Dictionary<string, StockTheorique>(StringComparer.OrdinalIgnoreCase);
         var skippedExisting = new List<string>();
+        var fallback = ResolveFallbackAgents(agents, fallbackAgentCodes);
+        var fallbackIndex = 0;
 
         foreach (var row in rows)
         {
-            var codeEmp = row.CodeEmplacement.Trim();
+            var codeEmp = Clip(row.CodeEmplacement, MaxCodeLength);
+            if (codeEmp.Length == 0)
+                continue;
 
             if (allowedCodes is not null && !allowedCodes.Contains(codeEmp))
             {
@@ -456,32 +477,21 @@ public class StockImportService : IStockImportService
             {
                 string codeAgent;
                 if (forcedAgentByEmplacement is not null
-                    && forcedAgentByEmplacement.TryGetValue(codeEmp, out var forced))
+                    && forcedAgentByEmplacement.TryGetValue(codeEmp, out var forced)
+                    && agents.ContainsKey(forced))
                 {
                     codeAgent = forced;
                 }
-                else if (string.IsNullOrWhiteSpace(row.CodeAgentPersonnel))
-                {
-                    validationErrors.Add(
-                        $"Ligne {row.RowNumber} : la colonne CodeAgent est obligatoire pour l'emplacement « {codeEmp} ».");
-                    continue;
-                }
                 else
                 {
-                    codeAgent = row.CodeAgentPersonnel.Trim();
-                }
-
-                if (!agents.ContainsKey(codeAgent))
-                {
-                    unknownAgents.Add(codeAgent);
-                    continue;
+                    codeAgent = ResolveAgentCode(row.CodeAgentPersonnel, agents, fallback, ref fallbackIndex);
                 }
 
                 emplacement = new Emplacement
                 {
                     PassageId = passageId,
                     Code = codeEmp,
-                    Designation = row.DesignationEmplacement ?? codeEmp,
+                    Designation = Clip(row.DesignationEmplacement, MaxDesignationLength, codeEmp),
                     CodeBarres = codeEmp,
                     Statut = StatutEmplacementEnum.EN_ATTENTE,
                     AgentAssigneId = agents[codeAgent],
@@ -490,33 +500,24 @@ public class StockImportService : IStockImportService
                 emplacementsByCode[codeEmp] = emplacement;
                 agentCodeByEmplacement[codeEmp] = codeAgent;
             }
-            else if (!string.IsNullOrWhiteSpace(row.CodeAgentPersonnel))
+
+            var codeUs = Clip(row.CodeUS, MaxCodeLength, $"{codeEmp}#L{row.RowNumber}");
+            var stockKey = $"{codeEmp}\u001f{codeUs}";
+            if (stocksByKey.TryGetValue(stockKey, out var existingStock))
             {
-                var expectedCode = agentCodeByEmplacement[codeEmp];
-                if (!string.Equals(expectedCode, row.CodeAgentPersonnel.Trim(), StringComparison.OrdinalIgnoreCase))
-                {
-                    validationErrors.Add(
-                        $"Ligne {row.RowNumber} : CodeAgent incohérent pour « {codeEmp} » "
-                        + $"(attendu « {expectedCode} », reçu « {row.CodeAgentPersonnel.Trim()} »).");
-                    continue;
-                }
+                existingStock.QteTheorique += Math.Max(0, row.QteTheorique);
+                continue;
             }
 
-            stocks.Add(new StockTheorique
+            stocksByKey[stockKey] = new StockTheorique
             {
                 Emplacement = emplacement,
-                CodeUS = row.CodeUS,
-                DesignationUS = row.DesignationUS ?? row.CodeUS,
-                QteTheorique = row.QteTheorique,
-                Client = string.IsNullOrWhiteSpace(row.Client) ? null : row.Client.Trim(),
+                CodeUS = codeUs,
+                DesignationUS = Clip(row.DesignationUS, MaxDesignationLength, codeUs),
+                QteTheorique = Math.Max(0, row.QteTheorique),
+                Client = string.IsNullOrWhiteSpace(row.Client) ? null : Clip(row.Client, MaxClientLength),
                 CreatedAt = DateTime.UtcNow
-            });
-        }
-
-        if (unknownAgents.Count > 0)
-        {
-            throw new InvalidOperationException(
-                $"Code(s) agent inconnu(s) dans le fichier Excel : {string.Join(", ", unknownAgents.OrderBy(c => c))}.");
+            };
         }
 
         if (validationErrors.Count > 0)
@@ -524,6 +525,8 @@ public class StockImportService : IStockImportService
             throw new InvalidOperationException(string.Join(" ", validationErrors.Take(5))
                 + (validationErrors.Count > 5 ? $" (+{validationErrors.Count - 5} autre(s) erreur(s))" : string.Empty));
         }
+
+        var stocks = stocksByKey.Values.ToList();
 
         if (emplacementsByCode.Count == 0 && skippedExisting.Count == 0)
             throw new InvalidOperationException("Aucun emplacement valide à importer.");
@@ -533,6 +536,58 @@ public class StockImportService : IStockImportService
                 "Tous les emplacements du fichier existent déjà sur le passage C2. Aucune création effectuée.");
 
         return (emplacementsByCode, agentCodeByEmplacement, stocks, skippedExisting);
+    }
+
+    private static List<string> ResolveFallbackAgents(
+        Dictionary<string, int> agents,
+        IReadOnlyList<string>? preferred)
+    {
+        var fallback = new List<string>();
+        if (preferred is not null)
+        {
+            foreach (var code in preferred)
+            {
+                if (string.IsNullOrWhiteSpace(code))
+                    continue;
+                var trimmed = code.Trim();
+                if (agents.ContainsKey(trimmed) && !fallback.Contains(trimmed, StringComparer.OrdinalIgnoreCase))
+                    fallback.Add(trimmed);
+            }
+        }
+
+        if (fallback.Count == 0)
+            fallback.AddRange(agents.Keys);
+
+        if (fallback.Count == 0)
+            throw new InvalidOperationException("Aucun agent avec code personnel n'est disponible pour l'assignation.");
+
+        return fallback;
+    }
+
+    private static string ResolveAgentCode(
+        string? requested,
+        Dictionary<string, int> agents,
+        IReadOnlyList<string> fallback,
+        ref int fallbackIndex)
+    {
+        if (!string.IsNullOrWhiteSpace(requested))
+        {
+            var trimmed = requested.Trim();
+            if (agents.ContainsKey(trimmed))
+                return trimmed;
+        }
+
+        var code = fallback[Math.Abs(fallbackIndex) % fallback.Count];
+        fallbackIndex++;
+        return code;
+    }
+
+    private static string Clip(string? value, int maxLength, string fallback = "")
+    {
+        var text = (value ?? string.Empty).Trim();
+        if (text.Length == 0)
+            text = fallback;
+        return text.Length <= maxLength ? text : text[..maxLength];
     }
 
     private async Task PersistImportAsync(

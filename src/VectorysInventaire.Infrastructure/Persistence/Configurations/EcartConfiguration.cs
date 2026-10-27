@@ -10,11 +10,11 @@ public class EcartConfiguration : IEntityTypeConfiguration<Ecart>
     {
         builder.ToTable("Ecart");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.CodeEmplacement).HasMaxLength(64).IsRequired();
-        builder.Property(x => x.DesignationEmplacement).HasMaxLength(200);
-        builder.Property(x => x.CodeUS).HasMaxLength(64).IsRequired();
-        builder.Property(x => x.DesignationUS).HasMaxLength(200);
-        builder.Property(x => x.Client).HasMaxLength(128);
+        builder.Property(x => x.CodeEmplacement).HasMaxLength(256).IsRequired();
+        builder.Property(x => x.DesignationEmplacement).HasMaxLength(500);
+        builder.Property(x => x.CodeUS).HasMaxLength(256).IsRequired();
+        builder.Property(x => x.DesignationUS).HasMaxLength(500);
+        builder.Property(x => x.Client).HasMaxLength(256);
         builder.HasIndex(x => new { x.InventaireId, x.EmplacementId, x.CodeUS, x.Statut });
         builder.HasIndex(x => new { x.InventaireId, x.DetecteAt });
         builder.HasIndex(x => new { x.Statut, x.DetecteAt });

@@ -10,9 +10,9 @@ public class StockTheoriqueConfiguration : IEntityTypeConfiguration<StockTheoriq
     {
         builder.ToTable("StockTheorique");
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.CodeUS).HasMaxLength(64).IsRequired();
-        builder.Property(x => x.DesignationUS).HasMaxLength(200);
-        builder.Property(x => x.Client).HasMaxLength(128);
+        builder.Property(x => x.CodeUS).HasMaxLength(256).IsRequired();
+        builder.Property(x => x.DesignationUS).HasMaxLength(500);
+        builder.Property(x => x.Client).HasMaxLength(256);
         builder.HasIndex(x => new { x.EmplacementId, x.CodeUS }).IsUnique();
         builder.HasOne(x => x.Emplacement).WithMany(e => e.StocksTheoriques).HasForeignKey(x => x.EmplacementId)
             .OnDelete(DeleteBehavior.Cascade);
